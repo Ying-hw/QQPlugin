@@ -1,0 +1,12 @@
+#ifndef LOGINPLUGIN_GLOBAL_H
+#define LOGINPLUGIN_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#ifdef LOGINPLUGIN_LIB
+# define LOGINPLUGIN_EXPORT Q_DECL_EXPORT
+#else
+# define LOGINPLUGIN_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // LOGINPLUGIN_GLOBAL_H
