@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<test>
+  <pluginconfig>
+	<plugin>
+		<name>LoginPlugin</name>
+		<path>.</path>
+		<rect>500,300,1900,800</rect>
+		<invalid>0</invalid>
+	</plugin>
+	<plugin>
+		<name>xxa.dll</name>
+		<path>.</path>
+		<rect>178,256,456,100</rect>
+		<invalid>1</invalid>
+	</plugin>
+	<plugin>
+		<name>xxx.dll</name>
+		<path>.</path>
+		<rect>178,256,456,100</rect>
+		<invalid>1</invalid>
+	</plugin>
+	<plugin>
+		<name>xxx.dll</name>
+		<path>.</path>
+		<rect>178,256,456,100</rect>
+		<invalid>1</invalid>
+	</plugin>
+	<plugin>
+		<name>xxx.dll</name>
+		<path>.</path>
+		<rect>178,256,456,100</rect>
+		<invalid>1</invalid>
+	</plugin>
+	<plugin>
+		<name>xxx.dll</name>
+		<path>.</path>
+		<rect>178,256,456,100</rect>
+		<invalid>1</invalid>
+	</plugin>
+</pluginconfig>
+</test>
