@@ -2,11 +2,10 @@
 #include "Login.h"
 
 Login::Login(QWidget *parent)
-	: MainWidget(parent)
+	: MainWidget()
 {
 	ui.setupUi(this);
-	//setGeometry(500, 300, 1800, 800);
-	//updateGeometry()
+	SET_MAIN(this);
 }
 
 Login::~Login()

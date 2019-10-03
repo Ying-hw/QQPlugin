@@ -4,5 +4,4 @@
 
 extern "C" LOGINPLUGIN_EXPORT void Handle() {
 	Login* login = new Login();
-	login->show();
 }
