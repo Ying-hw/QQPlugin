@@ -4,7 +4,7 @@
 	<plugin>
 		<name>LoginPlugin</name>
 		<path>.</path>
-		<rect>500,300,1900,800</rect>
+		<rect>500,300,700,600</rect>
 		<invalid>0</invalid>
 	</plugin>
 	<plugin>

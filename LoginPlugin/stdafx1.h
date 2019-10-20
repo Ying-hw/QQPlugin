@@ -6,3 +6,10 @@
 #include <QMutex>
 #include <QMap>
 #include <QPainter>
+#include <QGridLayout>
+#include <QWidget>
+#include <QtXml>
+#include <QDomDocument>
+#include <QSqlDataBase>
+#include <QSqlQuery>
+#include <QSqlRecord>
