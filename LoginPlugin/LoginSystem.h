@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include "ui_LoginSystem.h"
-#include "MainFrame.h"
+#include "SignalQueue.h"
+#include "Register.h"
+#include "BackPassword.h"
 #include "loginplugin_global.h"
 
 class LOGINPLUGIN_EXPORT LoginSystem : public QWidget
@@ -18,7 +20,11 @@ private slots:
 	void SlotRegister();
 	void SlotLogin();
 private:
+	void setSqlDataBase();
+private:
 	Ui::LoginSystem ui;
+	Register *m_Register;
+	BackPassword *m_BackPassWD;
 };
 
 #endif // LOGINSYSTEM_H

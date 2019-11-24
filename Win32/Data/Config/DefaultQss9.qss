@@ -1,7 +1,4 @@
-QWidget#frmLogin,QWidget#frmPopup,QWidget#frmHostInfo,QWidget#frmLogout,QWidget#frmConfig,QWidget#frmData,QWidget#frmDefence,QWidget#frmHost,QWidget#frmMain,QWidget#frmPwd,QWidget#frmSelect,QWidget#frmMessageBox{
-    border:1px solid #0F7DBE;
-    border-radius:0px;  
-}
+
 *{
   font-size:25px;
   color:white;
@@ -28,6 +25,7 @@ QLineEdit{
     border-radius: 5px;
     padding: 2px;
     background: none;
+	background-color:rgba(30,240,240,0);
     selection-background-color: #0F7DBE;
 }
 
@@ -151,17 +149,13 @@ QComboBox#ComUserName{
 	border-bottom-color:white;
 	background-color:rgba(30,240,240,0);
 }
+
 QComboBox#ComUserName::drop-down{
 	image: url(../Data/image/updown.png); 
 	border:none;
-	width: 22px;
 }
-QComboBox#ComUserName::drop-down:pressed{
-	background-color: blue;
-}
-QComboBox#ComUserName::drop-down:hover{
-	background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #50A3F0, stop:1 #489CEA);
-}
+
+
 QComboBox::drop-down,QDateEdit::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
@@ -170,7 +164,7 @@ QComboBox::drop-down,QDateEdit::drop-down {
     border-left-style: solid;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    border-left-color: #50A3F0;
+    border-left-color:rgba(30,240,240,0);
 }
 
  

@@ -13,3 +13,4 @@
 #include <QSqlDataBase>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QSqlError>
