@@ -48,8 +48,9 @@ void LoginSystem::setSqlDataBase() {
 				QString::fromLocal8Bit("密码输入错误！"));
 			return;
 		}
-
 		//进入主界面
+		SENDMESSAGE(Signal_::FREEPLUG, "LoginPlugin");
+		SENDMESSAGE(Signal_::LOADPLUG, "FriendListPlugin");
 	} 
 	else
 		QMessageBox::warning(this, QString::fromLocal8Bit("错误"),

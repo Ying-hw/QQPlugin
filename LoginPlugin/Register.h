@@ -13,8 +13,6 @@ public:
 	Register(QWidget *parent = 0);
 	~Register();
 
-	
-
 private:
 	Ui::Register ui;
 };

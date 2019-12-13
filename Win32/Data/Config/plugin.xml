@@ -8,34 +8,40 @@
 		<invalid>0</invalid>
 	</plugin>
 	<plugin>
-		<name>xxa.dll</name>
+		<name>ChatMessagePlugin</name>
 		<path>.</path>
 		<rect>178,256,456,100</rect>
 		<invalid>1</invalid>
 	</plugin>
 	<plugin>
-		<name>xxx.dll</name>
+		<name>FriendListPlugin</name>
 		<path>.</path>
 		<rect>178,256,456,100</rect>
 		<invalid>1</invalid>
 	</plugin>
 	<plugin>
-		<name>xxx.dll</name>
+		<name>FtpSharesPlugin</name>
 		<path>.</path>
 		<rect>178,256,456,100</rect>
 		<invalid>1</invalid>
 	</plugin>
 	<plugin>
-		<name>xxx.dll</name>
+		<name>MailboxPlugin</name>
 		<path>.</path>
 		<rect>178,256,456,100</rect>
 		<invalid>1</invalid>
 	</plugin>
 	<plugin>
-		<name>xxx.dll</name>
+		<name>QQSpacePlugin</name>
 		<path>.</path>
 		<rect>178,256,456,100</rect>
 		<invalid>1</invalid>
 	</plugin>
+  <plugin>
+    <name>VideoChatPlugin</name>
+    <path>.</path>
+    <rect>178,256,456,100</rect>
+    <invalid>1</invalid>
+  </plugin>
 </pluginconfig>
 </test>

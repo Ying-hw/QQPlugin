@@ -5,6 +5,23 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginPlugin", "LoginPlugin\LoginPlugin.vcxproj", "{F0D735A3-F0AC-4F47-9BDA-774B78420C72}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FriendListPlugin", "FriendListPlugin\FriendListPlugin.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChatMessagePlugin", "ChatMessagePlugin\ChatMessagePlugin.vcxproj", "{7E4E0F5D-9FBD-4297-B0ED-BD064B1A89C7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QQSpacePlugin", "QQSpacePlugin\QQSpacePlugin.vcxproj", "{6C84DC2F-EEFC-4D15-B63B-0648630EBCDC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VideoChatPlugin", "VideoChatPlugin\VideoChatPlugin.vcxproj", "{7B788AC0-8E2A-4805-9D9D-22DD49ADD9F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MailboxPlugin", "MailboxPlugin\MailboxPlugin.vcxproj", "{CB115747-D499-4EE4-ADF7-157A6E943E79}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FtpSharesPlugin", "ftpSharesPlugin\ftpSharesPlugin.vcxproj", "{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A818F6B-1948-4AB0-BE57-435DEA5BF9A4}"
+	ProjectSection(SolutionItems) = preProject
+		Win32\Data\Config\plugin.xml = Win32\Data\Config\plugin.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +32,30 @@ Global
 		{F0D735A3-F0AC-4F47-9BDA-774B78420C72}.Debug|Win32.Build.0 = Debug|Win32
 		{F0D735A3-F0AC-4F47-9BDA-774B78420C72}.Release|Win32.ActiveCfg = Release|Win32
 		{F0D735A3-F0AC-4F47-9BDA-774B78420C72}.Release|Win32.Build.0 = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|Win32.Build.0 = Debug|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.ActiveCfg = Release|Win32
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|Win32.Build.0 = Release|Win32
+		{7E4E0F5D-9FBD-4297-B0ED-BD064B1A89C7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E4E0F5D-9FBD-4297-B0ED-BD064B1A89C7}.Debug|Win32.Build.0 = Debug|Win32
+		{7E4E0F5D-9FBD-4297-B0ED-BD064B1A89C7}.Release|Win32.ActiveCfg = Release|Win32
+		{7E4E0F5D-9FBD-4297-B0ED-BD064B1A89C7}.Release|Win32.Build.0 = Release|Win32
+		{6C84DC2F-EEFC-4D15-B63B-0648630EBCDC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C84DC2F-EEFC-4D15-B63B-0648630EBCDC}.Debug|Win32.Build.0 = Debug|Win32
+		{6C84DC2F-EEFC-4D15-B63B-0648630EBCDC}.Release|Win32.ActiveCfg = Release|Win32
+		{6C84DC2F-EEFC-4D15-B63B-0648630EBCDC}.Release|Win32.Build.0 = Release|Win32
+		{7B788AC0-8E2A-4805-9D9D-22DD49ADD9F7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B788AC0-8E2A-4805-9D9D-22DD49ADD9F7}.Debug|Win32.Build.0 = Debug|Win32
+		{7B788AC0-8E2A-4805-9D9D-22DD49ADD9F7}.Release|Win32.ActiveCfg = Release|Win32
+		{7B788AC0-8E2A-4805-9D9D-22DD49ADD9F7}.Release|Win32.Build.0 = Release|Win32
+		{CB115747-D499-4EE4-ADF7-157A6E943E79}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CB115747-D499-4EE4-ADF7-157A6E943E79}.Debug|Win32.Build.0 = Debug|Win32
+		{CB115747-D499-4EE4-ADF7-157A6E943E79}.Release|Win32.ActiveCfg = Release|Win32
+		{CB115747-D499-4EE4-ADF7-157A6E943E79}.Release|Win32.Build.0 = Release|Win32
+		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Debug|Win32.Build.0 = Debug|Win32
+		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Release|Win32.ActiveCfg = Release|Win32
+		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

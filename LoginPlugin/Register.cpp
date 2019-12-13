@@ -6,7 +6,7 @@ Register::Register(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-	SENDMESSAGE(Signal_::RELOAD, this);
+	SENDMESSAGE(Signal_::RELOADUI, this);
 }
 
 Register::~Register()
