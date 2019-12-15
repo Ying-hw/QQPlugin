@@ -11,7 +11,7 @@ LoginSystem::LoginSystem(QWidget *parent)
 }
 
 LoginSystem::~LoginSystem() {
-
+	int a = 0;
 }
 
 void LoginSystem::SlotBackPassWD() {
@@ -29,10 +29,8 @@ void LoginSystem::SlotRegister() {
 }
 
 void LoginSystem::SlotLogin() {
-	
-}
-
-void LoginSystem::setSqlDataBase() {
+	SENDMESSAGE(Signal_::SWITCHPLUGIN, "FriendListPlugin");
+	return;
 	DataLib Data;
 	if (Data.openDataLib()) {
 		DataStructDefine UserData = DBSelect::GetDataLib(QString(SELECT_USER)
@@ -48,9 +46,7 @@ void LoginSystem::setSqlDataBase() {
 				QString::fromLocal8Bit("密码输入错误！"));
 			return;
 		}
-		//进入主界面
-		SENDMESSAGE(Signal_::FREEPLUG, "LoginPlugin");
-		SENDMESSAGE(Signal_::LOADPLUG, "FriendListPlugin");
+		SENDMESSAGE(Signal_::SWITCHPLUGIN, "FriendListPlugin");
 	} 
 	else
 		QMessageBox::warning(this, QString::fromLocal8Bit("错误"),

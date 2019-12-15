@@ -20,8 +20,6 @@ private slots:
 	void SlotRegister();
 	void SlotLogin();
 private:
-	void setSqlDataBase();
-private:
 	Ui::LoginSystem ui;
 	Register *m_Register;
 	BackPassword *m_BackPassWD;

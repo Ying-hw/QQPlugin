@@ -285,7 +285,7 @@
      <item row="5" column="0" colspan="3">
       <widget class="QPushButton" name="BtnLogin">
        <property name="text">
-        <string>登录</string>
+        <string>登 录</string>
        </property>
       </widget>
      </item>
