@@ -29,23 +29,23 @@
       <number>0</number>
      </property>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="BtnFriend">
        <property name="text">
-        <string>PushButton</string>
+        <string>联系人</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="BtnMessage">
        <property name="text">
-        <string>PushButton</string>
+        <string>消息</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="BtnSpace">
        <property name="text">
-        <string>PushButton</string>
+        <string>空间</string>
        </property>
       </widget>
      </item>
@@ -55,10 +55,10 @@
         <number>9</number>
        </property>
        <item>
-        <widget class="QTreeView" name="treeView"/>
+        <widget class="QTreeView" name="treeV_Friend"/>
        </item>
        <item>
-        <widget class="QListView" name="listView"/>
+        <widget class="QListView" name="listV_Message"/>
        </item>
       </layout>
      </item>
@@ -132,7 +132,7 @@
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="labUserName">
               <property name="font">
                <font>
                 <pointsize>18</pointsize>
@@ -144,7 +144,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_2">
+             <widget class="QComboBox" name="ComState">
               <item>
                <property name="text">
                 <string>在线</string>
@@ -194,7 +194,11 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QComboBox" name="comboBox"/>
+       <widget class="QComboBox" name="comboBox">
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

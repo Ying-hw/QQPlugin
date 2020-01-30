@@ -1,11 +1,12 @@
 #ifndef FRIENDLIST_H
 #define FRIENDLIST_H
 
-#include <QWidget>
 #include "ui_FriendList.h"
+#include "MacroDefine.h"
 #include "friendlistplugin_global.h"
-
-class FRIENDLISTPLUGIN_EXPORT FriendList : public QWidget
+#include "Animation.h"
+class Animation;
+class FRIENDLISTPLUGIN_EXPORT FriendList : public Animation
 {
 	Q_OBJECT
 

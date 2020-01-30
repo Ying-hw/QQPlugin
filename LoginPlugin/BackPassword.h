@@ -1,10 +1,11 @@
 #ifndef BACKPASSWORD_H
 #define BACKPASSWORD_H
 
-#include <QWidget>
+#include "MacroDefine.h"
 #include "ui_BackPassword.h"
+#include "Animation.h"
 
-class BackPassword : public QWidget
+class BackPassword : public Animation
 {
 	Q_OBJECT
 

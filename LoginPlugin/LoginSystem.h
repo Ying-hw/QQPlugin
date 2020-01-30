@@ -1,14 +1,12 @@
 #ifndef LOGINSYSTEM_H
 #define LOGINSYSTEM_H
 
-#include <QWidget>
 #include "ui_LoginSystem.h"
-#include "SignalQueue.h"
 #include "Register.h"
 #include "BackPassword.h"
 #include "loginplugin_global.h"
 
-class LOGINPLUGIN_EXPORT LoginSystem : public QWidget
+class LOGINPLUGIN_EXPORT LoginSystem : public Animation
 {
 	Q_OBJECT
 

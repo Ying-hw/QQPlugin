@@ -2,7 +2,7 @@
 #include "ftpShares.h"
 
 ftpShares::ftpShares(QWidget *parent)
-	: QWidget(parent)
+	: Animation(parent)
 {
 	ui.setupUi(this);
 }

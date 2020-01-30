@@ -1,11 +1,12 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
-#include <QWidget>
+
 #include "ui_Register.h"
 #include "MacroDefine.h"
+#include "Animation.h"
 
-class Register : public QWidget
+class Register : public Animation
 {
 	Q_OBJECT
 

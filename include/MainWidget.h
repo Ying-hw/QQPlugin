@@ -5,6 +5,7 @@
 #include "MainFrame_global.h"
 
 
+
 extern SignalQueue* g_pSignal;
 
 class MAINFRAME_EXPORT MainWidget : public QWidget
@@ -12,19 +13,24 @@ class MAINFRAME_EXPORT MainWidget : public QWidget
 	Q_OBJECT
 public:
 	MainWidget(QWidget *ject = 0) : QWidget(ject),
-		m_pWidget(nullptr), m_isPress(false), BtnClose(NULL) {}
+		m_pWidget(nullptr), m_isPress(false), BtnClose(NULL), BtnSet(NULL) {
+	}
 
 	void setInitUi(const QRect &rect);
-	void setMain(QWidget* pMain); 
+	void setMain(QWidget* pMain, const QRect& rect, bool isStart);
 	void mousePressEvent(QMouseEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
 	void Set_Qss();
 	void paintEvent(QPaintEvent* event);
+
+public:
 	static MainWidget* staticThis;
 	QWidget* m_pWidget;
+
 public slots: 
 	void closeWindow();
 	void setMain(QWidget* pMain, const QRect& rect);
+
 private:
 	QString m_strQssConfig;
 	QPoint m_point;

@@ -20,11 +20,13 @@ public:
 	static void Send_Message(Signal_ signal_, void *param);
 	void SetUserIdentify(void *, User user);
 signals:
+	void close_Window(bool isClose);
 	void close_Window();
-	void exit_Window();
+
 	void minWindow();
 	void maxWindow();
-	void RELOADUI(QWidget* that, const QRect &rect);
+	void ReloadUI(QWidget* that, const QRect &rect);
+	void MakeFile(void *source, bool isExit);
 private:
 	bool m_isRuning;
 	QQueue<QPair<Signal_, void *>> m_queue;

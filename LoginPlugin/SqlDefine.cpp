@@ -1,7 +1,6 @@
 #include "stdafx1.h"
 #include "SqlDefine.h"
 
-
 DataLib::DataLib():m_Port(3306){
 
 }

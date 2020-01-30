@@ -2,8 +2,7 @@
 #include "LoginSystem.h"
 #include "SqlDefine.h"
 
-LoginSystem::LoginSystem(QWidget *parent)
-	: QWidget(parent) {
+LoginSystem::LoginSystem(QWidget *parent) {
 	ui.setupUi(this);
 	connect(ui.BtnLogin, SIGNAL(clicked()), this, SLOT(SlotLogin()));
 	connect(ui.BtnRegister, SIGNAL(clicked()), this, SLOT(SlotRegister()));
@@ -11,13 +10,14 @@ LoginSystem::LoginSystem(QWidget *parent)
 }
 
 LoginSystem::~LoginSystem() {
-	int a = 0;
+
 }
 
 void LoginSystem::SlotBackPassWD() {
-	hide();
+	//hide();
 	//进入找回密码界面
-
+	
+//	test();
 
 }
 
@@ -25,7 +25,10 @@ void LoginSystem::SlotRegister() {
 	hide();
 	//进入注册界面
 	m_Register = new Register(this);
-	//m_Register->show();
+	QString name = m_Register->objectName();
+	m_Register->setObjectName("REG");
+	name= m_Register->objectName();
+	SENDMESSAGE(Signal_::RELOADUI, m_Register);
 }
 
 void LoginSystem::SlotLogin() {
@@ -52,3 +55,4 @@ void LoginSystem::SlotLogin() {
 		QMessageBox::warning(this, QString::fromLocal8Bit("错误"),
 			QString::fromLocal8Bit("网络连接失败！"));
 }
+

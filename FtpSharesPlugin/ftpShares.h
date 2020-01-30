@@ -1,10 +1,11 @@
 #ifndef FTPSHARES_H
 #define FTPSHARES_H
 
-#include <QWidget>
+#include "MacroDefine.h"
 #include "ui_ftpShares.h"
+#include "Animation.h"
 
-class ftpShares : public QWidget
+class ftpShares : public Animation
 {
 	Q_OBJECT
 

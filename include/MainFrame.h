@@ -25,22 +25,25 @@ public:
 		m_WaitCond.wakeOne();
 	}
 	void run();
+
+	const QRect FindChildUiLocation(QWidget* targetWidget);
 	static void FreeLib(MainFrame* pthis, const QString& strRect);
 	static void LoadLib(MainFrame* pthis, const QString strTargetName);
 	inline void WriteLog(const QString& strlog) {
 		m_logFile.write(strlog.toLocal8Bit());
 	}
+public slots:
+	void MakePluginsProtobufFile(void* source, bool isExit);
 signals:
 	void ReleaseWidget();
-	void InitWidget(bool isProgramStart);
+	void InitWidget(bool isProgramStart, const QRect& rect);
 private:
 	void ReadPluginConfig();
-	void loadManage();
-	void LoadPlugin();
-	QDomNode ReadXML();
+	void FindPlugin();
+	void StartPluginControl();
 private slots:
 	void ReleaseCurrentWidget();
-	void InitCurrentWidget(bool isProgramStart);
+	void InitCurrentWidget(bool isProgramStart, const QRect& rect);
 private:
 	QFile m_logFile;
 	bool m_isRunning;
@@ -48,8 +51,6 @@ private:
 	QMutex m_Mutex_;
 	QLibrary m_Loadlib;
 	QWaitCondition m_WaitCond;
-	QVector<PluginInfo> m_Plugin;
+	QVector<PluginInfo> m_PluginConfig;
 };
-
-
 #endif // MAINFRAME_H
