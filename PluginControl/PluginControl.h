@@ -11,7 +11,7 @@ public:
 	PluginControl();
 	~PluginControl();
 public:
-	static QVector<PluginInfo> m_VecPlugins;
+	static std::vector<PluginInfo> m_VecPlugins;
 private:
 	void SendPluginConfig();
 };

@@ -1,6 +1,7 @@
 #include "stdafx1.h"
 #include "LoginSystem.h"
 #include "SqlDefine.h"
+#include <QTypeInfo>
 
 LoginSystem::LoginSystem(QWidget *parent) {
 	ui.setupUi(this);
@@ -25,14 +26,11 @@ void LoginSystem::SlotRegister() {
 	hide();
 	//Ω¯»Î◊¢≤·ΩÁ√Ê
 	m_Register = new Register(this);
-	QString name = m_Register->objectName();
-	m_Register->setObjectName("REG");
-	name= m_Register->objectName();
-	SENDMESSAGE(Signal_::RELOADUI, m_Register);
+	SEND_SIGNAL(Signal_::RELOADUI, m_Register);
 }
 
 void LoginSystem::SlotLogin() {
-	SENDMESSAGE(Signal_::SWITCHPLUGIN, "FriendListPlugin");
+	SEND_SIGNAL(Signal_::SWITCHPLUGIN, "FriendListPlugin");
 	return;
 	DataLib Data;
 	if (Data.openDataLib()) {
@@ -42,14 +40,14 @@ void LoginSystem::SlotLogin() {
 			QMessageBox::warning(this, QString::fromLocal8Bit("¥ÌŒÛ"),
 				QString::fromLocal8Bit("’À∫≈ ‰»Î¥ÌŒÛ£°"));
 			return;
-		}
+		} 
 		if (UserData.m_lstAllData[0]["PASSWORD"].toString()
 			!= ui.EditPassWd->text()) {
 			QMessageBox::warning(this, QString::fromLocal8Bit("¥ÌŒÛ"),
 				QString::fromLocal8Bit("√‹¬Î ‰»Î¥ÌŒÛ£°"));
 			return;
 		}
-		SENDMESSAGE(Signal_::SWITCHPLUGIN, "FriendListPlugin");
+		SEND_SIGNAL(Signal_::SWITCHPLUGIN, "FriendListPlugin");
 	} 
 	else
 		QMessageBox::warning(this, QString::fromLocal8Bit("¥ÌŒÛ"),

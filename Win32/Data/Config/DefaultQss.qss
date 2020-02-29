@@ -12,7 +12,7 @@ QWidget#AvatarWidget{
 QWidget{
     background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #0F7DBE, stop:1 #1582C3);
 }
- 
+
 QLabel{
     border-radius:0px;
     color: #F0F0F0;

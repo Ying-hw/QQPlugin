@@ -8,7 +8,7 @@ Register::Register(QWidget *parent)
 {
 	ui.setupUi(this);
 	connect(ui.BtnReturn, &QPushButton::clicked, [this](){
-		SENDMESSAGE(Signal_::RELOADUI, this->parentWidget());
+		SEND_SIGNAL(Signal_::RELOADUI, this->parentWidget());
 	});
 }
 
