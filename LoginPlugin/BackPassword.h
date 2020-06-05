@@ -3,9 +3,8 @@
 
 #include "MacroDefine.h"
 #include "ui_BackPassword.h"
-#include "Animation.h"
 
-class BackPassword : public Animation
+class BackPassword : public QWidget
 {
 	Q_OBJECT
 

@@ -11,7 +11,7 @@ class QQSpace : public QWidget
 public:
 	QQSpace(QWidget *parent = 0);
 	~QQSpace();
-
+	void InitWidget();
 private:
 	Ui::QQSpace ui;
 };

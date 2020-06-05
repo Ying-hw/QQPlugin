@@ -1,0 +1,18 @@
+#ifndef SQLSTATEMENTDEFINE
+#define SQLSTATEMENTDEFINE
+
+#define  INSERT_USER  "INSERT INTO user_account VALUES('%1','%2','%3','%4','%5','%6','%7','%8','%9','%10','%11');"
+
+#define  SELECT_USER "SELECT * FROM user_account WHERE USER_NUMBER = '%1';"
+
+#define  SELECT_1 "SELECT 1;"
+
+#define  SELECT_CHAT_CONTENT "SELECT * FROM chat_content WHERE USER_ACCOUNT = '%1';"
+
+#define  SELECT_FRIEND  "SELECT * FROM friend WHERE USER_ACCOUNT = '%1';"
+
+#define  SELECT_GROUP  "SELECT * FROM group WHERE USER_ACCOUNT = '%1';"
+
+#define  SELECT_CHAT_MESSAGE "SELECT CHAT_RECORD FROM chat_content WHERE USER_ACCOUNT = '%1' AND FRIEND_ACCOUNT = '%2'"
+
+#endif //SQLSTATEMENTDEFINE

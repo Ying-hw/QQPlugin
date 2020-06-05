@@ -2,7 +2,7 @@
 #include "BackPassword.h"
 
 BackPassword::BackPassword(QWidget *parent)
-	: Animation(parent)
+	: QWidget(parent)
 {
 	ui.setupUi(this);
 }
