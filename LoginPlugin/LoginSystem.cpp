@@ -3,7 +3,7 @@
 #define    CONDIGIMAGEFILE   "../Data/Config/UserConfig.pr"
 #define    CONDIGFILE   "../Data/Config/Avatar.jpg"
 
-LoginSystem::LoginSystem(QWidget *parent):QWidget(parent) {
+LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent) {
 	ui.setupUi(this);
 	connect(ui.BtnLogin, SIGNAL(clicked()), this, SLOT(SlotLogin()));
 	connect(ui.BtnRegister, SIGNAL(clicked()), this, SLOT(SlotRegister()));

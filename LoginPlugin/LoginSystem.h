@@ -7,9 +7,9 @@
 #include "loginplugin_global.h"
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
+#include "AbstractWidget.h"
 
-
-class LOGINPLUGIN_EXPORT LoginSystem : public QWidget
+class LOGINPLUGIN_EXPORT LoginSystem : public AbstractWidget
 {
 	Q_OBJECT
 

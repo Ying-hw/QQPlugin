@@ -1,28 +1,37 @@
 #include "stdafx.h"
 #include "ChatMessage.h"
+#include "ProcessChatMessage.h"
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
+#include <QPainter>
+#include <QBitmap>
 
 #define LAYOUT_MESSAEG_WIDGET   10
 
-
-ChatMessage::ChatMessage(QWidget *parent)
-	: QWidget(parent)
+ChatMessage* g_pChatMessage = NULL;
+ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NULL)
 {
 	ui.setupUi(this);
+	g_pChatMessage = this;
 	ui.TexEditContent->resize(ui.TexEditContent->width(), 50);
+	QHostAddress host("192.168.1.17");
+	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
+	SEND_SIGNAL(Signal_::INITIALIZENETWORK, m_ProMsg);
 	QString* strNumber = (QString *)GET_MESSAGE(0); 
 	QString* strTargetNumber = (QString *)GET_MESSAGE(1);
-	bool bType = (bool)GET_MESSAGE(2);
+	QToolButton* pToolBu = (QToolButton*)GET_MESSAGE(2);
+	bool bType = (bool)GET_MESSAGE(3);
+	SetAddChatTgt(pToolBu);
 	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strNumber).arg(*strTargetNumber);
 	DataStructDefine& data = GET_DATA(strChat);
     connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SendTextContent()));
+	connect(ui.LstFriend, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(SwitchFriend(QListWidgetItem *, QListWidgetItem *)));
 	InitChatMessage(data);
 }
 
 ChatMessage::~ChatMessage()
 { 
-
+	SaveChatRecord();
 }
 
 void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage)
@@ -30,16 +39,16 @@ void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage)
 	QMap<quint64, QList<Message_Content>> mapMessage;
 	QList<Message_Content> currentContent;
 	QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
-	ChatRecord chat_message;
-	if (chat_message.ParseFromString(strContent.toStdString())) {
-		for (int i = 0; i < chat_message.content_size(); i++) {
-			std::string message_content = chat_message.content(i);
+	protocolType protocol;
+	if (protocol.ParseFromString(strContent.toStdString())) {
+		for (int i = 0; i < protocol.chatcontent_size(); i++) {
+			std::string message_content = protocol.chatcontent(i).content();
 			Message_Content Message;
-			Message.type = (Message_Content::Content_Type)chat_message.type(i);
+			Message.type = (Message_Content::Content_Type)protocol.chatcontent(i).type();
 			Message.strContent = QString::fromStdString(message_content);
-			Message.is_Self = chat_message.isself();
+			Message.is_Self = protocol.chatcontent(i).isself();
 			currentContent << Message;
-			quint64 message_time =  chat_message.time(i);
+			quint64 message_time = protocol.chatcontent(i).time();
 			if (!mapMessage.contains(message_time))
 				currentContent.clear();
 			mapMessage[message_time] = currentContent;
@@ -84,22 +93,65 @@ void ChatMessage::InitMessageUI(const QMap<quint64, QList<Message_Content>>& tar
 	}
 }
 
+void ChatMessage::SetAddMessage(QString strMsg)
+{
+	CustomMessageWidget* MessWidget = new CustomMessageWidget(ui.tab_MessageContent);
+	MessWidget->SetText(strMsg, false);
+	ui.tab_MessageContent->setCellWidget(ui.tab_MessageContent->rowCount() - 1, 0, MessWidget);
+}
+
+void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt)
+{
+	QListWidgetItem* pItemWidget = new QListWidgetItem(ui.LstFriend);
+	ui.LstFriend->addItem(pItemWidget);
+	ui.LstFriend->setItemWidget(pItemWidget, pToolTgt);
+}
+
+QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
+{
+	if (src.isNull())
+		return QPixmap();
+	QSize size(2 * radius, 2 * radius);
+	QBitmap mask(size);
+	QPainter painter(&mask);
+	painter.setRenderHint(QPainter::Antialiasing);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform);
+	painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+	painter.setBrush(QColor(0, 0, 0));
+	painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+	QPixmap image = src.scaled(size);
+	image.setMask(mask);
+	return image;
+}
+
+void ChatMessage::OnMessage()
+{
+	QString* strSelfNumber = (QString *)GET_MESSAGE(0);
+	QString* strTgtNumber = (QString *)GET_MESSAGE(1);
+	QToolButton* pToolBu = (QToolButton*)GET_MESSAGE(2);
+	bool isFriend = (bool)GET_MESSAGE(3);
+	for (int i = 0;i < ui.LstFriend->count();i++) 
+		if (ui.LstFriend->itemWidget(ui.LstFriend->item(i)) == pToolBu)
+			return;
+	SetAddChatTgt(pToolBu);
+}
+
+void ChatMessage::SaveChatRecord()
+{
+	//在窗口关闭的时候保存聊天记录
+}
+
 void ChatMessage::SendTextContent()
 {
-    CustomMessageWidget* MessWidget = new CustomMessageWidget(ui.tab_MessageContent);
-    MessWidget->SetText(ui.TexEditContent->toPlainText(), true);
-    ui.tab_MessageContent->setCellWidget(ui.tab_MessageContent->rowCount() - 1, 0, MessWidget);
-    /*
-            发送消息
-    
-    
-    */
-
-
-
+	if (!ui.TexEditContent->toPlainText().isEmpty())
+		m_ProMsg->SendMsg(ui.TexEditContent->toPlainText()); 
 }
 
 
+void ChatMessage::SwitchFriend(QListWidgetItem *current, QListWidgetItem *previous)
+{
+	//切换到之前的聊天
+}
 
 QFont g_Message_Font;
 CustomMessageWidget::CustomMessageWidget(QWidget* parent /*= 0*/) : QWidget(parent),
@@ -107,7 +159,6 @@ CustomMessageWidget::CustomMessageWidget(QWidget* parent /*= 0*/) : QWidget(pare
 {
 	g_Message_Font.setFamily("Microsoft YaHei");
 	g_Message_Font.setPixelSize(18);  //此处应该根据系统的分辨率调整
-
 }
 
 CustomMessageWidget::~CustomMessageWidget()

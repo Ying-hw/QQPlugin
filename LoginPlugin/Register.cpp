@@ -7,8 +7,7 @@
 #define PASSWORDLENGTH  10
 #define    CONDIG_IMAGE_FILE   "../Data/Config/Avatar.jpg"
 
-Register::Register(QWidget *parent)
-	: QWidget(parent), m_pArrayAnimation{}, m_widgetLocation(-1)
+Register::Register(QWidget *parent) : AbstractWidget(parent), m_pArrayAnimation{}, m_widgetLocation(-1)
 {
 	ui.setupUi(this);
 	connect(ui.BtnReturn, &QPushButton::clicked, [parent](){

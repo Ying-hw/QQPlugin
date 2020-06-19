@@ -1,14 +1,18 @@
 #include "stdafx.h"
 #include "MacroDefine.h"
 #include "FriendList.h"
+#include "ProsessMessage.h"
 #include <QBitmap>
 #include <QToolButton>
 #include <QGroupBox>
 
+FriendList* g_FriendList = NULL;
+
 FriendList::FriendList(QWidget *parent)
-	: QWidget(parent), m_pUserNumber(nullptr)
+	: AbstractWidget(parent), m_pUserNumber(nullptr)
 {
 	ui.setupUi(this);
+	g_FriendList = this;
 	ui.list_Space->hide();
 	ui.Friend_List->hide();
 	const QString* strUserName = (QString *)GET_MESSAGE(0);
@@ -16,6 +20,9 @@ FriendList::FriendList(QWidget *parent)
 	ui.labUserName->setText(*strUserName);
 	delete strUserName;
 	strUserName = nullptr; 
+	QHostAddress host("192.168.1.17");
+	ProsessMessage* promess = new ProsessMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
+	SEND_SIGNAL(Signal_::INITIALIZENETWORK, promess);
 	InitFriendList();
 	InitGroupList();
 	InitQQSpaceList(); 
@@ -92,7 +99,7 @@ void FriendList::InitFriendList()
 	QPixmap pix;
 	if (!data.m_lstAllData.isEmpty()) {
 		QGroupBox* group = new QGroupBox(ui.Friend_List);
-		QVBoxLayout* layout = new QVBoxLayout(group);
+		QHBoxLayout* layout = new QHBoxLayout(group);
 		layout->setMargin(20);
 		layout->setAlignment(Qt::AlignLeft);
 		for (int i = 0; i < data.m_lstAllData.size(); i++) {
@@ -111,6 +118,7 @@ void FriendList::InitFriendList()
 				connect(pToolBu, SIGNAL(clicked()), this, SLOT(StartChat()));
 				m_mapFriend[pToolBu] = friendata.m_lstAllData[0]["USER_ACCOUNT"].toString();
 				layout->addWidget(pToolBu);
+				group->setLayout(layout);
 			}
 		}
 		ui.Friend_List->addItem((QWidget*)group, QString::fromLocal8Bit("好友列表"));
@@ -124,7 +132,7 @@ void FriendList::InitGroupList()
 	QPixmap pix;
 	if (!groupdata.m_lstAllData.isEmpty()) {
 		QGroupBox* group = new QGroupBox(ui.Friend_List);
-		QVBoxLayout* layout = new QVBoxLayout(group);
+		QHBoxLayout* layout = new QHBoxLayout(group);
 		layout->setMargin(20);
 		layout->setAlignment(Qt::AlignLeft);
 		for (int i = 0; i < groupdata.m_lstAllData.size(); i++) {
@@ -141,6 +149,7 @@ void FriendList::InitGroupList()
 				connect(pToolBu, SIGNAL(clicked()), this, SLOT(StartGroupChat()));
 				m_mapGroup[pToolBu] = groupdata.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
 				layout->addWidget(pToolBu);
+				group->setLayout(layout);
 			}
 		}
 		ui.Friend_List->addItem((QWidget*)group, QString::fromLocal8Bit("群组"));
@@ -158,7 +167,7 @@ void FriendList::InitQQSpaceList()
 }
 
 QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
-{
+{	
 	if (src.isNull()) 
 		return QPixmap();
 	QSize size(2 * radius, 2 * radius);
@@ -177,15 +186,21 @@ QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
 void FriendList::StartChat()
 {
 	QToolButton* pTgButton = qobject_cast<QToolButton*>(sender());
-	SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), true); 
-	//打开聊天界面，双方号码，昵称，头像
-	SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin", true);
+	Send_MessageThread("ChatMessagePlugin","ChatMessagePlugin" ,SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), pTgButton, true)); //参数为本人账号，对方账号，是否为单聊
+	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
+	{
+		//打开聊天界面，双方号码，昵称，头像
+		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+	}
 }
 
 void FriendList::StartGroupChat()
 {	
 	QToolButton* pTgButton= qobject_cast<QToolButton*>(sender());
-	SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), false);
-	//群号码，名称，成员，以及详细信息，以及所有人的信息
-	SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), pTgButton, false));//参数为本人账号，对方账号，是否为单聊
+	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
+	{
+		//群号码，名称，成员，以及详细信息，以及所有人的信息
+		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+	}
 }

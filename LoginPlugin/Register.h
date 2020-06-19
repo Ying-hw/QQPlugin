@@ -5,15 +5,13 @@
 #include "ui_Register.h"
 #include "MacroDefine.h"
 #include "SqlStatementDefine.h"
-#include <QPropertyAnimation>
-#include <QSequentialAnimationGroup>
-
+#include "AbstractWidget.h"
 
 enum GenDer { MAN, WOMAN };
 enum StackedWidgetPage { USERINFO,IDENTIFY,ACCOUNT };
 enum forwordNext { FORWORD,NEXT };
 
-class Register : public QWidget
+class Register : public AbstractWidget
 {
 	Q_OBJECT
 

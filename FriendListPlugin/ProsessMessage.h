@@ -1,11 +1,16 @@
 #ifndef  PROCESSMASSAGE_H__
 #define  PROCESSMASSAGE_H__
-#include "NetWork.h"
-class ProsessMessage : public NetWork
+#include "AbstractNetWork.h"
+class ProsessMessage : public AbstractNetWork
 {
 public:
-	ProsessMessage(QObject* parent = 0);
-private:
+	ProsessMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent = 0);
+	~ProsessMessage();
+	int RecvMessage();
+	
+	/// \brief 解析协议
+	/// \param[in] protocol 原协议内容
+	void AnalysisProtocol(QByteArray& protocol);
 
 };
 

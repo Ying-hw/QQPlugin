@@ -12,3 +12,6 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QHostAddress>
+#include <QTimer>
+#include <QLibrary>

@@ -37,7 +37,7 @@ namespace protobuf_NetProtocConfig_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[4];
+  static const ::google::protobuf::internal::ParseTable schema[5];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -51,11 +51,14 @@ void InitDefaultsUserImpl();
 void InitDefaultsUser();
 void InitDefaultsChatRecord_GroupImpl();
 void InitDefaultsChatRecord_Group();
+void InitDefaultsprotocolTypeImpl();
+void InitDefaultsprotocolType();
 inline void InitDefaults() {
   InitDefaultsChatRecord();
   InitDefaultsUser_loginUser();
   InitDefaultsUser();
   InitDefaultsChatRecord_Group();
+  InitDefaultsprotocolType();
 }
 }  // namespace protobuf_NetProtocConfig_2eproto
 class ChatRecord;
@@ -70,6 +73,9 @@ extern UserDefaultTypeInternal _User_default_instance_;
 class User_loginUser;
 class User_loginUserDefaultTypeInternal;
 extern User_loginUserDefaultTypeInternal _User_loginUser_default_instance_;
+class protocolType;
+class protocolTypeDefaultTypeInternal;
+extern protocolTypeDefaultTypeInternal _protocolType_default_instance_;
 
 enum ChatRecord_contenttype {
   ChatRecord_contenttype_file = 0,
@@ -114,6 +120,51 @@ inline bool ChatRecord_Group_contenttype_Parse(
     const ::std::string& name, ChatRecord_Group_contenttype* value) {
   return ::google::protobuf::internal::ParseNamedEnum<ChatRecord_Group_contenttype>(
     ChatRecord_Group_contenttype_descriptor(), name, value);
+}
+enum protocolType_Type {
+  protocolType_Type_tcp = 0,
+  protocolType_Type_udp = 1,
+  protocolType_Type_http = 2,
+  protocolType_Type_smtp = 3,
+  protocolType_Type_ftp = 4,
+  protocolType_Type_protocolType_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  protocolType_Type_protocolType_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool protocolType_Type_IsValid(int value);
+const protocolType_Type protocolType_Type_Type_MIN = protocolType_Type_tcp;
+const protocolType_Type protocolType_Type_Type_MAX = protocolType_Type_ftp;
+const int protocolType_Type_Type_ARRAYSIZE = protocolType_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* protocolType_Type_descriptor();
+inline const ::std::string& protocolType_Type_Name(protocolType_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    protocolType_Type_descriptor(), value);
+}
+inline bool protocolType_Type_Parse(
+    const ::std::string& name, protocolType_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<protocolType_Type>(
+    protocolType_Type_descriptor(), name, value);
+}
+enum protocolType_Chat_OneorMultiple {
+  protocolType_Chat_OneorMultiple_one = 0,
+  protocolType_Chat_OneorMultiple_multiple = 1,
+  protocolType_Chat_OneorMultiple_protocolType_Chat_OneorMultiple_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  protocolType_Chat_OneorMultiple_protocolType_Chat_OneorMultiple_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool protocolType_Chat_OneorMultiple_IsValid(int value);
+const protocolType_Chat_OneorMultiple protocolType_Chat_OneorMultiple_Chat_OneorMultiple_MIN = protocolType_Chat_OneorMultiple_one;
+const protocolType_Chat_OneorMultiple protocolType_Chat_OneorMultiple_Chat_OneorMultiple_MAX = protocolType_Chat_OneorMultiple_multiple;
+const int protocolType_Chat_OneorMultiple_Chat_OneorMultiple_ARRAYSIZE = protocolType_Chat_OneorMultiple_Chat_OneorMultiple_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* protocolType_Chat_OneorMultiple_descriptor();
+inline const ::std::string& protocolType_Chat_OneorMultiple_Name(protocolType_Chat_OneorMultiple value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    protocolType_Chat_OneorMultiple_descriptor(), value);
+}
+inline bool protocolType_Chat_OneorMultiple_Parse(
+    const ::std::string& name, protocolType_Chat_OneorMultiple* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<protocolType_Chat_OneorMultiple>(
+    protocolType_Chat_OneorMultiple_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -227,53 +278,49 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
-  // repeated uint64 time = 1;
-  int time_size() const;
+  // bytes content = 3;
+  void clear_content();
+  static const int kContentFieldNumber = 3;
+  const ::std::string& content() const;
+  void set_content(const ::std::string& value);
+  #if LANG_CXX11
+  void set_content(::std::string&& value);
+  #endif
+  void set_content(const char* value);
+  void set_content(const void* value, size_t size);
+  ::std::string* mutable_content();
+  ::std::string* release_content();
+  void set_allocated_content(::std::string* content);
+
+  // bytes targetNumber = 5;
+  void clear_targetnumber();
+  static const int kTargetNumberFieldNumber = 5;
+  const ::std::string& targetnumber() const;
+  void set_targetnumber(const ::std::string& value);
+  #if LANG_CXX11
+  void set_targetnumber(::std::string&& value);
+  #endif
+  void set_targetnumber(const char* value);
+  void set_targetnumber(const void* value, size_t size);
+  ::std::string* mutable_targetnumber();
+  ::std::string* release_targetnumber();
+  void set_allocated_targetnumber(::std::string* targetnumber);
+
+  // uint64 time = 1;
   void clear_time();
   static const int kTimeFieldNumber = 1;
-  ::google::protobuf::uint64 time(int index) const;
-  void set_time(int index, ::google::protobuf::uint64 value);
-  void add_time(::google::protobuf::uint64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-      time() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-      mutable_time();
+  ::google::protobuf::uint64 time() const;
+  void set_time(::google::protobuf::uint64 value);
 
-  // repeated .ChatRecord.contenttype type = 3;
-  int type_size() const;
+  // .ChatRecord.contenttype type = 2;
   void clear_type();
-  static const int kTypeFieldNumber = 3;
-  ::ChatRecord_contenttype type(int index) const;
-  void set_type(int index, ::ChatRecord_contenttype value);
-  void add_type(::ChatRecord_contenttype value);
-  const ::google::protobuf::RepeatedField<int>& type() const;
-  ::google::protobuf::RepeatedField<int>* mutable_type();
+  static const int kTypeFieldNumber = 2;
+  ::ChatRecord_contenttype type() const;
+  void set_type(::ChatRecord_contenttype value);
 
-  // repeated bytes content = 4;
-  int content_size() const;
-  void clear_content();
-  static const int kContentFieldNumber = 4;
-  const ::std::string& content(int index) const;
-  ::std::string* mutable_content(int index);
-  void set_content(int index, const ::std::string& value);
-  #if LANG_CXX11
-  void set_content(int index, ::std::string&& value);
-  #endif
-  void set_content(int index, const char* value);
-  void set_content(int index, const void* value, size_t size);
-  ::std::string* add_content();
-  void add_content(const ::std::string& value);
-  #if LANG_CXX11
-  void add_content(::std::string&& value);
-  #endif
-  void add_content(const char* value);
-  void add_content(const void* value, size_t size);
-  const ::google::protobuf::RepeatedPtrField< ::std::string>& content() const;
-  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_content();
-
-  // bool isSelf = 5;
+  // bool isSelf = 4;
   void clear_isself();
-  static const int kIsSelfFieldNumber = 5;
+  static const int kIsSelfFieldNumber = 4;
   bool isself() const;
   void set_isself(bool value);
 
@@ -281,11 +328,10 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > time_;
-  mutable int _time_cached_byte_size_;
-  ::google::protobuf::RepeatedField<int> type_;
-  mutable int _type_cached_byte_size_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> content_;
+  ::google::protobuf::internal::ArenaStringPtr content_;
+  ::google::protobuf::internal::ArenaStringPtr targetnumber_;
+  ::google::protobuf::uint64 time_;
+  int type_;
   bool isself_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
@@ -624,85 +670,262 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
 
   // accessors -------------------------------------------------------
 
-  // repeated uint64 currtime = 1;
-  int currtime_size() const;
-  void clear_currtime();
-  static const int kCurrtimeFieldNumber = 1;
-  ::google::protobuf::uint64 currtime(int index) const;
-  void set_currtime(int index, ::google::protobuf::uint64 value);
-  void add_currtime(::google::protobuf::uint64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-      currtime() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-      mutable_currtime();
-
-  // repeated bytes account = 2;
-  int account_size() const;
+  // bytes account = 2;
   void clear_account();
   static const int kAccountFieldNumber = 2;
-  const ::std::string& account(int index) const;
-  ::std::string* mutable_account(int index);
-  void set_account(int index, const ::std::string& value);
+  const ::std::string& account() const;
+  void set_account(const ::std::string& value);
   #if LANG_CXX11
-  void set_account(int index, ::std::string&& value);
+  void set_account(::std::string&& value);
   #endif
-  void set_account(int index, const char* value);
-  void set_account(int index, const void* value, size_t size);
-  ::std::string* add_account();
-  void add_account(const ::std::string& value);
-  #if LANG_CXX11
-  void add_account(::std::string&& value);
-  #endif
-  void add_account(const char* value);
-  void add_account(const void* value, size_t size);
-  const ::google::protobuf::RepeatedPtrField< ::std::string>& account() const;
-  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_account();
+  void set_account(const char* value);
+  void set_account(const void* value, size_t size);
+  ::std::string* mutable_account();
+  ::std::string* release_account();
+  void set_allocated_account(::std::string* account);
 
-  // repeated .ChatRecord_Group.contenttype type = 3;
-  int type_size() const;
-  void clear_type();
-  static const int kTypeFieldNumber = 3;
-  ::ChatRecord_Group_contenttype type(int index) const;
-  void set_type(int index, ::ChatRecord_Group_contenttype value);
-  void add_type(::ChatRecord_Group_contenttype value);
-  const ::google::protobuf::RepeatedField<int>& type() const;
-  ::google::protobuf::RepeatedField<int>* mutable_type();
-
-  // repeated bytes content = 4;
-  int content_size() const;
+  // bytes content = 4;
   void clear_content();
   static const int kContentFieldNumber = 4;
-  const ::std::string& content(int index) const;
-  ::std::string* mutable_content(int index);
-  void set_content(int index, const ::std::string& value);
+  const ::std::string& content() const;
+  void set_content(const ::std::string& value);
   #if LANG_CXX11
-  void set_content(int index, ::std::string&& value);
+  void set_content(::std::string&& value);
   #endif
-  void set_content(int index, const char* value);
-  void set_content(int index, const void* value, size_t size);
-  ::std::string* add_content();
-  void add_content(const ::std::string& value);
+  void set_content(const char* value);
+  void set_content(const void* value, size_t size);
+  ::std::string* mutable_content();
+  ::std::string* release_content();
+  void set_allocated_content(::std::string* content);
+
+  // bytes targetNumber = 5;
+  void clear_targetnumber();
+  static const int kTargetNumberFieldNumber = 5;
+  const ::std::string& targetnumber() const;
+  void set_targetnumber(const ::std::string& value);
   #if LANG_CXX11
-  void add_content(::std::string&& value);
+  void set_targetnumber(::std::string&& value);
   #endif
-  void add_content(const char* value);
-  void add_content(const void* value, size_t size);
-  const ::google::protobuf::RepeatedPtrField< ::std::string>& content() const;
-  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_content();
+  void set_targetnumber(const char* value);
+  void set_targetnumber(const void* value, size_t size);
+  ::std::string* mutable_targetnumber();
+  ::std::string* release_targetnumber();
+  void set_allocated_targetnumber(::std::string* targetnumber);
+
+  // uint64 currtime = 1;
+  void clear_currtime();
+  static const int kCurrtimeFieldNumber = 1;
+  ::google::protobuf::uint64 currtime() const;
+  void set_currtime(::google::protobuf::uint64 value);
+
+  // .ChatRecord_Group.contenttype type = 3;
+  void clear_type();
+  static const int kTypeFieldNumber = 3;
+  ::ChatRecord_Group_contenttype type() const;
+  void set_type(::ChatRecord_Group_contenttype value);
 
   // @@protoc_insertion_point(class_scope:ChatRecord_Group)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > currtime_;
-  mutable int _currtime_cached_byte_size_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> account_;
-  ::google::protobuf::RepeatedField<int> type_;
-  mutable int _type_cached_byte_size_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> content_;
+  ::google::protobuf::internal::ArenaStringPtr account_;
+  ::google::protobuf::internal::ArenaStringPtr content_;
+  ::google::protobuf::internal::ArenaStringPtr targetnumber_;
+  ::google::protobuf::uint64 currtime_;
+  int type_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_GroupImpl();
+};
+// -------------------------------------------------------------------
+
+class protocolType : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:protocolType) */ {
+ public:
+  protocolType();
+  virtual ~protocolType();
+
+  protocolType(const protocolType& from);
+
+  inline protocolType& operator=(const protocolType& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  protocolType(protocolType&& from) noexcept
+    : protocolType() {
+    *this = ::std::move(from);
+  }
+
+  inline protocolType& operator=(protocolType&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const protocolType& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const protocolType* internal_default_instance() {
+    return reinterpret_cast<const protocolType*>(
+               &_protocolType_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    4;
+
+  void Swap(protocolType* other);
+  friend void swap(protocolType& a, protocolType& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline protocolType* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  protocolType* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const protocolType& from);
+  void MergeFrom(const protocolType& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(protocolType* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  typedef protocolType_Type Type;
+  static const Type tcp =
+    protocolType_Type_tcp;
+  static const Type udp =
+    protocolType_Type_udp;
+  static const Type http =
+    protocolType_Type_http;
+  static const Type smtp =
+    protocolType_Type_smtp;
+  static const Type ftp =
+    protocolType_Type_ftp;
+  static inline bool Type_IsValid(int value) {
+    return protocolType_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    protocolType_Type_Type_MIN;
+  static const Type Type_MAX =
+    protocolType_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    protocolType_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return protocolType_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return protocolType_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return protocolType_Type_Parse(name, value);
+  }
+
+  typedef protocolType_Chat_OneorMultiple Chat_OneorMultiple;
+  static const Chat_OneorMultiple one =
+    protocolType_Chat_OneorMultiple_one;
+  static const Chat_OneorMultiple multiple =
+    protocolType_Chat_OneorMultiple_multiple;
+  static inline bool Chat_OneorMultiple_IsValid(int value) {
+    return protocolType_Chat_OneorMultiple_IsValid(value);
+  }
+  static const Chat_OneorMultiple Chat_OneorMultiple_MIN =
+    protocolType_Chat_OneorMultiple_Chat_OneorMultiple_MIN;
+  static const Chat_OneorMultiple Chat_OneorMultiple_MAX =
+    protocolType_Chat_OneorMultiple_Chat_OneorMultiple_MAX;
+  static const int Chat_OneorMultiple_ARRAYSIZE =
+    protocolType_Chat_OneorMultiple_Chat_OneorMultiple_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Chat_OneorMultiple_descriptor() {
+    return protocolType_Chat_OneorMultiple_descriptor();
+  }
+  static inline const ::std::string& Chat_OneorMultiple_Name(Chat_OneorMultiple value) {
+    return protocolType_Chat_OneorMultiple_Name(value);
+  }
+  static inline bool Chat_OneorMultiple_Parse(const ::std::string& name,
+      Chat_OneorMultiple* value) {
+    return protocolType_Chat_OneorMultiple_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // repeated .ChatRecord chatContent = 3;
+  int chatcontent_size() const;
+  void clear_chatcontent();
+  static const int kChatContentFieldNumber = 3;
+  const ::ChatRecord& chatcontent(int index) const;
+  ::ChatRecord* mutable_chatcontent(int index);
+  ::ChatRecord* add_chatcontent();
+  ::google::protobuf::RepeatedPtrField< ::ChatRecord >*
+      mutable_chatcontent();
+  const ::google::protobuf::RepeatedPtrField< ::ChatRecord >&
+      chatcontent() const;
+
+  // repeated .ChatRecord_Group group = 4;
+  int group_size() const;
+  void clear_group();
+  static const int kGroupFieldNumber = 4;
+  const ::ChatRecord_Group& group(int index) const;
+  ::ChatRecord_Group* mutable_group(int index);
+  ::ChatRecord_Group* add_group();
+  ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >*
+      mutable_group();
+  const ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >&
+      group() const;
+
+  // .protocolType.Type type = 1;
+  void clear_type();
+  static const int kTypeFieldNumber = 1;
+  ::protocolType_Type type() const;
+  void set_type(::protocolType_Type value);
+
+  // .protocolType.Chat_OneorMultiple count = 2;
+  void clear_count();
+  static const int kCountFieldNumber = 2;
+  ::protocolType_Chat_OneorMultiple count() const;
+  void set_count(::protocolType_Chat_OneorMultiple value);
+
+  // @@protoc_insertion_point(class_scope:protocolType)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::ChatRecord > chatcontent_;
+  ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group > group_;
+  int type_;
+  int count_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
+  friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsprotocolTypeImpl();
 };
 // ===================================================================
 
@@ -715,136 +938,88 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
 #endif  // __GNUC__
 // ChatRecord
 
-// repeated uint64 time = 1;
-inline int ChatRecord::time_size() const {
-  return time_.size();
-}
+// uint64 time = 1;
 inline void ChatRecord::clear_time() {
-  time_.Clear();
+  time_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::uint64 ChatRecord::time(int index) const {
+inline ::google::protobuf::uint64 ChatRecord::time() const {
   // @@protoc_insertion_point(field_get:ChatRecord.time)
-  return time_.Get(index);
-}
-inline void ChatRecord::set_time(int index, ::google::protobuf::uint64 value) {
-  time_.Set(index, value);
-  // @@protoc_insertion_point(field_set:ChatRecord.time)
-}
-inline void ChatRecord::add_time(::google::protobuf::uint64 value) {
-  time_.Add(value);
-  // @@protoc_insertion_point(field_add:ChatRecord.time)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-ChatRecord::time() const {
-  // @@protoc_insertion_point(field_list:ChatRecord.time)
   return time_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-ChatRecord::mutable_time() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord.time)
-  return &time_;
+inline void ChatRecord::set_time(::google::protobuf::uint64 value) {
+  
+  time_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord.time)
 }
 
-// repeated .ChatRecord.contenttype type = 3;
-inline int ChatRecord::type_size() const {
-  return type_.size();
-}
+// .ChatRecord.contenttype type = 2;
 inline void ChatRecord::clear_type() {
-  type_.Clear();
+  type_ = 0;
 }
-inline ::ChatRecord_contenttype ChatRecord::type(int index) const {
+inline ::ChatRecord_contenttype ChatRecord::type() const {
   // @@protoc_insertion_point(field_get:ChatRecord.type)
-  return static_cast< ::ChatRecord_contenttype >(type_.Get(index));
+  return static_cast< ::ChatRecord_contenttype >(type_);
 }
-inline void ChatRecord::set_type(int index, ::ChatRecord_contenttype value) {
-  type_.Set(index, value);
+inline void ChatRecord::set_type(::ChatRecord_contenttype value) {
+  
+  type_ = value;
   // @@protoc_insertion_point(field_set:ChatRecord.type)
 }
-inline void ChatRecord::add_type(::ChatRecord_contenttype value) {
-  type_.Add(value);
-  // @@protoc_insertion_point(field_add:ChatRecord.type)
-}
-inline const ::google::protobuf::RepeatedField<int>&
-ChatRecord::type() const {
-  // @@protoc_insertion_point(field_list:ChatRecord.type)
-  return type_;
-}
-inline ::google::protobuf::RepeatedField<int>*
-ChatRecord::mutable_type() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord.type)
-  return &type_;
-}
 
-// repeated bytes content = 4;
-inline int ChatRecord::content_size() const {
-  return content_.size();
-}
+// bytes content = 3;
 inline void ChatRecord::clear_content() {
-  content_.Clear();
+  content_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChatRecord::content(int index) const {
+inline const ::std::string& ChatRecord::content() const {
   // @@protoc_insertion_point(field_get:ChatRecord.content)
-  return content_.Get(index);
+  return content_.GetNoArena();
 }
-inline ::std::string* ChatRecord::mutable_content(int index) {
-  // @@protoc_insertion_point(field_mutable:ChatRecord.content)
-  return content_.Mutable(index);
-}
-inline void ChatRecord::set_content(int index, const ::std::string& value) {
+inline void ChatRecord::set_content(const ::std::string& value) {
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:ChatRecord.content)
-  content_.Mutable(index)->assign(value);
 }
 #if LANG_CXX11
-inline void ChatRecord::set_content(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:ChatRecord.content)
-  content_.Mutable(index)->assign(std::move(value));
+inline void ChatRecord::set_content(::std::string&& value) {
+  
+  content_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord.content)
 }
 #endif
-inline void ChatRecord::set_content(int index, const char* value) {
+inline void ChatRecord::set_content(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  content_.Mutable(index)->assign(value);
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ChatRecord.content)
 }
-inline void ChatRecord::set_content(int index, const void* value, size_t size) {
-  content_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
+inline void ChatRecord::set_content(const void* value, size_t size) {
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:ChatRecord.content)
 }
-inline ::std::string* ChatRecord::add_content() {
-  // @@protoc_insertion_point(field_add_mutable:ChatRecord.content)
-  return content_.Add();
+inline ::std::string* ChatRecord::mutable_content() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord.content)
+  return content_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChatRecord::add_content(const ::std::string& value) {
-  content_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:ChatRecord.content)
+inline ::std::string* ChatRecord::release_content() {
+  // @@protoc_insertion_point(field_release:ChatRecord.content)
+  
+  return content_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-#if LANG_CXX11
-inline void ChatRecord::add_content(::std::string&& value) {
-  content_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:ChatRecord.content)
-}
-#endif
-inline void ChatRecord::add_content(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  content_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:ChatRecord.content)
-}
-inline void ChatRecord::add_content(const void* value, size_t size) {
-  content_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:ChatRecord.content)
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-ChatRecord::content() const {
-  // @@protoc_insertion_point(field_list:ChatRecord.content)
-  return content_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-ChatRecord::mutable_content() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord.content)
-  return &content_;
+inline void ChatRecord::set_allocated_content(::std::string* content) {
+  if (content != NULL) {
+    
+  } else {
+    
+  }
+  content_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), content);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord.content)
 }
 
-// bool isSelf = 5;
+// bool isSelf = 4;
 inline void ChatRecord::clear_isself() {
   isself_ = false;
 }
@@ -856,6 +1031,59 @@ inline void ChatRecord::set_isself(bool value) {
   
   isself_ = value;
   // @@protoc_insertion_point(field_set:ChatRecord.isSelf)
+}
+
+// bytes targetNumber = 5;
+inline void ChatRecord::clear_targetnumber() {
+  targetnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatRecord::targetnumber() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.targetNumber)
+  return targetnumber_.GetNoArena();
+}
+inline void ChatRecord::set_targetnumber(const ::std::string& value) {
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord.targetNumber)
+}
+#if LANG_CXX11
+inline void ChatRecord::set_targetnumber(::std::string&& value) {
+  
+  targetnumber_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord.targetNumber)
+}
+#endif
+inline void ChatRecord::set_targetnumber(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord.targetNumber)
+}
+inline void ChatRecord::set_targetnumber(const void* value, size_t size) {
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord.targetNumber)
+}
+inline ::std::string* ChatRecord::mutable_targetnumber() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord.targetNumber)
+  return targetnumber_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChatRecord::release_targetnumber() {
+  // @@protoc_insertion_point(field_release:ChatRecord.targetNumber)
+  
+  return targetnumber_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord::set_allocated_targetnumber(::std::string* targetnumber) {
+  if (targetnumber != NULL) {
+    
+  } else {
+    
+  }
+  targetnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), targetnumber);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord.targetNumber)
 }
 
 // -------------------------------------------------------------------
@@ -967,207 +1195,290 @@ User::login() const {
 
 // ChatRecord_Group
 
-// repeated uint64 currtime = 1;
-inline int ChatRecord_Group::currtime_size() const {
-  return currtime_.size();
-}
+// uint64 currtime = 1;
 inline void ChatRecord_Group::clear_currtime() {
-  currtime_.Clear();
+  currtime_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::uint64 ChatRecord_Group::currtime(int index) const {
+inline ::google::protobuf::uint64 ChatRecord_Group::currtime() const {
   // @@protoc_insertion_point(field_get:ChatRecord_Group.currtime)
-  return currtime_.Get(index);
-}
-inline void ChatRecord_Group::set_currtime(int index, ::google::protobuf::uint64 value) {
-  currtime_.Set(index, value);
-  // @@protoc_insertion_point(field_set:ChatRecord_Group.currtime)
-}
-inline void ChatRecord_Group::add_currtime(::google::protobuf::uint64 value) {
-  currtime_.Add(value);
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.currtime)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-ChatRecord_Group::currtime() const {
-  // @@protoc_insertion_point(field_list:ChatRecord_Group.currtime)
   return currtime_;
 }
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-ChatRecord_Group::mutable_currtime() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord_Group.currtime)
-  return &currtime_;
+inline void ChatRecord_Group::set_currtime(::google::protobuf::uint64 value) {
+  
+  currtime_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.currtime)
 }
 
-// repeated bytes account = 2;
-inline int ChatRecord_Group::account_size() const {
-  return account_.size();
-}
+// bytes account = 2;
 inline void ChatRecord_Group::clear_account() {
-  account_.Clear();
+  account_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChatRecord_Group::account(int index) const {
+inline const ::std::string& ChatRecord_Group::account() const {
   // @@protoc_insertion_point(field_get:ChatRecord_Group.account)
-  return account_.Get(index);
+  return account_.GetNoArena();
 }
-inline ::std::string* ChatRecord_Group::mutable_account(int index) {
-  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.account)
-  return account_.Mutable(index);
-}
-inline void ChatRecord_Group::set_account(int index, const ::std::string& value) {
+inline void ChatRecord_Group::set_account(const ::std::string& value) {
+  
+  account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:ChatRecord_Group.account)
-  account_.Mutable(index)->assign(value);
 }
 #if LANG_CXX11
-inline void ChatRecord_Group::set_account(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:ChatRecord_Group.account)
-  account_.Mutable(index)->assign(std::move(value));
+inline void ChatRecord_Group::set_account(::std::string&& value) {
+  
+  account_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.account)
 }
 #endif
-inline void ChatRecord_Group::set_account(int index, const char* value) {
+inline void ChatRecord_Group::set_account(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  account_.Mutable(index)->assign(value);
+  
+  account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ChatRecord_Group.account)
 }
-inline void ChatRecord_Group::set_account(int index, const void* value, size_t size) {
-  account_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
+inline void ChatRecord_Group::set_account(const void* value, size_t size) {
+  
+  account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.account)
 }
-inline ::std::string* ChatRecord_Group::add_account() {
-  // @@protoc_insertion_point(field_add_mutable:ChatRecord_Group.account)
-  return account_.Add();
+inline ::std::string* ChatRecord_Group::mutable_account() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.account)
+  return account_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChatRecord_Group::add_account(const ::std::string& value) {
-  account_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.account)
+inline ::std::string* ChatRecord_Group::release_account() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.account)
+  
+  return account_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-#if LANG_CXX11
-inline void ChatRecord_Group::add_account(::std::string&& value) {
-  account_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.account)
-}
-#endif
-inline void ChatRecord_Group::add_account(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  account_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:ChatRecord_Group.account)
-}
-inline void ChatRecord_Group::add_account(const void* value, size_t size) {
-  account_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:ChatRecord_Group.account)
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-ChatRecord_Group::account() const {
-  // @@protoc_insertion_point(field_list:ChatRecord_Group.account)
-  return account_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-ChatRecord_Group::mutable_account() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord_Group.account)
-  return &account_;
+inline void ChatRecord_Group::set_allocated_account(::std::string* account) {
+  if (account != NULL) {
+    
+  } else {
+    
+  }
+  account_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.account)
 }
 
-// repeated .ChatRecord_Group.contenttype type = 3;
-inline int ChatRecord_Group::type_size() const {
-  return type_.size();
-}
+// .ChatRecord_Group.contenttype type = 3;
 inline void ChatRecord_Group::clear_type() {
-  type_.Clear();
+  type_ = 0;
 }
-inline ::ChatRecord_Group_contenttype ChatRecord_Group::type(int index) const {
+inline ::ChatRecord_Group_contenttype ChatRecord_Group::type() const {
   // @@protoc_insertion_point(field_get:ChatRecord_Group.type)
-  return static_cast< ::ChatRecord_Group_contenttype >(type_.Get(index));
+  return static_cast< ::ChatRecord_Group_contenttype >(type_);
 }
-inline void ChatRecord_Group::set_type(int index, ::ChatRecord_Group_contenttype value) {
-  type_.Set(index, value);
+inline void ChatRecord_Group::set_type(::ChatRecord_Group_contenttype value) {
+  
+  type_ = value;
   // @@protoc_insertion_point(field_set:ChatRecord_Group.type)
 }
-inline void ChatRecord_Group::add_type(::ChatRecord_Group_contenttype value) {
-  type_.Add(value);
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.type)
-}
-inline const ::google::protobuf::RepeatedField<int>&
-ChatRecord_Group::type() const {
-  // @@protoc_insertion_point(field_list:ChatRecord_Group.type)
-  return type_;
-}
-inline ::google::protobuf::RepeatedField<int>*
-ChatRecord_Group::mutable_type() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord_Group.type)
-  return &type_;
-}
 
-// repeated bytes content = 4;
-inline int ChatRecord_Group::content_size() const {
-  return content_.size();
-}
+// bytes content = 4;
 inline void ChatRecord_Group::clear_content() {
-  content_.Clear();
+  content_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChatRecord_Group::content(int index) const {
+inline const ::std::string& ChatRecord_Group::content() const {
   // @@protoc_insertion_point(field_get:ChatRecord_Group.content)
-  return content_.Get(index);
+  return content_.GetNoArena();
 }
-inline ::std::string* ChatRecord_Group::mutable_content(int index) {
-  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.content)
-  return content_.Mutable(index);
-}
-inline void ChatRecord_Group::set_content(int index, const ::std::string& value) {
+inline void ChatRecord_Group::set_content(const ::std::string& value) {
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:ChatRecord_Group.content)
-  content_.Mutable(index)->assign(value);
 }
 #if LANG_CXX11
-inline void ChatRecord_Group::set_content(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:ChatRecord_Group.content)
-  content_.Mutable(index)->assign(std::move(value));
+inline void ChatRecord_Group::set_content(::std::string&& value) {
+  
+  content_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.content)
 }
 #endif
-inline void ChatRecord_Group::set_content(int index, const char* value) {
+inline void ChatRecord_Group::set_content(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  content_.Mutable(index)->assign(value);
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ChatRecord_Group.content)
 }
-inline void ChatRecord_Group::set_content(int index, const void* value, size_t size) {
-  content_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
+inline void ChatRecord_Group::set_content(const void* value, size_t size) {
+  
+  content_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.content)
 }
-inline ::std::string* ChatRecord_Group::add_content() {
-  // @@protoc_insertion_point(field_add_mutable:ChatRecord_Group.content)
-  return content_.Add();
+inline ::std::string* ChatRecord_Group::mutable_content() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.content)
+  return content_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChatRecord_Group::add_content(const ::std::string& value) {
-  content_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.content)
+inline ::std::string* ChatRecord_Group::release_content() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.content)
+  
+  return content_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord_Group::set_allocated_content(::std::string* content) {
+  if (content != NULL) {
+    
+  } else {
+    
+  }
+  content_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), content);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.content)
+}
+
+// bytes targetNumber = 5;
+inline void ChatRecord_Group::clear_targetnumber() {
+  targetnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatRecord_Group::targetnumber() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.targetNumber)
+  return targetnumber_.GetNoArena();
+}
+inline void ChatRecord_Group::set_targetnumber(const ::std::string& value) {
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.targetNumber)
 }
 #if LANG_CXX11
-inline void ChatRecord_Group::add_content(::std::string&& value) {
-  content_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:ChatRecord_Group.content)
+inline void ChatRecord_Group::set_targetnumber(::std::string&& value) {
+  
+  targetnumber_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.targetNumber)
 }
 #endif
-inline void ChatRecord_Group::add_content(const char* value) {
+inline void ChatRecord_Group::set_targetnumber(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  content_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:ChatRecord_Group.content)
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord_Group.targetNumber)
 }
-inline void ChatRecord_Group::add_content(const void* value, size_t size) {
-  content_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:ChatRecord_Group.content)
+inline void ChatRecord_Group::set_targetnumber(const void* value, size_t size) {
+  
+  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.targetNumber)
 }
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-ChatRecord_Group::content() const {
-  // @@protoc_insertion_point(field_list:ChatRecord_Group.content)
-  return content_;
+inline ::std::string* ChatRecord_Group::mutable_targetnumber() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.targetNumber)
+  return targetnumber_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-ChatRecord_Group::mutable_content() {
-  // @@protoc_insertion_point(field_mutable_list:ChatRecord_Group.content)
-  return &content_;
+inline ::std::string* ChatRecord_Group::release_targetnumber() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.targetNumber)
+  
+  return targetnumber_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord_Group::set_allocated_targetnumber(::std::string* targetnumber) {
+  if (targetnumber != NULL) {
+    
+  } else {
+    
+  }
+  targetnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), targetnumber);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.targetNumber)
+}
+
+// -------------------------------------------------------------------
+
+// protocolType
+
+// .protocolType.Type type = 1;
+inline void protocolType::clear_type() {
+  type_ = 0;
+}
+inline ::protocolType_Type protocolType::type() const {
+  // @@protoc_insertion_point(field_get:protocolType.type)
+  return static_cast< ::protocolType_Type >(type_);
+}
+inline void protocolType::set_type(::protocolType_Type value) {
+  
+  type_ = value;
+  // @@protoc_insertion_point(field_set:protocolType.type)
+}
+
+// .protocolType.Chat_OneorMultiple count = 2;
+inline void protocolType::clear_count() {
+  count_ = 0;
+}
+inline ::protocolType_Chat_OneorMultiple protocolType::count() const {
+  // @@protoc_insertion_point(field_get:protocolType.count)
+  return static_cast< ::protocolType_Chat_OneorMultiple >(count_);
+}
+inline void protocolType::set_count(::protocolType_Chat_OneorMultiple value) {
+  
+  count_ = value;
+  // @@protoc_insertion_point(field_set:protocolType.count)
+}
+
+// repeated .ChatRecord chatContent = 3;
+inline int protocolType::chatcontent_size() const {
+  return chatcontent_.size();
+}
+inline void protocolType::clear_chatcontent() {
+  chatcontent_.Clear();
+}
+inline const ::ChatRecord& protocolType::chatcontent(int index) const {
+  // @@protoc_insertion_point(field_get:protocolType.chatContent)
+  return chatcontent_.Get(index);
+}
+inline ::ChatRecord* protocolType::mutable_chatcontent(int index) {
+  // @@protoc_insertion_point(field_mutable:protocolType.chatContent)
+  return chatcontent_.Mutable(index);
+}
+inline ::ChatRecord* protocolType::add_chatcontent() {
+  // @@protoc_insertion_point(field_add:protocolType.chatContent)
+  return chatcontent_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::ChatRecord >*
+protocolType::mutable_chatcontent() {
+  // @@protoc_insertion_point(field_mutable_list:protocolType.chatContent)
+  return &chatcontent_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ChatRecord >&
+protocolType::chatcontent() const {
+  // @@protoc_insertion_point(field_list:protocolType.chatContent)
+  return chatcontent_;
+}
+
+// repeated .ChatRecord_Group group = 4;
+inline int protocolType::group_size() const {
+  return group_.size();
+}
+inline void protocolType::clear_group() {
+  group_.Clear();
+}
+inline const ::ChatRecord_Group& protocolType::group(int index) const {
+  // @@protoc_insertion_point(field_get:protocolType.group)
+  return group_.Get(index);
+}
+inline ::ChatRecord_Group* protocolType::mutable_group(int index) {
+  // @@protoc_insertion_point(field_mutable:protocolType.group)
+  return group_.Mutable(index);
+}
+inline ::ChatRecord_Group* protocolType::add_group() {
+  // @@protoc_insertion_point(field_add:protocolType.group)
+  return group_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >*
+protocolType::mutable_group() {
+  // @@protoc_insertion_point(field_mutable_list:protocolType.group)
+  return &group_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >&
+protocolType::group() const {
+  // @@protoc_insertion_point(field_list:protocolType.group)
+  return group_;
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1190,6 +1501,16 @@ template <> struct is_proto_enum< ::ChatRecord_Group_contenttype> : ::google::pr
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::ChatRecord_Group_contenttype>() {
   return ::ChatRecord_Group_contenttype_descriptor();
+}
+template <> struct is_proto_enum< ::protocolType_Type> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocolType_Type>() {
+  return ::protocolType_Type_descriptor();
+}
+template <> struct is_proto_enum< ::protocolType_Chat_OneorMultiple> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocolType_Chat_OneorMultiple>() {
+  return ::protocolType_Chat_OneorMultiple_descriptor();
 }
 
 }  // namespace protobuf

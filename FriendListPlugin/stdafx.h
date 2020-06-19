@@ -12,3 +12,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QAbstractSocket>
+#include <QHostInfo>
+#include <QTimer>
+#include <QLibrary>

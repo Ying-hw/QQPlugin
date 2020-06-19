@@ -1,10 +1,13 @@
 #ifndef CHATMESSAGE_H
 #define CHATMESSAGE_H
 
-#include <QWidget>
 #include "ui_ChatMessage.h"
 #include "MacroDefine.h"
+#include "ProcessChatMessage.h"
 #include "sqlPlugin.h"
+#include "AbstractWidget.h"
+#include <QToolButton>
+
 
 /// \brief 消息内容结构体
 struct Message_Content {
@@ -23,7 +26,7 @@ struct Message_Content {
 using namespace sqlPlugin;
 
 /// \brief 聊天界面功能定义
-class ChatMessage : public QWidget
+class ChatMessage : public AbstractWidget
 {
 	Q_OBJECT
 
@@ -31,6 +34,8 @@ public:
     /// \brief 构造函数
     /// \param[in] parent 父窗口
 	ChatMessage(QWidget *parent = 0);
+
+	/// \brief 析构
 	~ChatMessage();
 	
 	/// \brief 初始化聊天记录数据
@@ -40,13 +45,39 @@ public:
 	/// \brief 初始化聊天记录UI
 	/// \param[in] targetMessage 目标聊天消息结构
 	void InitMessageUI(const QMap<quint64, QList<Message_Content>>& targetContent);
+
+	/// \brief 添加聊天消息
+	/// \param[in] strMsg 消息内容
+	void SetAddMessage(QString strMsg);
+
+	/// \brief 添加聊天对象
+	/// \param[in] pToolTgt 对方信息
+	void SetAddChatTgt(QToolButton* pToolTgt);
+
+	/// \brief 接收消息
+	void OnMessage();
+
+	/// \brief 保存聊天记录
+	void SaveChatRecord();
+
+	/// \brief 绘制圆形图标头像
+	/// \param[in] src 原图形
+	/// \param[in] radius 圆角
+	/// \retval 返回绘制好的
+	QPixmap PixmapToRound(const QPixmap &src, int radius);
 private slots:
 	
     /// \brief 发送网络消息 
-    void SendTextContent();
+    void SendTextContent(); 
+
+	/// \brief 切换好友聊天
+	/// \param[in] current 当前的
+	/// \param[in] previous 之前的
+	void SwitchFriend(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
-	Ui::ChatMessage ui;
+	Ui::ChatMessage ui;		///< 界面对象
+	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 
 };
 
 /// \brief 气泡界面定义

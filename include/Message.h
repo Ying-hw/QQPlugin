@@ -62,9 +62,8 @@ template<typename index>
 				Params_Array* pArray = (Params_Array*)g_pSignal->ReturnUser(SystemUser::MESSAGE);
 				int i = 0;
 				for (i; (pArray + i)->GetParam().m_param != nullptr; i++);
-				if (index_ < i && index_ > -1) {
+				if (index_ < i && index_ > -1) 
 					return pArray[index_].GetParam().m_param;
-				}
 				return nullptr;
 			} 
 			Params_Array* m_Params;

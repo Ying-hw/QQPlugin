@@ -14,3 +14,5 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>

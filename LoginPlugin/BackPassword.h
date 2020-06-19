@@ -3,8 +3,9 @@
 
 #include "MacroDefine.h"
 #include "ui_BackPassword.h"
+#include "AbstractWidget.h"
 
-class BackPassword : public QWidget
+class BackPassword : public AbstractWidget
 {
 	Q_OBJECT
 
