@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QGroupBox>
 
+
 FriendList* g_FriendList = NULL;
 
 FriendList::FriendList(QWidget *parent)
@@ -36,60 +37,47 @@ FriendList::~FriendList()
 
 void FriendList::RecoveryChatRecord()
 {
-	ChatRecord chatrecord;
-	QMap<QString, ChatRecord> mapChat;
+	protocolType protoContent;
+	QMap<QString, protocolType> mapChat;
 	QString strSelectFriend = QString(SELECT_CHAT_CONTENT).arg(*m_pUserNumber);
 	sqlPlugin::DataStructDefine& target = GET_DATA(strSelectFriend);
 	for (int i = 0; i < target.m_lstAllData.size();i++) {
 		std::string array = QString::fromUtf8(target.m_lstAllData[i]["CHAT_RECORD"].toByteArray().data()).toStdString();
-		if (chatrecord.ParseFromString(array) && !array.empty()) {
+		if (protoContent.ParseFromString(array) && !array.empty()) {
 			QString strAccount = target.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
-			mapChat[strAccount] = chatrecord;
+			mapChat[strAccount] = protoContent;
 		}
 	}
 
-	for (QMap<QString, ChatRecord>::const_iterator it = mapChat.constBegin();
+	for (QMap<QString, protocolType>::const_iterator it = mapChat.constBegin();
 		it != mapChat.constEnd(); it++) {
 		QString strSelectUser = QString(SELECT_USER).arg(it.key());
 		sqlPlugin::DataStructDefine& data = GET_DATA(strSelectUser);
 		if (!data.m_lstAllData.isEmpty()) {
 			QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
 			QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
-			SetMessage_ListUi(strName, array);
+			SetMessage_ListUi(it.key(), strName, array, it->count());
 		}
 	}
 }
 
-void FriendList::SetMessage_ListUi(const QString& strName, const QByteArray& byteImage)
+void FriendList::SetMessage_ListUi(const QString& strNum, const QString& strName, const QByteArray& byteImage, bool isFriend)
 {
-	QWidget* pMessageWidget = new QWidget(ui.listV_Message);
-	QLabel* pImage = new QLabel(pMessageWidget);
-	pImage->setMaximumWidth(50);
-	QLabel* pLabName = new QLabel(pMessageWidget);
-	QLabel* pLabFirstMessage = new QLabel(pMessageWidget);
-	QVBoxLayout* pVBox = new QVBoxLayout(pMessageWidget);
-	QHBoxLayout* pHBox = new QHBoxLayout(pMessageWidget);
-	pVBox->addWidget(pLabName);
-	pVBox->addWidget(pLabFirstMessage);
-	pHBox->addWidget(pImage);
-	pHBox->addLayout(pVBox);  
-	pMessageWidget->setLayout(pHBox);
+	CustomToolButton* pCusBu = new CustomToolButton(ui.listV_Message);
 	QPixmap pix;
 	if (pix.loadFromData(byteImage)) {
 		QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 		newpix = PixmapToRound(newpix, 50);
-		pImage->setPixmap(pix);
-		pImage->setObjectName("person");
+		pCusBu->setIcon(newpix);
+		pCusBu->setText(strName);
+		pCusBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+		pCusBu->setAutoRaise(true);
+		isFriend ? connect(pCusBu, SIGNAL(clicked()), this, SLOT(StartChatFromMessage())) : connect(pCusBu, SIGNAL(clicked()), this, SLOT(StartGroupChatFromMessage()));
+		m_mapMesssage[pCusBu] = strNum;
 	}
-	pLabName->setText(strName);
 	QListWidgetItem* lstitem = new QListWidgetItem(ui.listV_Message);
 	ui.listV_Message->addItem(lstitem);
-	ui.listV_Message->setItemWidget(lstitem, pMessageWidget);
-}
-
-void FriendList::paintEvent(QPaintEvent *event)
-{
-	//计算未读消息的数量，并画在消息消息界面上
+	ui.listV_Message->setItemWidget(lstitem, pCusBu);
 }
 
 void FriendList::InitFriendList()
@@ -110,7 +98,7 @@ void FriendList::InitFriendList()
 			if (pix.loadFromData(arrayImage)) {
 				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 				newpix = PixmapToRound(newpix, 50);
-				QToolButton* pToolBu = new QToolButton(ui.Friend_List);
+				CustomToolButton* pToolBu = new CustomToolButton(ui.Friend_List);
 				pToolBu->setIcon(newpix);
 				pToolBu->setText(strName);
 				pToolBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -141,7 +129,7 @@ void FriendList::InitGroupList()
 			if (pix.loadFromData(arrayImage)) {
 				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 				newpix = PixmapToRound(newpix, 50);
-				QToolButton* pToolBu = new QToolButton(ui.Friend_List);
+				CustomToolButton* pToolBu = new CustomToolButton(ui.Friend_List);
 				pToolBu->setIcon(newpix);
 				pToolBu->setText(strName);
 				pToolBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -185,7 +173,7 @@ QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
 
 void FriendList::StartChat()
 {
-	QToolButton* pTgButton = qobject_cast<QToolButton*>(sender());
+	CustomToolButton* pTgButton = qobject_cast<CustomToolButton*>(sender());
 	Send_MessageThread("ChatMessagePlugin","ChatMessagePlugin" ,SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), pTgButton, true)); //参数为本人账号，对方账号，是否为单聊
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
 	{
@@ -196,7 +184,7 @@ void FriendList::StartChat()
 
 void FriendList::StartGroupChat()
 {	
-	QToolButton* pTgButton= qobject_cast<QToolButton*>(sender());
+	CustomToolButton* pTgButton= qobject_cast<CustomToolButton*>(sender());
 	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), pTgButton, false));//参数为本人账号，对方账号，是否为单聊
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
 	{
@@ -204,3 +192,57 @@ void FriendList::StartGroupChat()
 		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
 	}
 }
+
+
+void FriendList::StartChatFromMessage()
+{
+	CustomToolButton* cusToBu = qobject_cast<CustomToolButton*>(sender());
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), cusToBu, true));//参数为本人账号，对方账号，是否为单聊
+	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
+	{
+		//群号码，名称，成员，以及详细信息，以及所有人的信息
+		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+	}
+}
+
+void FriendList::StartGroupChatFromMessage()
+{
+	CustomToolButton* cusToBu = qobject_cast<CustomToolButton*>(sender());
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), cusToBu, false));//参数为本人账号，对方账号，是否为单聊
+	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
+	{
+		//群号码，名称，成员，以及详细信息，以及所有人的信息
+		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+	}
+}
+
+CustomToolButton::CustomToolButton(QWidget* parent /*= 0*/) : QToolButton(parent)
+{
+
+}
+
+CustomToolButton::~CustomToolButton()
+{
+
+}
+#define FONT_SIZE  10
+void CustomToolButton::paintEvent(QPaintEvent *event)
+{
+	QFont f("Microsoft YaHei", FONT_SIZE, QFont::Bold);
+	QPainter pa(this);
+	pa.setFont(f);
+	QPen pen(Qt::red);
+	pa.setPen(pen);
+	QPoint textPoint = this->rect().center();
+	textPoint.setX(this->rect().right() - FONT_SIZE * 3);
+	textPoint.setY(textPoint.y() - FONT_SIZE / 2);
+	pa.drawText(textPoint, m_strPaintContent);
+	QToolButton::paintEvent(event);
+}
+
+void CustomToolButton::SetPaintContent(QString strContent)
+{
+	m_strPaintContent = strContent;
+}
+
+

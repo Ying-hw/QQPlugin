@@ -6,8 +6,8 @@
 #include "ProcessChatMessage.h"
 #include "sqlPlugin.h"
 #include "AbstractWidget.h"
-#include <QToolButton>
-
+#include "../FriendListPlugin/FriendList.h"
+#include "ChatMessage_global.h"
 
 /// \brief 消息内容结构体
 struct Message_Content {
@@ -26,7 +26,7 @@ struct Message_Content {
 using namespace sqlPlugin;
 
 /// \brief 聊天界面功能定义
-class ChatMessage : public AbstractWidget
+class CHATMESSAGEPLUGIN_EXPORT ChatMessage : public AbstractWidget
 {
 	Q_OBJECT
 
@@ -40,19 +40,24 @@ public:
 	
 	/// \brief 初始化聊天记录数据
 	/// \param[in] targetMessage 目标聊天消息结构
-	void InitChatMessage(const DataStructDefine& targetMessage);
+	/// \param[in] tab 显示聊天记录的表格
+	void InitChatMessage(const DataStructDefine& targetMessage, QTableWidget* tab);
 	
 	/// \brief 初始化聊天记录UI
 	/// \param[in] targetMessage 目标聊天消息结构
-	void InitMessageUI(const QMap<quint64, QList<Message_Content>>& targetContent);
+	/// \param[in] tab 显示聊天记录的表格
+	void InitMessageUI(const QMap<quint64, QList<Message_Content>>& targetContent, QTableWidget* tab);
 
 	/// \brief 添加聊天消息
+	/// \param[in] strTgtNum 对方账号
 	/// \param[in] strMsg 消息内容
-	void SetAddMessage(QString strMsg);
+	void SetAddMessage(const QString strTgtNum, const QString strMsg);
 
 	/// \brief 添加聊天对象
 	/// \param[in] pToolTgt 对方信息
-	void SetAddChatTgt(QToolButton* pToolTgt);
+	/// \param[in] strTgtNum 对方账号
+	/// \param[in] strSelfNum 本人账号
+	void SetAddChatTgt(QToolButton* pToolTgt, const QString& strTgtNum, const QString& strSelfNum);
 
 	/// \brief 接收消息
 	void OnMessage();
@@ -77,7 +82,20 @@ private slots:
 
 private:
 	Ui::ChatMessage ui;		///< 界面对象
+	struct NumInfo
+	{
+		NumInfo() : m_unknowMessage(0), m_Friend_Group(true), m_isCurrent(false) {}
+		NumInfo(bool Friend_Group, bool isCurrent, QString& strNum, quint32 unknowMessage)
+			: m_Friend_Group(Friend_Group), m_isCurrent(isCurrent), m_strNum(strNum), m_unknowMessage(unknowMessage) {}
+		bool m_Friend_Group;
+		bool m_isCurrent;
+		QString m_strNum;
+		quint32 m_unknowMessage;
+	};
+	QString m_strSelfNum;       ///< 本人账号
 	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 
+	QMap<QString, QTableWidget *> m_mapFriend_GroupTgt; ///< 账号映射到聊天界面表格
+	QMap<CustomToolButton *, NumInfo> m_mapFriend_Group;  ///< 是单聊还是多人聊天
 };
 
 /// \brief 气泡界面定义
@@ -101,5 +119,7 @@ public:
 	QTextEdit* m_pMessageContent;    ///< 气泡
     QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
 };
+
+
 
 #endif // CHATMESSAGE_H

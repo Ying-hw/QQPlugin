@@ -43,18 +43,30 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& proto)
 			switch (protocol.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
-				g_pChatMessage->SetAddMessage(QString::fromLocal8Bit("文件："));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), QString::fromLocal8Bit("文件："));
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.chatcontent(0).content()));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), QString::fromStdString(protocol.chatcontent(0).content()));
 				break;
 			default:
 				break;
 			}
 			break;
 		case protocolType_Type_udp:
+			switch (protocol.group(0).type())
+			{
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:
+				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_image:
+				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text:
+				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_group(0)->account()), QString::fromStdString(protocol.mutable_group(0)->content()));
+				break;
+			default:
+				break;
+			}
 			break;
 		}
 	}

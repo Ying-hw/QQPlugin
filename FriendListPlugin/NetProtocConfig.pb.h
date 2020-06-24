@@ -306,6 +306,20 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_targetnumber();
   void set_allocated_targetnumber(::std::string* targetnumber);
 
+  // bytes selfNumber = 6;
+  void clear_selfnumber();
+  static const int kSelfNumberFieldNumber = 6;
+  const ::std::string& selfnumber() const;
+  void set_selfnumber(const ::std::string& value);
+  #if LANG_CXX11
+  void set_selfnumber(::std::string&& value);
+  #endif
+  void set_selfnumber(const char* value);
+  void set_selfnumber(const void* value, size_t size);
+  ::std::string* mutable_selfnumber();
+  ::std::string* release_selfnumber();
+  void set_allocated_selfnumber(::std::string* selfnumber);
+
   // uint64 time = 1;
   void clear_time();
   static const int kTimeFieldNumber = 1;
@@ -330,6 +344,7 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr content_;
   ::google::protobuf::internal::ArenaStringPtr targetnumber_;
+  ::google::protobuf::internal::ArenaStringPtr selfnumber_;
   ::google::protobuf::uint64 time_;
   int type_;
   bool isself_;
@@ -698,19 +713,19 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
   ::std::string* release_content();
   void set_allocated_content(::std::string* content);
 
-  // bytes targetNumber = 5;
-  void clear_targetnumber();
-  static const int kTargetNumberFieldNumber = 5;
-  const ::std::string& targetnumber() const;
-  void set_targetnumber(const ::std::string& value);
+  // bytes selfNumber = 5;
+  void clear_selfnumber();
+  static const int kSelfNumberFieldNumber = 5;
+  const ::std::string& selfnumber() const;
+  void set_selfnumber(const ::std::string& value);
   #if LANG_CXX11
-  void set_targetnumber(::std::string&& value);
+  void set_selfnumber(::std::string&& value);
   #endif
-  void set_targetnumber(const char* value);
-  void set_targetnumber(const void* value, size_t size);
-  ::std::string* mutable_targetnumber();
-  ::std::string* release_targetnumber();
-  void set_allocated_targetnumber(::std::string* targetnumber);
+  void set_selfnumber(const char* value);
+  void set_selfnumber(const void* value, size_t size);
+  ::std::string* mutable_selfnumber();
+  ::std::string* release_selfnumber();
+  void set_allocated_selfnumber(::std::string* selfnumber);
 
   // uint64 currtime = 1;
   void clear_currtime();
@@ -730,7 +745,7 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr account_;
   ::google::protobuf::internal::ArenaStringPtr content_;
-  ::google::protobuf::internal::ArenaStringPtr targetnumber_;
+  ::google::protobuf::internal::ArenaStringPtr selfnumber_;
   ::google::protobuf::uint64 currtime_;
   int type_;
   mutable int _cached_size_;
@@ -1086,6 +1101,59 @@ inline void ChatRecord::set_allocated_targetnumber(::std::string* targetnumber) 
   // @@protoc_insertion_point(field_set_allocated:ChatRecord.targetNumber)
 }
 
+// bytes selfNumber = 6;
+inline void ChatRecord::clear_selfnumber() {
+  selfnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatRecord::selfnumber() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.selfNumber)
+  return selfnumber_.GetNoArena();
+}
+inline void ChatRecord::set_selfnumber(const ::std::string& value) {
+  
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord.selfNumber)
+}
+#if LANG_CXX11
+inline void ChatRecord::set_selfnumber(::std::string&& value) {
+  
+  selfnumber_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord.selfNumber)
+}
+#endif
+inline void ChatRecord::set_selfnumber(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord.selfNumber)
+}
+inline void ChatRecord::set_selfnumber(const void* value, size_t size) {
+  
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord.selfNumber)
+}
+inline ::std::string* ChatRecord::mutable_selfnumber() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord.selfNumber)
+  return selfnumber_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChatRecord::release_selfnumber() {
+  // @@protoc_insertion_point(field_release:ChatRecord.selfNumber)
+  
+  return selfnumber_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord::set_allocated_selfnumber(::std::string* selfnumber) {
+  if (selfnumber != NULL) {
+    
+  } else {
+    
+  }
+  selfnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), selfnumber);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord.selfNumber)
+}
+
 // -------------------------------------------------------------------
 
 // User_loginUser
@@ -1329,57 +1397,57 @@ inline void ChatRecord_Group::set_allocated_content(::std::string* content) {
   // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.content)
 }
 
-// bytes targetNumber = 5;
-inline void ChatRecord_Group::clear_targetnumber() {
-  targetnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// bytes selfNumber = 5;
+inline void ChatRecord_Group::clear_selfnumber() {
+  selfnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& ChatRecord_Group::targetnumber() const {
-  // @@protoc_insertion_point(field_get:ChatRecord_Group.targetNumber)
-  return targetnumber_.GetNoArena();
+inline const ::std::string& ChatRecord_Group::selfnumber() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.selfNumber)
+  return selfnumber_.GetNoArena();
 }
-inline void ChatRecord_Group::set_targetnumber(const ::std::string& value) {
+inline void ChatRecord_Group::set_selfnumber(const ::std::string& value) {
   
-  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ChatRecord_Group.targetNumber)
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.selfNumber)
 }
 #if LANG_CXX11
-inline void ChatRecord_Group::set_targetnumber(::std::string&& value) {
+inline void ChatRecord_Group::set_selfnumber(::std::string&& value) {
   
-  targetnumber_.SetNoArena(
+  selfnumber_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.targetNumber)
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.selfNumber)
 }
 #endif
-inline void ChatRecord_Group::set_targetnumber(const char* value) {
+inline void ChatRecord_Group::set_selfnumber(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
-  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ChatRecord_Group.targetNumber)
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord_Group.selfNumber)
 }
-inline void ChatRecord_Group::set_targetnumber(const void* value, size_t size) {
+inline void ChatRecord_Group::set_selfnumber(const void* value, size_t size) {
   
-  targetnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  selfnumber_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.targetNumber)
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.selfNumber)
 }
-inline ::std::string* ChatRecord_Group::mutable_targetnumber() {
+inline ::std::string* ChatRecord_Group::mutable_selfnumber() {
   
-  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.targetNumber)
-  return targetnumber_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.selfNumber)
+  return selfnumber_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* ChatRecord_Group::release_targetnumber() {
-  // @@protoc_insertion_point(field_release:ChatRecord_Group.targetNumber)
+inline ::std::string* ChatRecord_Group::release_selfnumber() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.selfNumber)
   
-  return targetnumber_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return selfnumber_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChatRecord_Group::set_allocated_targetnumber(::std::string* targetnumber) {
-  if (targetnumber != NULL) {
+inline void ChatRecord_Group::set_allocated_selfnumber(::std::string* selfnumber) {
+  if (selfnumber != NULL) {
     
   } else {
     
   }
-  targetnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), targetnumber);
-  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.targetNumber)
+  selfnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), selfnumber);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.selfNumber)
 }
 
 // -------------------------------------------------------------------

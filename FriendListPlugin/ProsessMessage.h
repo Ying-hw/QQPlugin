@@ -6,6 +6,7 @@ class ProsessMessage : public AbstractNetWork
 public:
 	ProsessMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent = 0);
 	~ProsessMessage();
+
 	int RecvMessage();
 	
 	/// \brief ½âÎöĞ­Òé

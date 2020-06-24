@@ -167,6 +167,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord, content_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord, isself_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord, targetnumber_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord, selfnumber_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::User_loginUser, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -189,7 +190,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, account_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, content_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, targetnumber_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, selfnumber_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocolType, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -202,10 +203,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::ChatRecord)},
-  { 10, -1, sizeof(::User_loginUser)},
-  { 17, -1, sizeof(::User)},
-  { 23, -1, sizeof(::ChatRecord_Group)},
-  { 33, -1, sizeof(::protocolType)},
+  { 11, -1, sizeof(::User_loginUser)},
+  { 18, -1, sizeof(::User)},
+  { 24, -1, sizeof(::ChatRecord_Group)},
+  { 34, -1, sizeof(::protocolType)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -238,28 +239,29 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\025NetProtocConfig.proto\"\246\001\n\nChatRecord\022\014"
+      "\n\025NetProtocConfig.proto\"\272\001\n\nChatRecord\022\014"
       "\n\004time\030\001 \001(\004\022%\n\004type\030\002 \001(\0162\027.ChatRecord."
       "contenttype\022\017\n\007content\030\003 \001(\014\022\016\n\006isSelf\030\004"
-      " \001(\010\022\024\n\014targetNumber\030\005 \001(\014\",\n\013contenttyp"
-      "e\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text\020\002\"Z\n\004User"
-      "\022\036\n\005login\030\003 \003(\0132\017.User.loginUser\0322\n\tlogi"
-      "nUser\022\022\n\nuserNumder\030\001 \001(\014\022\021\n\tisCurrent\030\002"
-      " \001(\010\"\267\001\n\020ChatRecord_Group\022\020\n\010currtime\030\001 "
-      "\001(\004\022\017\n\007account\030\002 \001(\014\022+\n\004type\030\003 \001(\0162\035.Cha"
-      "tRecord_Group.contenttype\022\017\n\007content\030\004 \001"
-      "(\014\022\024\n\014targetNumber\030\005 \001(\014\",\n\013contenttype\022"
-      "\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text\020\002\"\211\002\n\014proto"
-      "colType\022 \n\004type\030\001 \001(\0162\022.protocolType.Typ"
-      "e\022/\n\005count\030\002 \001(\0162 .protocolType.Chat_One"
-      "orMultiple\022 \n\013chatContent\030\003 \003(\0132\013.ChatRe"
-      "cord\022 \n\005group\030\004 \003(\0132\021.ChatRecord_Group\"5"
-      "\n\004Type\022\007\n\003tcp\020\000\022\007\n\003udp\020\001\022\010\n\004http\020\002\022\010\n\004sm"
-      "tp\020\003\022\007\n\003ftp\020\004\"+\n\022Chat_OneorMultiple\022\007\n\003o"
-      "ne\020\000\022\014\n\010multiple\020\001B\002H\001b\006proto3"
+      " \001(\010\022\024\n\014targetNumber\030\005 \001(\014\022\022\n\nselfNumber"
+      "\030\006 \001(\014\",\n\013contenttype\022\010\n\004file\020\000\022\t\n\005image"
+      "\020\001\022\010\n\004text\020\002\"Z\n\004User\022\036\n\005login\030\003 \003(\0132\017.Us"
+      "er.loginUser\0322\n\tloginUser\022\022\n\nuserNumder\030"
+      "\001 \001(\014\022\021\n\tisCurrent\030\002 \001(\010\"\265\001\n\020ChatRecord_"
+      "Group\022\020\n\010currtime\030\001 \001(\004\022\017\n\007account\030\002 \001(\014"
+      "\022+\n\004type\030\003 \001(\0162\035.ChatRecord_Group.conten"
+      "ttype\022\017\n\007content\030\004 \001(\014\022\022\n\nselfNumber\030\005 \001"
+      "(\014\",\n\013contenttype\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010"
+      "\n\004text\020\002\"\211\002\n\014protocolType\022 \n\004type\030\001 \001(\0162"
+      "\022.protocolType.Type\022/\n\005count\030\002 \001(\0162 .pro"
+      "tocolType.Chat_OneorMultiple\022 \n\013chatCont"
+      "ent\030\003 \003(\0132\013.ChatRecord\022 \n\005group\030\004 \003(\0132\021."
+      "ChatRecord_Group\"5\n\004Type\022\007\n\003tcp\020\000\022\007\n\003udp"
+      "\020\001\022\010\n\004http\020\002\022\010\n\004smtp\020\003\022\007\n\003ftp\020\004\"+\n\022Chat_"
+      "OneorMultiple\022\007\n\003one\020\000\022\014\n\010multiple\020\001B\002H\001"
+      "b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 750);
+      descriptor, 768);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetProtocConfig.proto", &protobuf_RegisterTypes);
 }
@@ -380,6 +382,7 @@ const int ChatRecord::kTypeFieldNumber;
 const int ChatRecord::kContentFieldNumber;
 const int ChatRecord::kIsSelfFieldNumber;
 const int ChatRecord::kTargetNumberFieldNumber;
+const int ChatRecord::kSelfNumberFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ChatRecord::ChatRecord()
@@ -403,6 +406,10 @@ ChatRecord::ChatRecord(const ChatRecord& from)
   if (from.targetnumber().size() > 0) {
     targetnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.targetnumber_);
   }
+  selfnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.selfnumber().size() > 0) {
+    selfnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.selfnumber_);
+  }
   ::memcpy(&time_, &from.time_,
     static_cast<size_t>(reinterpret_cast<char*>(&isself_) -
     reinterpret_cast<char*>(&time_)) + sizeof(isself_));
@@ -412,6 +419,7 @@ ChatRecord::ChatRecord(const ChatRecord& from)
 void ChatRecord::SharedCtor() {
   content_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   targetnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&time_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&isself_) -
       reinterpret_cast<char*>(&time_)) + sizeof(isself_));
@@ -426,6 +434,7 @@ ChatRecord::~ChatRecord() {
 void ChatRecord::SharedDtor() {
   content_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   targetnumber_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void ChatRecord::SetCachedSize(int size) const {
@@ -459,6 +468,7 @@ void ChatRecord::Clear() {
 
   content_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   targetnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&time_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&isself_) -
       reinterpret_cast<char*>(&time_)) + sizeof(isself_));
@@ -542,6 +552,18 @@ bool ChatRecord::MergePartialFromCodedStream(
         break;
       }
 
+      // bytes selfNumber = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_selfnumber()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -596,6 +618,12 @@ void ChatRecord::SerializeWithCachedSizes(
       5, this->targetnumber(), output);
   }
 
+  // bytes selfNumber = 6;
+  if (this->selfnumber().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      6, this->selfnumber(), output);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
@@ -640,6 +668,13 @@ void ChatRecord::SerializeWithCachedSizes(
         5, this->targetnumber(), target);
   }
 
+  // bytes selfNumber = 6;
+  if (this->selfnumber().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->selfnumber(), target);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
@@ -669,6 +704,13 @@ size_t ChatRecord::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->targetnumber());
+  }
+
+  // bytes selfNumber = 6;
+  if (this->selfnumber().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->selfnumber());
   }
 
   // uint64 time = 1;
@@ -726,6 +768,10 @@ void ChatRecord::MergeFrom(const ChatRecord& from) {
 
     targetnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.targetnumber_);
   }
+  if (from.selfnumber().size() > 0) {
+
+    selfnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.selfnumber_);
+  }
   if (from.time() != 0) {
     set_time(from.time());
   }
@@ -763,6 +809,7 @@ void ChatRecord::InternalSwap(ChatRecord* other) {
   using std::swap;
   content_.Swap(&other->content_);
   targetnumber_.Swap(&other->targetnumber_);
+  selfnumber_.Swap(&other->selfnumber_);
   swap(time_, other->time_);
   swap(type_, other->type_);
   swap(isself_, other->isself_);
@@ -1307,7 +1354,7 @@ const int ChatRecord_Group::kCurrtimeFieldNumber;
 const int ChatRecord_Group::kAccountFieldNumber;
 const int ChatRecord_Group::kTypeFieldNumber;
 const int ChatRecord_Group::kContentFieldNumber;
-const int ChatRecord_Group::kTargetNumberFieldNumber;
+const int ChatRecord_Group::kSelfNumberFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ChatRecord_Group::ChatRecord_Group()
@@ -1331,9 +1378,9 @@ ChatRecord_Group::ChatRecord_Group(const ChatRecord_Group& from)
   if (from.content().size() > 0) {
     content_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.content_);
   }
-  targetnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.targetnumber().size() > 0) {
-    targetnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.targetnumber_);
+  selfnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.selfnumber().size() > 0) {
+    selfnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.selfnumber_);
   }
   ::memcpy(&currtime_, &from.currtime_,
     static_cast<size_t>(reinterpret_cast<char*>(&type_) -
@@ -1344,7 +1391,7 @@ ChatRecord_Group::ChatRecord_Group(const ChatRecord_Group& from)
 void ChatRecord_Group::SharedCtor() {
   account_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   content_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  targetnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&currtime_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&type_) -
       reinterpret_cast<char*>(&currtime_)) + sizeof(type_));
@@ -1359,7 +1406,7 @@ ChatRecord_Group::~ChatRecord_Group() {
 void ChatRecord_Group::SharedDtor() {
   account_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   content_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  targetnumber_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void ChatRecord_Group::SetCachedSize(int size) const {
@@ -1393,7 +1440,7 @@ void ChatRecord_Group::Clear() {
 
   account_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   content_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  targetnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  selfnumber_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&currtime_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&type_) -
       reinterpret_cast<char*>(&currtime_)) + sizeof(type_));
@@ -1463,12 +1510,12 @@ bool ChatRecord_Group::MergePartialFromCodedStream(
         break;
       }
 
-      // bytes targetNumber = 5;
+      // bytes selfNumber = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_targetnumber()));
+                input, this->mutable_selfnumber()));
         } else {
           goto handle_unusual;
         }
@@ -1524,10 +1571,10 @@ void ChatRecord_Group::SerializeWithCachedSizes(
       4, this->content(), output);
   }
 
-  // bytes targetNumber = 5;
-  if (this->targetnumber().size() > 0) {
+  // bytes selfNumber = 5;
+  if (this->selfnumber().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      5, this->targetnumber(), output);
+      5, this->selfnumber(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1569,11 +1616,11 @@ void ChatRecord_Group::SerializeWithCachedSizes(
         4, this->content(), target);
   }
 
-  // bytes targetNumber = 5;
-  if (this->targetnumber().size() > 0) {
+  // bytes selfNumber = 5;
+  if (this->selfnumber().size() > 0) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        5, this->targetnumber(), target);
+        5, this->selfnumber(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1607,11 +1654,11 @@ size_t ChatRecord_Group::ByteSizeLong() const {
         this->content());
   }
 
-  // bytes targetNumber = 5;
-  if (this->targetnumber().size() > 0) {
+  // bytes selfNumber = 5;
+  if (this->selfnumber().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
-        this->targetnumber());
+        this->selfnumber());
   }
 
   // uint64 currtime = 1;
@@ -1664,9 +1711,9 @@ void ChatRecord_Group::MergeFrom(const ChatRecord_Group& from) {
 
     content_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.content_);
   }
-  if (from.targetnumber().size() > 0) {
+  if (from.selfnumber().size() > 0) {
 
-    targetnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.targetnumber_);
+    selfnumber_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.selfnumber_);
   }
   if (from.currtime() != 0) {
     set_currtime(from.currtime());
@@ -1702,7 +1749,7 @@ void ChatRecord_Group::InternalSwap(ChatRecord_Group* other) {
   using std::swap;
   account_.Swap(&other->account_);
   content_.Swap(&other->content_);
-  targetnumber_.Swap(&other->targetnumber_);
+  selfnumber_.Swap(&other->selfnumber_);
   swap(currtime_, other->currtime_);
   swap(type_, other->type_);
   _internal_metadata_.Swap(&other->_internal_metadata_);

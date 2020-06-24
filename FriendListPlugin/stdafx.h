@@ -16,3 +16,4 @@
 #include <QHostInfo>
 #include <QTimer>
 #include <QLibrary>
+#include <QToolButton>

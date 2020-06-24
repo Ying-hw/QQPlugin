@@ -152,7 +152,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>MainLogicFrame.lib;libprotobufd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5Widgetsd.lib;Qt5Sqld.lib;qtmaind.lib;sqlPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MainLogicFrame.lib;libprotobufd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5Widgetsd.lib;Qt5Sqld.lib;qtmaind.lib;sqlPlugin.lib;FriendListPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtMoc>
       <ForceInclude>stdafx.h;../../%(Filename)%(Extension)</ForceInclude>

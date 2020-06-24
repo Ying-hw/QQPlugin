@@ -2,6 +2,6 @@
 #include "ChatMessage.h"
 #include "ChatMessage_global.h"
 
-extern "C" FRIENDLISTPLUGIN_EXPORT QWidget* Handle() {
+extern "C" CHATMESSAGEPLUGIN_EXPORT QWidget* Handle() {
 	return new ChatMessage();
 }
