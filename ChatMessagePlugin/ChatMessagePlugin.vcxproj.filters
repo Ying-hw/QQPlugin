@@ -50,6 +50,9 @@
     <ClCompile Include="ProcessChatMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CustomTextEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -75,5 +78,8 @@
     <QtUic Include="ChatMessage.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtMoc Include="CustomTextEdit.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

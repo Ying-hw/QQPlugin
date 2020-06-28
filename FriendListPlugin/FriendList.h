@@ -32,6 +32,8 @@ public:
 	/// \param[in] strContent 内容
 	void SetPaintContent(QString strContent);
 
+	QString& GetPaintContent();
+private:
 	QString m_strPaintContent; ///< 画的内容
 };
 
@@ -66,6 +68,12 @@ public:
 	/// \param[in] radius 圆角
 	/// \retval 返回绘制好的
 	QPixmap PixmapToRound(const QPixmap &src, int radius);
+
+	/// \brief 显示未知消息的数量
+	/// \param[in] strTgtNum 目标账号
+	/// \param[in] isFriend 是否是好友
+	void ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend);
+
 private slots:
 	/// \brief 开始聊天
 	void StartChat();

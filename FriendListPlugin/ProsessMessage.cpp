@@ -43,14 +43,26 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				protocol.chatcontent(0).targetnumber();
-				QString::fromStdString(protocol.chatcontent(0).content());
+				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), true);
 				break;
 			default:
 				break;
 			}
 			break;
 		case protocolType_Type_udp:
+			switch (protocol.group(0).type())
+			{
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:
+				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_image:
+				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text:
+				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(protocol.mutable_group(0)->account()), false);
+				break;
+			default:
+				break;
+			}
+			break;
 			break;
 		}
 	}

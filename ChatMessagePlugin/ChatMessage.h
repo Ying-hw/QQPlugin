@@ -70,15 +70,49 @@ public:
 	/// \param[in] radius 圆角
 	/// \retval 返回绘制好的
 	QPixmap PixmapToRound(const QPixmap &src, int radius);
+
 private slots:
 	
     /// \brief 发送网络消息 
-    void SendTextContent(); 
+    void SlotSendTextContent(); 
 
 	/// \brief 切换好友聊天
 	/// \param[in] current 当前的
 	/// \param[in] previous 之前的
-	void SwitchFriend(QListWidgetItem *current, QListWidgetItem *previous);
+	void SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *previous);
+
+	/// \brief 视频通话
+	void SlotBtnVedio();
+
+	/// \brief 语音通话
+	void SlotBtnVoiceChat();
+
+	/// \brief 邮件
+	void SlotBtnMail();
+
+	/// \brief 表情
+	void SlotBtnFace();
+
+	/// \brief 截图
+	void SlotBtnScreenshot();
+
+	/// \brief 震动
+	void SlotBtnVibration();
+
+	/// \brief 语音
+	void SlotBtnVoice();
+
+	/// \brief 处理绑定回车键菜单
+	/// \param[in] point 鼠标位置
+	void SlotCustomMenu(const QPoint& point);
+
+	/// \brief 点击绑定回车键槽函数
+	/// \param[in] isClicked 点击标识
+	void SlotBindEnter(bool isClicked);
+
+	/// \brief 点击绑定回车键槽函数
+	/// \param[in] isClicked 点击标识
+	void SlotRemoveBindEnter(bool isClicked);
 
 private:
 	Ui::ChatMessage ui;		///< 界面对象

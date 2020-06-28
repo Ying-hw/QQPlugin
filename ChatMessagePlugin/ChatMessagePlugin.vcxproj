@@ -236,6 +236,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChatMessage.cpp" />
+    <ClCompile Include="CustomTextEdit.cpp" />
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="NetProtocConfig.pb.cc" />
     <ClCompile Include="ProcessChatMessage.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="ChatMessage_global.h" />
     <QtMoc Include="ChatMessage.h">
     </QtMoc>
+    <QtMoc Include="CustomTextEdit.h" />
     <ClInclude Include="NetProtocConfig.pb.h" />
     <ClInclude Include="ProcessChatMessage.h" />
     <ClInclude Include="stdafx.h" />

@@ -171,6 +171,34 @@ QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
 	return image;
 }
 
+void FriendList::ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend)
+{
+	for (QMap<CustomToolButton *, QString>::iterator it = m_mapMesssage.begin();
+		it != m_mapMesssage.end();it++) {
+		if (*it == strTgtNum) {
+			if (it.key()->GetPaintContent().isEmpty())
+				it.key()->SetPaintContent(QString::number(1));
+			else {
+				bool isOk = 0;
+				int num = it.key()->GetPaintContent().toUInt(&isOk);
+				if (isOk)
+					if (num != 99)
+						it.key()->SetPaintContent(QString::number(++num));
+					else
+						it.key()->SetPaintContent("99+");
+			}
+			return;
+		}
+	}
+	QString strFriendInfo = QString(SELECT_USER).arg(strTgtNum);
+	sqlPlugin::DataStructDefine& data = GET_DATA(strFriendInfo);
+	if (!data.m_lstAllData.isEmpty()) {
+		QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
+		QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
+		SetMessage_ListUi(strTgtNum, strName, array, isFriend);
+	}
+}
+
 void FriendList::StartChat()
 {
 	CustomToolButton* pTgButton = qobject_cast<CustomToolButton*>(sender());
@@ -245,4 +273,8 @@ void CustomToolButton::SetPaintContent(QString strContent)
 	m_strPaintContent = strContent;
 }
 
+QString& CustomToolButton::GetPaintContent()
+{
+	return m_strPaintContent;
+}
 

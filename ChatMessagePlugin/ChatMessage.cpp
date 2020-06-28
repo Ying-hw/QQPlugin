@@ -3,8 +3,7 @@
 #include "ProcessChatMessage.h"
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
-#include <QPainter>
-#include <QBitmap>
+#include "CustomTextEdit.h"
 
 #define LAYOUT_MESSAEG_WIDGET   10
 
@@ -28,8 +27,25 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	SetAddChatTgt(pToolBu, *strSelfNum, *strTargetNum);
 	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strSelfNum).arg(*strTargetNum);
 	DataStructDefine& data = GET_DATA(strChat);
-    connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SendTextContent()));
-	connect(ui.LstFriend, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(SwitchFriend(QListWidgetItem *, QListWidgetItem *)));
+	ui.BtnEnter->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* pAction_enter = new QAction(QString::fromLocal8Bit("按Enter发送消息"));
+	QAction* pAction_No_Enter = new QAction(QString::fromLocal8Bit("按Ctrl + Enter发送消息"));
+	QMenu* pMenu = new QMenu(this);
+	pMenu->addAction(pAction_enter);
+	pMenu->addAction(pAction_No_Enter);
+	ui.BtnEnter->setMenu(pMenu);
+    connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SlotSendTextContent()));
+	connect(ui.LstFriend, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(SlotSwitchFriend(QListWidgetItem *, QListWidgetItem *)));
+	connect(ui.BtnFace, SIGNAL(clicked()), this, SLOT(SlotBtnFace()));
+	connect(ui.BtnMail, SIGNAL(clicked()), this, SLOT(SlotBtnMail()));
+	connect(ui.BtnScreenshot, SIGNAL(clicked()), this, SLOT(SlotBtnScreenshot()));
+	connect(ui.BtnVedio, SIGNAL(clicked()), this, SLOT(SlotBtnVedio()));
+	connect(ui.BtnVibration, SIGNAL(clicked()), this, SLOT(SlotBtnVibration()));
+	connect(ui.BtnVoice, SIGNAL(clicked()), this, SLOT(SlotBtnVoice()));
+	connect(ui.BtnVoiceChat, SIGNAL(clicked()), this, SLOT(SlotBtnVoiceChat()));
+	connect(ui.BtnEnter, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(SlotCustomMenu(const QPoint&)));
+	connect(pAction_enter, SIGNAL(toggled(bool)), this, SLOT(SlotBindEnter(bool)));
+	connect(pAction_No_Enter, SIGNAL(toggled(bool)), this, SLOT(SlotRemoveBindEnter(bool)));
 	m_mapFriend_GroupTgt[*strTargetNum] = ui.tab_MessageContent;
 	InitChatMessage(data, ui.tab_MessageContent);
 }
@@ -117,43 +133,65 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 	ui.LstFriend->addItem(pItemWidget);
 	ui.LstFriend->setItemWidget(pItemWidget, pToolTgt);
 	if (ui.LstFriend->count() > 1) {
-		QWidget* page = new QWidget();
-		page->setObjectName(QString::fromUtf8("page"));
+		QWidget* page = new QWidget(this);
+		page->setObjectName("page");
 		QGridLayout* gridLayout_7 = new QGridLayout(page);
 		gridLayout_7->setSpacing(0);
 		gridLayout_7->setContentsMargins(11, 11, 11, 11);
-		gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
+		gridLayout_7->setObjectName("gridLayout_7");
 		gridLayout_7->setContentsMargins(0, 0, 0, 0);
 		QWidget* widget_3 = new QWidget(page);
-		widget_3->setObjectName(QString::fromUtf8("widget_3"));
+		widget_3->setObjectName("widget_3");
 		QGridLayout* gridLayout = new QGridLayout(widget_3);
 		gridLayout->setSpacing(6);
 		gridLayout->setContentsMargins(11, 11, 11, 11);
-		gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+		gridLayout->setObjectName("gridLayout");
 		QLabel* labName = new QLabel(widget_3);
-		labName->setObjectName(QString::fromUtf8("labName"));
-		gridLayout->addWidget(labName, 0, 0, 1, 1);
+		labName->setObjectName("labName");
+		QHBoxLayout *horizontalLayout_2 = new QHBoxLayout();
+		horizontalLayout_2->setSpacing(6);
+		horizontalLayout_2->addWidget(labName);
 		QSpacerItem* horizontalSpacer_2 = new QSpacerItem(37, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
-		gridLayout->addItem(horizontalSpacer_2, 0, 4, 1, 1);
+		horizontalLayout_2->addItem(horizontalSpacer_2);
+		gridLayout->addLayout(horizontalLayout_2, 0, 0, 1, 1);
+		QHBoxLayout * horizontalLayout_3 = new QHBoxLayout();
+		horizontalLayout_3->setSpacing(6);
 		QPushButton* pushButton_5 = new QPushButton(widget_3);
-		pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+		connect(pushButton_5, SIGNAL(clicked()), this, SLOT(SlotBtnVedio()));
+		pushButton_5->setObjectName("pushButton_5");
 		pushButton_5->setFlat(true);
-		gridLayout->addWidget(pushButton_5, 1, 0, 1, 1);
+		QIcon icon4;
+		icon4.addFile(QString::fromUtf8("../x64/Data/Image/23_toolbar_down@2x.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_5->setIcon(icon4);
+		pushButton_5->setIconSize(QSize(20, 20));
+		horizontalLayout_3->addWidget(pushButton_5);
+
 		QPushButton* pushButton_6 = new QPushButton(widget_3);
-		pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
+		connect(pushButton_6, SIGNAL(clicked()), this, SLOT(SlotBtnVoiceChat()));
+		pushButton_6->setObjectName("pushButton_6");
 		pushButton_6->setFlat(true);
-		gridLayout->addWidget(pushButton_6, 1, 1, 1, 1);
+		QIcon icon5;
+		icon5.addFile(QString::fromUtf8("../x64/Data/Image/1104753436_toolbar_down@2x.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_6->setIcon(icon5);
+		pushButton_6->setIconSize(QSize(20, 20));
+		horizontalLayout_3->addWidget(pushButton_6);
+
 		QPushButton* pushButton_7 = new QPushButton(widget_3);
-		pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
+		connect(pushButton_7, SIGNAL(clicked()), this, SLOT(SlotBtnMail()));
+		pushButton_7->setObjectName("pushButton_7");
 		pushButton_7->setFlat(true);
-		gridLayout->addWidget(pushButton_7, 1, 2, 1, 1);
-		QPushButton* pushButton_8 = new QPushButton(widget_3);
-		pushButton_8->setObjectName(QString::fromUtf8("pushButton_8"));
-		pushButton_8->setFlat(true);
-		gridLayout->addWidget(pushButton_8, 1, 3, 1, 1);
+		QIcon icon6;
+		icon6.addFile(QString::fromUtf8("../x64/Data/Image/1_toolbar_default_down@2x.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_7->setIcon(icon6);
+		pushButton_7->setIconSize(QSize(20, 20));
+		horizontalLayout_3->addWidget(pushButton_7);
+
+		QSpacerItem* horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+		horizontalLayout_3->addItem(horizontalSpacer_4);
+		gridLayout->addLayout(horizontalLayout_3, 1, 0, 1, 1);
 		gridLayout_7->addWidget(widget_3, 0, 0, 1, 1);
 		QSplitter* splitter_3 = new QSplitter(page);
-		splitter_3->setObjectName(QString::fromUtf8("splitter_3"));
+		splitter_3->setObjectName("splitter_3");
 		splitter_3->setLineWidth(0);
 		splitter_3->setOrientation(Qt::Vertical);
 		splitter_3->setHandleWidth(0);
@@ -179,44 +217,67 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		DataStructDefine& data = GET_DATA(strChat);
 		InitChatMessage(data, tab_MessageContent);
 		QWidget* layoutWidget1 = new QWidget(splitter_3);
-		layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+		layoutWidget1->setObjectName("layoutWidget1");
 		QGridLayout* gridLayout_3 = new QGridLayout(layoutWidget1);
 		gridLayout_3->setSpacing(6);
 		gridLayout_3->setContentsMargins(11, 11, 11, 11);
-		gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+		gridLayout_3->setObjectName("gridLayout_3");
 		gridLayout_3->setVerticalSpacing(0);
 		gridLayout_3->setContentsMargins(0, 0, 0, 0);
 		QWidget* widget_2 = new QWidget(layoutWidget1);
-		widget_2->setObjectName(QString::fromUtf8("widget_2"));
-		widget_2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
+		widget_2->setObjectName("widget_2");
+		widget_2->setStyleSheet("background-color: rgb(255, 255, 255);");
 		QGridLayout* gridLayout_2 = new QGridLayout(widget_2);
 		gridLayout_2->setSpacing(6);
-		gridLayout_2->setContentsMargins(11, 11, 11, 11);
-		gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+		gridLayout_2->setObjectName("gridLayout_2");
+		gridLayout_2->setContentsMargins(0, 0, 0, 0);
 		QPushButton* pushButton = new QPushButton(widget_2);
-		pushButton->setObjectName(QString::fromUtf8("pushButton"));
+		connect(pushButton, SIGNAL(clicked()), this, SLOT(SlotBtnFace()));
+		pushButton->setObjectName("pushButton");
 		pushButton->setFlat(true);
+		QIcon icon;
+		icon.addFile(QString::fromUtf8("../x64/Data/Image/Face happy.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton->setIcon(icon);
+		pushButton->setIconSize(QSize(16, 16));
+
 		gridLayout_2->addWidget(pushButton, 0, 0, 1, 1);
 		QPushButton* pushButton_2 = new QPushButton(widget_2);
-		pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+		connect(pushButton_2, SIGNAL(clicked()), this, SLOT(SlotBtnScreenshot()));
+		pushButton_2->setObjectName("pushButton_2");
 		pushButton_2->setCheckable(false);
 		pushButton_2->setAutoRepeat(false);
 		pushButton_2->setAutoExclusive(false);
 		pushButton_2->setFlat(true);
+		QIcon icon1;
+		icon1.addFile(QString::fromUtf8("../x64/Data/Image/Clipboard cut.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_2->setIcon(icon1);
+		pushButton_2->setIconSize(QSize(16, 16));
+
 		gridLayout_2->addWidget(pushButton_2, 0, 1, 1, 1);
 		QPushButton* pushButton_3 = new QPushButton(widget_2);
-		pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+		connect(pushButton_3, SIGNAL(clicked()), this, SLOT(SlotBtnVibration()));
+		pushButton_3->setObjectName("pushButton_3");
 		pushButton_3->setFlat(true);
+		QIcon icon2;
+		icon2.addFile(QString::fromUtf8("../x64/Data/Image/My images1.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_3->setIcon(icon2);
+		pushButton_3->setIconSize(QSize(16, 16));
+		
 		gridLayout_2->addWidget(pushButton_3, 0, 2, 1, 1);
 		QPushButton* pushButton_4 = new QPushButton(widget_2);
-		pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+		connect(pushButton_4, SIGNAL(clicked()), this, SLOT(SlotBtnVoice()));
+		pushButton_4->setObjectName("pushButton_4");
 		pushButton_4->setFlat(true);
+		QIcon icon3;
+		icon3.addFile(QString::fromLocal8Bit("../x64/Data/Image/项目3.png"), QSize(), QIcon::Normal, QIcon::Off);
+		pushButton_4->setIcon(icon3);
+		pushButton_4->setIconSize(QSize(16, 16));
 		gridLayout_2->addWidget(pushButton_4, 0, 3, 1, 1);
-		QSpacerItem* horizontalSpacer = new QSpacerItem(250, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
+		QSpacerItem* horizontalSpacer = new QSpacerItem(250, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 		gridLayout_2->addItem(horizontalSpacer, 0, 4, 1, 1);
 		gridLayout_3->addWidget(widget_2, 0, 0, 1, 1);
-		QTextEdit* TexEditContent = new QTextEdit(layoutWidget1);
-		TexEditContent->setObjectName(QString::fromUtf8("TexEditContent"));
+		CustomTextEdit* TexEditContent = new CustomTextEdit(layoutWidget1);
+		TexEditContent->setObjectName("TexEditContent");
 		TexEditContent->setFrameShape(QFrame::NoFrame);
 		TexEditContent->setFrameShadow(QFrame::Raised);
 		gridLayout_3->addWidget(TexEditContent, 1, 0, 1, 1);
@@ -225,6 +286,7 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		ui.stackedWidget->addWidget(page);
 		ui.stackedWidget->setCurrentWidget(page);
 	}
+	ui.LstFriend->setCurrentItem(pItemWidget);
 }
 
 QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
@@ -267,7 +329,7 @@ void ChatMessage::SaveChatRecord()
 	//在窗口关闭的时候保存聊天记录
 }
 
-void ChatMessage::SendTextContent()
+void ChatMessage::SlotSendTextContent()
 {
 	protocolType proto;
 	CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
@@ -304,7 +366,7 @@ void ChatMessage::SendTextContent()
 }
 
 
-void ChatMessage::SwitchFriend(QListWidgetItem *current, QListWidgetItem *previous)
+void ChatMessage::SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *previous)
 {
 	//切换到之前的聊天
 	ui.stackedWidget->setCurrentIndex(ui.LstFriend->currentRow());
@@ -313,6 +375,57 @@ void ChatMessage::SwitchFriend(QListWidgetItem *current, QListWidgetItem *previo
 	for (QMap<CustomToolButton*, ChatMessage::NumInfo>::iterator it = m_mapFriend_Group.begin();it != m_mapFriend_Group.end(); it++) it->m_isCurrent = false; //全部重置
 	m_mapFriend_Group[pToolBu].m_isCurrent = true;
 	pToolBu->SetPaintContent("");
+}
+
+void ChatMessage::SlotBtnVedio()
+{
+
+}
+
+void ChatMessage::SlotBtnVoiceChat()
+{
+
+}
+
+void ChatMessage::SlotBtnMail()
+{
+
+}
+
+void ChatMessage::SlotBtnFace()
+{
+
+}
+
+void ChatMessage::SlotBtnScreenshot()
+{
+
+}
+
+void ChatMessage::SlotBtnVibration()
+{
+
+}
+
+void ChatMessage::SlotBtnVoice()
+{
+
+}
+
+void ChatMessage::SlotCustomMenu(const QPoint& point)
+{
+
+}
+
+void ChatMessage::SlotBindEnter(bool isClicked)
+{
+
+}
+
+
+void ChatMessage::SlotRemoveBindEnter(bool isClicked)
+{
+
 }
 
 QFont g_Message_Font;

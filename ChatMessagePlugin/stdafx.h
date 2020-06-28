@@ -16,3 +16,8 @@
 #include <QTimer>
 #include <QLibrary>
 #include <QToolButton>
+#include <QMimeData>
+#include <QFileIconProvider>
+#include <QBitmap>
+#include <QAction>
+#include <QMenu>
