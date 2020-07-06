@@ -15,7 +15,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	ui.TexEditContent->resize(ui.TexEditContent->width(), 50);
 	QHostAddress host("192.168.1.17");
 	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
-	SEND_SIGNAL(Signal_::INITIALIZENETWORK, m_ProMsg);
+	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
 	QString* strSelfNum = (QString *)GET_MESSAGE(0); 
 	QString* strTargetNum = (QString *)GET_MESSAGE(1);
 	CustomToolButton* pToolBu = (CustomToolButton*)GET_MESSAGE(2);
@@ -379,7 +379,7 @@ void ChatMessage::SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *pr
 
 void ChatMessage::SlotBtnVedio()
 {
-
+	
 }
 
 void ChatMessage::SlotBtnVoiceChat()

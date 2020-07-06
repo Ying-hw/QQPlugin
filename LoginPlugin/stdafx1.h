@@ -16,3 +16,4 @@
 #include <QSqlError>
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
+#include "MacroDefine.h"

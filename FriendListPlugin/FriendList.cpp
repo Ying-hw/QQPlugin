@@ -23,7 +23,7 @@ FriendList::FriendList(QWidget *parent)
 	strUserName = nullptr; 
 	QHostAddress host("192.168.1.17");
 	ProsessMessage* promess = new ProsessMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
-	SEND_SIGNAL(Signal_::INITIALIZENETWORK, promess);
+	SendSIG(Signal_::INITIALIZENETWORK, promess);
 	InitFriendList();
 	InitGroupList();
 	InitQQSpaceList(); 
@@ -203,22 +203,16 @@ void FriendList::StartChat()
 {
 	CustomToolButton* pTgButton = qobject_cast<CustomToolButton*>(sender());
 	Send_MessageThread("ChatMessagePlugin","ChatMessagePlugin" ,SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), pTgButton, true)); //参数为本人账号，对方账号，是否为单聊
-	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
-	{
-		//打开聊天界面，双方号码，昵称，头像
-		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
-	}
+	//打开聊天界面，双方号码，昵称，头像
+	SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 }
 
 void FriendList::StartGroupChat()
 {	
 	CustomToolButton* pTgButton= qobject_cast<CustomToolButton*>(sender());
 	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), pTgButton, false));//参数为本人账号，对方账号，是否为单聊
-	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
-	{
-		//群号码，名称，成员，以及详细信息，以及所有人的信息
-		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
-	}
+	//群号码，名称，成员，以及详细信息，以及所有人的信息
+	SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 }
 
 
@@ -229,7 +223,7 @@ void FriendList::StartChatFromMessage()
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
 	{
 		//群号码，名称，成员，以及详细信息，以及所有人的信息
-		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+		SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 	}
 }
 
@@ -240,7 +234,7 @@ void FriendList::StartGroupChatFromMessage()
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
 	{
 		//群号码，名称，成员，以及详细信息，以及所有人的信息
-		SEND_SIGNAL(Signal_::LOADPLUG, "ChatMessagePlugin");
+		SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 	}
 }
 

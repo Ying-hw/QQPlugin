@@ -1,0 +1,13 @@
+#include <QMediaRecorder>
+#include <QCameraInfo>
+#include <QCamera>
+#include <QMediaRecorder>
+#include <QVideoWidget>
+#include <QGraphicsVideoItem>
+#include <QCameraViewfinder>
+#include <QThread>
+#include <QQueue>
+#include <QWaitCondition>
+#include <QMutex>
+#include <QHostAddress>
+#include <QPainter>

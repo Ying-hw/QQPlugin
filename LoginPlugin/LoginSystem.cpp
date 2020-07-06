@@ -80,7 +80,7 @@ void LoginSystem::SlotBackPassWD() {
 void LoginSystem::SlotRegister() {
 	//hide();
 	//进入注册界面 
-	SEND_SIGNAL(Signal_::RELOADUI, new Register(this));
+	SendSIG(Signal_::RELOADUI, new Register(this));
 }
 
 void LoginSystem::SlotLogin() {
@@ -103,7 +103,7 @@ void LoginSystem::SlotLogin() {
 		saveUserConfig();
 		SEND_MESSAGE(new QString(UserData.m_lstAllData[0]["USER_NAME"].toString()),
 						new QString(ui.ComUserName->currentText()));
-		SEND_SIGNAL(Signal_::SWITCHPLUGIN, "FriendListPlugin");
+		SendSIG(Signal_::SWITCHPLUGIN, "FriendListPlugin");
 	} 
 	else
 		QMessageBox::warning(this, QString::fromLocal8Bit("错误"),

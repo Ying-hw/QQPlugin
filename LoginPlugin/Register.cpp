@@ -10,14 +10,14 @@
 Register::Register(QWidget *parent) : AbstractWidget(parent), m_pArrayAnimation{}, m_widgetLocation(-1)
 {
 	ui.setupUi(this);
-	connect(ui.BtnReturn, &QPushButton::clicked, [parent](){
-		SEND_SIGNAL(Signal_::RELOADUI, parent);
+	connect(ui.BtnReturn, &QPushButton::clicked, [parent, this](){
+		SendSIG(Signal_::RELOADUI, parent);
 	});
-	connect(ui.BtnReturn_2, &QPushButton::clicked, [parent]() {
-		SEND_SIGNAL(Signal_::RELOADUI, parent);
+	connect(ui.BtnReturn_2, &QPushButton::clicked, [parent, this]() {
+		SendSIG(Signal_::RELOADUI, parent);
 	});
-	connect(ui.BtnReturn_3, &QPushButton::clicked, [parent]() {
-		SEND_SIGNAL(Signal_::RELOADUI, parent);
+	connect(ui.BtnReturn_3, &QPushButton::clicked, [parent, this]() {
+		SendSIG(Signal_::RELOADUI, parent);
 	});
 	connect(ui.BtnPerious, SIGNAL(clicked()), this, SLOT(LastPage()));
 	connect(ui.BtnPerious_2, SIGNAL(clicked()), this, SLOT(LastPage()));
