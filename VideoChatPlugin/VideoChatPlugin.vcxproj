@@ -135,7 +135,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;WIN64;QT_DLL;VIDEOCHATPLUGIN_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)include;$(SolutionDir)include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtNetWork;$(QTDIR)\include\QtMultimediaWidgets;$(QTDIR)\include\QtMultimedia;$(OPENCV_PATH);$(OPENCV_PATH)\opencv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)include;$(SolutionDir)include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtNetWork;$(OPENCV_PATH);$(OPENCV_PATH)\opencv2;$(ProtobufHome);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -234,7 +234,10 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CustomVideoImage.cpp" />
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="NetProtocConfig.pb.cc" />
+    <ClCompile Include="ProcessNetWork.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -244,6 +247,9 @@
     <ClCompile Include="VideoChat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CustomVideoImage.h" />
+    <ClInclude Include="NetProtocConfig.pb.h" />
+    <ClInclude Include="ProcessNetWork.h" />
     <ClInclude Include="stdafx.h" />
     <QtMoc Include="VideoChat.h">
     </QtMoc>

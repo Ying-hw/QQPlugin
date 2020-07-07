@@ -44,8 +44,13 @@
     <ClCompile Include="VideoChat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    
-    
+    <ClCompile Include="ProcessNetWork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetProtocConfig.pb.cc" />
+    <ClCompile Include="CustomVideoImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -54,7 +59,15 @@
     <ClInclude Include="videochatplugin_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    
+    <ClInclude Include="ProcessNetWork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetProtocConfig.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomVideoImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="VideoChat.h">
