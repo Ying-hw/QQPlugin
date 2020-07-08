@@ -39,7 +39,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	connect(ui.BtnFace, SIGNAL(clicked()), this, SLOT(SlotBtnFace()));
 	connect(ui.BtnMail, SIGNAL(clicked()), this, SLOT(SlotBtnMail()));
 	connect(ui.BtnScreenshot, SIGNAL(clicked()), this, SLOT(SlotBtnScreenshot()));
-	connect(ui.BtnVedio, SIGNAL(clicked()), this, SLOT(SlotBtnVedio()));
+	connect(ui.BtnVedio, SIGNAL(clicked()), this, SLOT(SlotBtnVideo()));
 	connect(ui.BtnVibration, SIGNAL(clicked()), this, SLOT(SlotBtnVibration()));
 	connect(ui.BtnVoice, SIGNAL(clicked()), this, SLOT(SlotBtnVoice()));
 	connect(ui.BtnVoiceChat, SIGNAL(clicked()), this, SLOT(SlotBtnVoiceChat()));
@@ -52,7 +52,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 
 ChatMessage::~ChatMessage()
 { 
-	SaveChatRecord();
+
 }
 
 void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage, QTableWidget* tab)
@@ -157,7 +157,7 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		QHBoxLayout * horizontalLayout_3 = new QHBoxLayout();
 		horizontalLayout_3->setSpacing(6);
 		QPushButton* pushButton_5 = new QPushButton(widget_3);
-		connect(pushButton_5, SIGNAL(clicked()), this, SLOT(SlotBtnVedio()));
+		connect(pushButton_5, SIGNAL(clicked()), this, SLOT(SlotBtnVideo()));
 		pushButton_5->setObjectName("pushButton_5");
 		pushButton_5->setFlat(true);
 		QIcon icon4;
@@ -306,6 +306,17 @@ QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
 	return image;
 }
 
+void ChatMessage::OnClose()
+{
+	SaveChatRecord();
+}
+
+void ChatMessage::StartVideoChat(const QString& strNum)
+{
+	SEND_MESSAGE(false, m_strSelfNum, strNum);  //代表被动接受
+	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
+}
+
 void ChatMessage::OnMessage()
 {
 	QString* strSelfNumber = (QString *)GET_MESSAGE(0);
@@ -327,6 +338,7 @@ void ChatMessage::OnMessage()
 void ChatMessage::SaveChatRecord()
 {
 	//在窗口关闭的时候保存聊天记录
+
 }
 
 void ChatMessage::SlotSendTextContent()
@@ -377,14 +389,16 @@ void ChatMessage::SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *pr
 	pToolBu->SetPaintContent("");
 }
 
-void ChatMessage::SlotBtnVedio()
+void ChatMessage::SlotBtnVideo()
 {
-	
+	CustomToolButton* pTgt = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+	SEND_MESSAGE(true, m_strSelfNum, m_mapFriend_Group[pTgt].m_strNum);
+	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
 }
 
 void ChatMessage::SlotBtnVoiceChat()
 {
-
+	
 }
 
 void ChatMessage::SlotBtnMail()

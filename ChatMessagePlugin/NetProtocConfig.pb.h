@@ -37,12 +37,14 @@ namespace protobuf_NetProtocConfig_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[5];
+  static const ::google::protobuf::internal::ParseTable schema[6];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
 };
 void AddDescriptors();
+void InitDefaultsChatRecord_HeadInforImpl();
+void InitDefaultsChatRecord_HeadInfor();
 void InitDefaultsChatRecordImpl();
 void InitDefaultsChatRecord();
 void InitDefaultsUser_loginUserImpl();
@@ -54,6 +56,7 @@ void InitDefaultsChatRecord_Group();
 void InitDefaultsprotocolTypeImpl();
 void InitDefaultsprotocolType();
 inline void InitDefaults() {
+  InitDefaultsChatRecord_HeadInfor();
   InitDefaultsChatRecord();
   InitDefaultsUser_loginUser();
   InitDefaultsUser();
@@ -67,6 +70,9 @@ extern ChatRecordDefaultTypeInternal _ChatRecord_default_instance_;
 class ChatRecord_Group;
 class ChatRecord_GroupDefaultTypeInternal;
 extern ChatRecord_GroupDefaultTypeInternal _ChatRecord_Group_default_instance_;
+class ChatRecord_HeadInfor;
+class ChatRecord_HeadInforDefaultTypeInternal;
+extern ChatRecord_HeadInforDefaultTypeInternal _ChatRecord_HeadInfor_default_instance_;
 class User;
 class UserDefaultTypeInternal;
 extern UserDefaultTypeInternal _User_default_instance_;
@@ -81,12 +87,14 @@ enum ChatRecord_contenttype {
   ChatRecord_contenttype_file = 0,
   ChatRecord_contenttype_image = 1,
   ChatRecord_contenttype_text = 2,
+  ChatRecord_contenttype_video = 3,
+  ChatRecord_contenttype_folder = 4,
   ChatRecord_contenttype_ChatRecord_contenttype_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   ChatRecord_contenttype_ChatRecord_contenttype_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool ChatRecord_contenttype_IsValid(int value);
 const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MIN = ChatRecord_contenttype_file;
-const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MAX = ChatRecord_contenttype_text;
+const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MAX = ChatRecord_contenttype_folder;
 const int ChatRecord_contenttype_contenttype_ARRAYSIZE = ChatRecord_contenttype_contenttype_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ChatRecord_contenttype_descriptor();
@@ -168,6 +176,120 @@ inline bool protocolType_Chat_OneorMultiple_Parse(
 }
 // ===================================================================
 
+class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ChatRecord.HeadInfor) */ {
+ public:
+  ChatRecord_HeadInfor();
+  virtual ~ChatRecord_HeadInfor();
+
+  ChatRecord_HeadInfor(const ChatRecord_HeadInfor& from);
+
+  inline ChatRecord_HeadInfor& operator=(const ChatRecord_HeadInfor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  ChatRecord_HeadInfor(ChatRecord_HeadInfor&& from) noexcept
+    : ChatRecord_HeadInfor() {
+    *this = ::std::move(from);
+  }
+
+  inline ChatRecord_HeadInfor& operator=(ChatRecord_HeadInfor&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ChatRecord_HeadInfor& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const ChatRecord_HeadInfor* internal_default_instance() {
+    return reinterpret_cast<const ChatRecord_HeadInfor*>(
+               &_ChatRecord_HeadInfor_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    0;
+
+  void Swap(ChatRecord_HeadInfor* other);
+  friend void swap(ChatRecord_HeadInfor& a, ChatRecord_HeadInfor& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ChatRecord_HeadInfor* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  ChatRecord_HeadInfor* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const ChatRecord_HeadInfor& from);
+  void MergeFrom(const ChatRecord_HeadInfor& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(ChatRecord_HeadInfor* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bytes name = 2;
+  void clear_name();
+  static const int kNameFieldNumber = 2;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_name(::std::string&& value);
+  #endif
+  void set_name(const char* value);
+  void set_name(const void* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
+  // uint64 size = 1;
+  void clear_size();
+  static const int kSizeFieldNumber = 1;
+  ::google::protobuf::uint64 size() const;
+  void set_size(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:ChatRecord.HeadInfor)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
+  ::google::protobuf::uint64 size_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
+  friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_HeadInforImpl();
+};
+// -------------------------------------------------------------------
+
 class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ChatRecord) */ {
  public:
   ChatRecord();
@@ -203,7 +325,7 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_ChatRecord_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    0;
+    1;
 
   void Swap(ChatRecord* other);
   friend void swap(ChatRecord& a, ChatRecord& b) {
@@ -248,6 +370,8 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // nested types ----------------------------------------------------
 
+  typedef ChatRecord_HeadInfor HeadInfor;
+
   typedef ChatRecord_contenttype contenttype;
   static const contenttype file =
     ChatRecord_contenttype_file;
@@ -255,6 +379,10 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
     ChatRecord_contenttype_image;
   static const contenttype text =
     ChatRecord_contenttype_text;
+  static const contenttype video =
+    ChatRecord_contenttype_video;
+  static const contenttype folder =
+    ChatRecord_contenttype_folder;
   static inline bool contenttype_IsValid(int value) {
     return ChatRecord_contenttype_IsValid(value);
   }
@@ -320,6 +448,15 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_selfnumber();
   void set_allocated_selfnumber(::std::string* selfnumber);
 
+  // .ChatRecord.HeadInfor head = 7;
+  bool has_head() const;
+  void clear_head();
+  static const int kHeadFieldNumber = 7;
+  const ::ChatRecord_HeadInfor& head() const;
+  ::ChatRecord_HeadInfor* release_head();
+  ::ChatRecord_HeadInfor* mutable_head();
+  void set_allocated_head(::ChatRecord_HeadInfor* head);
+
   // uint64 time = 1;
   void clear_time();
   static const int kTimeFieldNumber = 1;
@@ -345,6 +482,7 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr content_;
   ::google::protobuf::internal::ArenaStringPtr targetnumber_;
   ::google::protobuf::internal::ArenaStringPtr selfnumber_;
+  ::ChatRecord_HeadInfor* head_;
   ::google::protobuf::uint64 time_;
   int type_;
   bool isself_;
@@ -389,7 +527,7 @@ class User_loginUser : public ::google::protobuf::Message /* @@protoc_insertion_
                &_User_loginUser_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(User_loginUser* other);
   friend void swap(User_loginUser& a, User_loginUser& b) {
@@ -503,7 +641,7 @@ class User : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
                &_User_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(User* other);
   friend void swap(User& a, User& b) {
@@ -610,7 +748,7 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
                &_ChatRecord_Group_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(ChatRecord_Group* other);
   friend void swap(ChatRecord_Group& a, ChatRecord_Group& b) {
@@ -789,7 +927,7 @@ class protocolType : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_protocolType_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(protocolType* other);
   friend void swap(protocolType& a, protocolType& b) {
@@ -951,6 +1089,77 @@ class protocolType : public ::google::protobuf::Message /* @@protoc_insertion_po
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// ChatRecord_HeadInfor
+
+// uint64 size = 1;
+inline void ChatRecord_HeadInfor::clear_size() {
+  size_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 ChatRecord_HeadInfor::size() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.size)
+  return size_;
+}
+inline void ChatRecord_HeadInfor::set_size(::google::protobuf::uint64 value) {
+  
+  size_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.size)
+}
+
+// bytes name = 2;
+inline void ChatRecord_HeadInfor::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatRecord_HeadInfor::name() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.name)
+  return name_.GetNoArena();
+}
+inline void ChatRecord_HeadInfor::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.name)
+}
+#if LANG_CXX11
+inline void ChatRecord_HeadInfor::set_name(::std::string&& value) {
+  
+  name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord.HeadInfor.name)
+}
+#endif
+inline void ChatRecord_HeadInfor::set_name(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord.HeadInfor.name)
+}
+inline void ChatRecord_HeadInfor::set_name(const void* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord.HeadInfor.name)
+}
+inline ::std::string* ChatRecord_HeadInfor::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord.HeadInfor.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChatRecord_HeadInfor::release_name() {
+  // @@protoc_insertion_point(field_release:ChatRecord.HeadInfor.name)
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord_HeadInfor::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord.HeadInfor.name)
+}
+
+// -------------------------------------------------------------------
+
 // ChatRecord
 
 // uint64 time = 1;
@@ -1152,6 +1361,56 @@ inline void ChatRecord::set_allocated_selfnumber(::std::string* selfnumber) {
   }
   selfnumber_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), selfnumber);
   // @@protoc_insertion_point(field_set_allocated:ChatRecord.selfNumber)
+}
+
+// .ChatRecord.HeadInfor head = 7;
+inline bool ChatRecord::has_head() const {
+  return this != internal_default_instance() && head_ != NULL;
+}
+inline void ChatRecord::clear_head() {
+  if (GetArenaNoVirtual() == NULL && head_ != NULL) {
+    delete head_;
+  }
+  head_ = NULL;
+}
+inline const ::ChatRecord_HeadInfor& ChatRecord::head() const {
+  const ::ChatRecord_HeadInfor* p = head_;
+  // @@protoc_insertion_point(field_get:ChatRecord.head)
+  return p != NULL ? *p : *reinterpret_cast<const ::ChatRecord_HeadInfor*>(
+      &::_ChatRecord_HeadInfor_default_instance_);
+}
+inline ::ChatRecord_HeadInfor* ChatRecord::release_head() {
+  // @@protoc_insertion_point(field_release:ChatRecord.head)
+  
+  ::ChatRecord_HeadInfor* temp = head_;
+  head_ = NULL;
+  return temp;
+}
+inline ::ChatRecord_HeadInfor* ChatRecord::mutable_head() {
+  
+  if (head_ == NULL) {
+    head_ = new ::ChatRecord_HeadInfor;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatRecord.head)
+  return head_;
+}
+inline void ChatRecord::set_allocated_head(::ChatRecord_HeadInfor* head) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete head_;
+  }
+  if (head) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      head = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, head, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  head_ = head;
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord.head)
 }
 
 // -------------------------------------------------------------------
@@ -1545,6 +1804,8 @@ protocolType::group() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

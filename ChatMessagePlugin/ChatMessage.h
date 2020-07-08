@@ -71,6 +71,13 @@ public:
 	/// \retval 返回绘制好的
 	QPixmap PixmapToRound(const QPixmap &src, int radius);
 
+	/// \brief 关闭之后调用
+	void OnClose();
+
+	/// \brief 启动视频聊天
+	/// \param[in] strNum 对方账号
+	void StartVideoChat(const QString& strNum);
+
 private slots:
 	
     /// \brief 发送网络消息 
@@ -82,7 +89,7 @@ private slots:
 	void SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *previous);
 
 	/// \brief 视频通话
-	void SlotBtnVedio();
+	void SlotBtnVideo();
 
 	/// \brief 语音通话
 	void SlotBtnVoiceChat();

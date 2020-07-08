@@ -43,12 +43,15 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& proto)
 			switch (protocol.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), QString::fromLocal8Bit("文件："));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()), QString::fromLocal8Bit("文件："));
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), QString::fromStdString(protocol.chatcontent(0).content()));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(protocol.chatcontent(0).content()));
+				break;
+			case ChatRecord_contenttype::ChatRecord_contenttype_video:
+				g_pChatMessage->StartVideoChat(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()));
 				break;
 			default:
 				break;

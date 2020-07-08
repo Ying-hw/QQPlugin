@@ -14,7 +14,8 @@
 
 /// \brief 自定义按钮工具
 /// 主要把未读消息的画出来
-class FRIENDLISTPLUGIN_EXPORT CustomToolButton : public QToolButton {
+class FRIENDLISTPLUGIN_EXPORT CustomToolButton : public QToolButton 
+{
 	Q_OBJECT
 public:
 	/// \brief 构造函数
@@ -32,6 +33,7 @@ public:
 	/// \param[in] strContent 内容
 	void SetPaintContent(QString strContent);
 
+	/// \brief 获取绘图的内容
 	QString& GetPaintContent();
 private:
 	QString m_strPaintContent; ///< 画的内容

@@ -6,3 +6,7 @@
 #include <QMutex>
 #include <QHostAddress>
 #include <QPainter>
+#include <QMouseEvent>
+#include <QBitmap>
+#include <QByteArray>
+#include <QBuffer>
