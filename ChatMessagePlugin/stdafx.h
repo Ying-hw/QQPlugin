@@ -21,3 +21,4 @@
 #include <QBitmap>
 #include <QAction>
 #include <QMenu>
+#include <QDomNode>

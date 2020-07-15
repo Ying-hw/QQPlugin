@@ -24,6 +24,7 @@ struct Message_Content {
 };
 
 using namespace sqlPlugin;
+class CustomMessageWidget;
 
 /// \brief 聊天界面功能定义
 class CHATMESSAGEPLUGIN_EXPORT ChatMessage : public AbstractWidget
@@ -70,9 +71,6 @@ public:
 	/// \param[in] radius 圆角
 	/// \retval 返回绘制好的
 	QPixmap PixmapToRound(const QPixmap &src, int radius);
-
-	/// \brief 关闭之后调用
-	void OnClose();
 
 	/// \brief 启动视频聊天
 	/// \param[in] strNum 对方账号
@@ -137,11 +135,23 @@ private:
 	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 
 	QMap<QString, QTableWidget *> m_mapFriend_GroupTgt; ///< 账号映射到聊天界面表格
 	QMap<CustomToolButton *, NumInfo> m_mapFriend_Group;  ///< 是单聊还是多人聊天
+	QMap<CustomMessageWidget*, QString> m_MsgSourceNum;   ///< 聊天内容--好友账号，保存该聊天内容是哪个账号的
 };
 
 /// \brief 气泡界面定义
-class CustomMessageWidget : public QWidget {
+class CustomMessageWidget : public QWidget 
+{
+	
 public:
+	/// \brief 内容类型定义
+	enum class ContentType
+	{
+		file,   ///< 文件
+		image,  ///< 图像
+		text,   ///< 文本
+		folder  ///< 文件夹
+	};
+
     /// \brief 构造函数
     /// \param[in] parent 父窗口
 	CustomMessageWidget(QWidget* parent = 0);
@@ -150,13 +160,21 @@ public:
     /// \brief 设置消息文本内容
     /// \param[in] strContent 消息
     /// \param[in] isSelf 是否是自己的消息
-	void SetText(const QString& strContent, bool isSelf);
+	void SetText(const QString& strContent, bool isSelf, ContentType type = ContentType::text);
     
     /// \brief 计算坐标，绘制聊天气泡
     /// \paran[in] event 系统参数
 	void paintEvent(QPaintEvent* event);
 
+	/// \brief 返回消息的类型
+	/// \retval 消息类型
+	ContentType GetType();
+
+public:
 	QString m_strContent;           ///< 消息体
+	ContentType m_MsgType;          ///< 消息类型
+	QByteArray m_ArrayData;         ///< 消息缓存
+private:
 	QTextEdit* m_pMessageContent;    ///< 气泡
     QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
 };

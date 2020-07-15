@@ -110,6 +110,8 @@ void VideoChat::closeEvent(QCloseEvent *event)
 void VideoChat::RefreshImage(const QImage& image)
 {
 	m_CustomImage->drawImage(image);
+	ui.HintWidget->hide();
+	ui.LabVideoImage->show();
 }
 
 void VideoChat::SlotUpdateImage()

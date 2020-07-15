@@ -76,6 +76,10 @@ public:
 	/// \param[in] isFriend 是否是好友
 	void ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend);
 
+	/// \brief 启动视频聊天
+	/// \param[in] strNum 对方账号
+	void StartVideoChat(const QString& strNum);
+
 private slots:
 	/// \brief 开始聊天
 	void StartChat();

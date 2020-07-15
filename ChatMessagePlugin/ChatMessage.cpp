@@ -52,7 +52,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 
 ChatMessage::~ChatMessage()
 { 
-
+	SaveChatRecord();
 }
 
 void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage, QTableWidget* tab)
@@ -125,6 +125,7 @@ void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg)
 	CustomMessageWidget* MessWidget = new CustomMessageWidget();
 	MessWidget->SetText(strMsg, false);
 	m_mapFriend_GroupTgt[strTgtNum]->setCellWidget(ui.tab_MessageContent->rowCount() - 1, 0, MessWidget);
+	m_MsgSourceNum[MessWidget] = strTgtNum;
 }
 
 void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum, const QString& strTgtNum)
@@ -306,14 +307,9 @@ QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
 	return image;
 }
 
-void ChatMessage::OnClose()
-{
-	SaveChatRecord();
-}
-
 void ChatMessage::StartVideoChat(const QString& strNum)
 {
-	SEND_MESSAGE(false, m_strSelfNum, strNum);  //代表被动接受
+	SEND_MESSAGE(false, new QString(m_strSelfNum), new QString(strNum));  //代表被动接受
 	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
 }
 
@@ -338,7 +334,43 @@ void ChatMessage::OnMessage()
 void ChatMessage::SaveChatRecord()
 {
 	//在窗口关闭的时候保存聊天记录
-
+	for (QMap<QString, QTableWidget *>::iterator it = m_mapFriend_GroupTgt.begin();
+		it != m_mapFriend_GroupTgt.end(); it++) {
+		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(m_strSelfNum).arg(it.key());
+		DataStructDefine& data = GET_DATA(strChat);
+		protocolType protocol;
+		for (int i = 0; i < (*it)->rowCount(); i++) {
+			CustomMessageWidget* pMsgWidget = static_cast<CustomMessageWidget*>((*it)->cellWidget(i, 0));
+			QString strContent = QString::fromUtf8(data.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
+			if (protocol.ParseFromString(strContent.toStdString())) {
+				ChatRecord* record = protocol.add_chatcontent();
+				if (m_MsgSourceNum.contains(pMsgWidget))
+					if (m_MsgSourceNum[pMsgWidget] == m_strSelfNum) 
+						record->set_selfnumber(m_strSelfNum.toStdString());
+					else
+						record->set_targetnumber(m_MsgSourceNum[pMsgWidget].toStdString());
+				record->set_isself(m_MsgSourceNum.contains(pMsgWidget));
+				record->set_content(pMsgWidget->m_strContent.toStdString());
+				record->set_time(QDateTime::currentMSecsSinceEpoch());
+				switch (pMsgWidget->GetType())
+				{
+				case CustomMessageWidget::ContentType::file:
+					break;
+				case CustomMessageWidget::ContentType::text:
+					break;
+				case CustomMessageWidget::ContentType::image:
+					record->clear_content();
+					record->set_content(pMsgWidget->m_ArrayData.toStdString());
+					break;
+				case CustomMessageWidget::ContentType::folder:
+					break;
+				default:
+					break;
+				}
+				pMsgWidget->GetType();
+			}
+		}
+	}
 }
 
 void ChatMessage::SlotSendTextContent()
@@ -358,7 +390,8 @@ void ChatMessage::SlotSendTextContent()
 				chat->set_selfnumber(m_strSelfNum.toStdString());
 				chat->set_isself(true);
 				chat->set_type(ChatRecord_contenttype_text);  /*默认文字，后续更改*/
-				m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString()));
+				if (m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString())) > 0) 
+					SetAddMessage(m_strSelfNum, ui.TexEditContent->toPlainText());
 			}
 		}
 		else {
@@ -372,7 +405,8 @@ void ChatMessage::SlotSendTextContent()
 				pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
 				pGroup->set_content(ui.TexEditContent->toPlainText().toStdString());
 				pGroup->set_type(ChatRecord_Group_contenttype_text);  /*默认文字，后续更改*/
-				m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString()));
+				if(m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString())) > 0)
+					SetAddMessage(m_mapFriend_Group[pTgtBu].m_strNum, ui.TexEditContent->toPlainText());
 			}
 		}
 }
@@ -392,7 +426,7 @@ void ChatMessage::SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *pr
 void ChatMessage::SlotBtnVideo()
 {
 	CustomToolButton* pTgt = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
-	SEND_MESSAGE(true, m_strSelfNum, m_mapFriend_Group[pTgt].m_strNum);
+	SEND_MESSAGE(true, new QString(m_strSelfNum), new QString(m_mapFriend_Group[pTgt].m_strNum));
 	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
 }
 
@@ -455,8 +489,10 @@ CustomMessageWidget::~CustomMessageWidget()
 
 }
 
-void CustomMessageWidget::SetText(const QString& strContent, bool isSelf)
+void CustomMessageWidget::SetText(const QString& strContent, bool isSelf, ContentType type)
 {
+	
+	m_MsgType = type; 
 	m_strContent = const_cast<QString&>(strContent);
 	QPushButton* button = new QPushButton(this);
 	m_pMessageContent = new QTextEdit(this);
@@ -518,6 +554,10 @@ void CustomMessageWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+CustomMessageWidget::ContentType CustomMessageWidget::GetType()
+{
+	return m_MsgType;
+}
 
 
 

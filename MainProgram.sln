@@ -17,9 +17,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MailboxPlugin", "MailboxPlu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FtpSharesPlugin", "ftpSharesPlugin\ftpSharesPlugin.vcxproj", "{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A818F6B-1948-4AB0-BE57-435DEA5BF9A4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{8A818F6B-1948-4AB0-BE57-435DEA5BF9A4}"
 	ProjectSection(SolutionItems) = preProject
-		Win32\Data\Config\plugin.xml = Win32\Data\Config\plugin.xml
+		x64\Data\Config\plugin.xml = x64\Data\Config\plugin.xml
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginControl", "PluginControl\PluginControl.vcxproj", "{1356FA71-21E1-43D5-B748-A9286DC61FF4}"

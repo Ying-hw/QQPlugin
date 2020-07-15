@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<test>
+  <pluginconfig>
+	<plugin>
+		<name>LoginPlugin</name>
+		<path>.</path>
+		<start>1</start>
+	</plugin>
+	<plugin>
+		<name>ChatMessagePlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+	<plugin>
+		<name>FriendListPlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+	<plugin>
+		<name>FtpSharesPlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+	<plugin>
+		<name>MailboxPlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+	<plugin>
+		<name>QQSpacePlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+	<plugin>
+		<name>VideoChatPlugin</name>
+		<path>.</path>
+		<start>0</start>
+	</plugin>
+</pluginconfig>
+</test>

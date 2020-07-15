@@ -10,3 +10,4 @@
 #include <QBitmap>
 #include <QByteArray>
 #include <QBuffer>
+#include <QDomNode>

@@ -45,6 +45,9 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
 				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), true);
 				break;
+			case ChatRecord_contenttype::ChatRecord_contenttype_video:
+
+				break;
 			default:
 				break;
 			}

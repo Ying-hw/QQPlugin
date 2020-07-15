@@ -17,3 +17,7 @@
 #include <QTimer>
 #include <QLibrary>
 #include <QToolButton>
+#include <QDomNode>
+#include <QMenu>
+#include <QBitmap>
+#include <QGroupBox>

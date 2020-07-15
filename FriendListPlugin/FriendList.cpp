@@ -2,9 +2,6 @@
 #include "MacroDefine.h"
 #include "FriendList.h"
 #include "ProsessMessage.h"
-#include <QBitmap>
-#include <QToolButton>
-#include <QGroupBox>
 
 
 FriendList* g_FriendList = NULL;
@@ -28,6 +25,13 @@ FriendList::FriendList(QWidget *parent)
 	InitGroupList();
 	InitQQSpaceList(); 
 	RecoveryChatRecord();
+	ui.BtnAdd->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* pAction_enter = new QAction(QString::fromLocal8Bit("添加好友"));
+	QAction* pAction_No_Enter = new QAction(QString::fromLocal8Bit("添加群"));
+	QMenu* pMenu = new QMenu(this);
+	pMenu->addAction(pAction_enter);
+	pMenu->addAction(pAction_No_Enter);
+	ui.BtnAdd->setMenu(pMenu);
 }
 
 FriendList::~FriendList()
@@ -197,6 +201,12 @@ void FriendList::ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend)
 		QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
 		SetMessage_ListUi(strTgtNum, strName, array, isFriend);
 	}
+}
+
+void FriendList::StartVideoChat(const QString& strNum)
+{
+	SEND_MESSAGE(false, m_pUserNumber, new QString(strNum));  //代表被动接受
+	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
 }
 
 void FriendList::StartChat()
