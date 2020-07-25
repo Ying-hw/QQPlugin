@@ -50,6 +50,12 @@
     <ClCompile Include="ProsessMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AddFriend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplyJoinFriend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -72,9 +78,21 @@
     <QtUic Include="FriendList.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="AddFriend.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ApplyJoinFriend.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="FriendList.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddFriend.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ApplyJoinFriend.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

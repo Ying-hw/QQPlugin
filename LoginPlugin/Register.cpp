@@ -5,19 +5,22 @@
 
 #define ANIMATION_TIME  300
 #define PASSWORDLENGTH  10
-#define    CONDIG_IMAGE_FILE   "../Data/Config/Avatar.jpg"
+#define    CONDIG_IMAGE_FILE   "../Data/Image/Avatar.jpg"
 
-Register::Register(QWidget *parent) : AbstractWidget(parent), m_pArrayAnimation{}, m_widgetLocation(-1)
+Register::Register(AbstractWidget *parent) : AbstractWidget(parent), m_pArrayAnimation{}, m_widgetLocation(-1)
 {
 	ui.setupUi(this);
 	connect(ui.BtnReturn, &QPushButton::clicked, [parent, this](){
-		SendSIG(Signal_::RELOADUI, parent);
+		SendSIG(Signal_::CLOSE, this);
+		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, parent);
 	});
 	connect(ui.BtnReturn_2, &QPushButton::clicked, [parent, this]() {
-		SendSIG(Signal_::RELOADUI, parent);
+		SendSIG(Signal_::CLOSE, this);
+		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, parent);
 	});
 	connect(ui.BtnReturn_3, &QPushButton::clicked, [parent, this]() {
-		SendSIG(Signal_::RELOADUI, parent);
+		SendSIG(Signal_::CLOSE, this);
+		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, parent);
 	});
 	connect(ui.BtnPerious, SIGNAL(clicked()), this, SLOT(LastPage()));
 	connect(ui.BtnPerious_2, SIGNAL(clicked()), this, SLOT(LastPage()));
@@ -153,10 +156,10 @@ void Register::AddUserToSqldatabase()
 	QString strRegisterUserSql = QString(INSERT_USER).arg(encryption.data()).arg(strAccount).arg(strUserName)
 		.arg(gender).arg(age).arg(strAddress)
 		.arg(strOccupational).arg(strBirthplace)
-		.arg(strSchool).arg(strIdentify).arg(LoadDefaultImage().data());
+		.arg(strSchool).arg(strIdentify);
 
-	if (OPEN_DATATBASE() && EXECUTE(strRegisterUserSql)) {
-		QMessageBox::warning(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功"));
+	if (OPEN_DATATBASE() && EXECUTE(strRegisterUserSql) && UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(strAccount), QVariant(LoadDefaultImage()))) {
+		QMessageBox::critical(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功"));
 		ui.BtnReturn->click();
 	}
 	else

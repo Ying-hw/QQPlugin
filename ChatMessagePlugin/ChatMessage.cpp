@@ -208,8 +208,8 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		tab_MessageContent->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 		tab_MessageContent->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 		tab_MessageContent->setSelectionMode(QAbstractItemView::NoSelection);
+		tab_MessageContent->setEditTriggers(QAbstractItemView::NoEditTriggers);
 		tab_MessageContent->setShowGrid(false);
-		tab_MessageContent->setColumnCount(1);
 		splitter_3->addWidget(tab_MessageContent);
 		tab_MessageContent->horizontalHeader()->setVisible(false);
 		tab_MessageContent->verticalHeader()->setVisible(false);

@@ -21,3 +21,5 @@
 #include <QMenu>
 #include <QBitmap>
 #include <QGroupBox>
+#include <QFileDialog>
+#include <QBuffer>

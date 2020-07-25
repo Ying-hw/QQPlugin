@@ -14,9 +14,8 @@ enum forwordNext { FORWORD,NEXT };
 class Register : public AbstractWidget
 {
 	Q_OBJECT
-
 public:
-	Register(QWidget *parent = 0);
+	Register(AbstractWidget *parent);
 	~Register();
 
 private slots:

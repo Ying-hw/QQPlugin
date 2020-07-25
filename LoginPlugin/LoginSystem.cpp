@@ -1,18 +1,21 @@
 #include "stdafx1.h"
 #include "LoginSystem.h"
-#define    CONDIGIMAGEFILE   "../Data/Config/UserConfig.pr"
-#define    CONDIGFILE   "../Data/Config/Avatar.jpg"
+#include "HintFrameWidget.h"
 
-LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent) {
+#define    CONDIGIMAGEFILE   "../Data/Config/UserConfig.pr"
+#define    CONDIGFILE   "../Data/Image/Avatar.jpg"
+
+LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent), m_BackPassWD(NULL){
 	ui.setupUi(this);
 	connect(ui.BtnLogin, SIGNAL(clicked()), this, SLOT(SlotLogin()));
 	connect(ui.BtnRegister, SIGNAL(clicked()), this, SLOT(SlotRegister()));
 	connect(ui.BtnBackPassWD, SIGNAL(clicked()), this, SLOT(SlotBackPassWD()));
 	SetCurrenrtUser();
+	RecoverImage(); 
+	ui.BtnLogin->setShortcut(Qt::Key_Enter);
 }
 
 LoginSystem::~LoginSystem() {
-	 
 }
 
 void LoginSystem::SetCurrenrtUser()
@@ -28,7 +31,6 @@ void LoginSystem::SetCurrenrtUser()
 			}
 		file.close();
 		}
-	RecoverImage();
 }
 
 void LoginSystem::RecoverImage()
@@ -47,7 +49,30 @@ void LoginSystem::RecoverImage()
 			repaint();
 		}
 	}
+	QFile file(CONDIGFILE);
+	if (file.open(QIODevice::ReadOnly)) {
+		ui.LabImage->setAlignment(Qt::AlignCenter);
+		QPixmap pix(CONDIGFILE, file.readAll());
+		ui.LabImage->setPixmap(PixmapToRound(pix, 70));
+	}
 }
+
+QPixmap LoginSystem::PixmapToRound(const QPixmap &src, int radius)
+{
+	if (src.isNull())
+ 		return QPixmap();
+	QSize size(2 * radius, 2 * radius);
+	QBitmap mask(size);
+	QPainter painter(&mask);
+	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+	painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+	painter.setBrush(QColor(0, 0, 0));
+	painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
+	QPixmap image = src.scaled(size, Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+	image.setMask(mask);
+	return image;
+}
+
 
 void LoginSystem::saveUserConfig()
 {
@@ -82,33 +107,35 @@ void LoginSystem::SlotBackPassWD() {
 void LoginSystem::SlotRegister() {
 	//hide();
 	//½øÈë×¢²á½çÃæ 
-	SendSIG(Signal_::RELOADUI, new Register(this));
+	SendSIG(Signal_::CLOSE, this);
+	Register* reg = new Register(this);
+	SendSIG(Signal_::SHOW_ABSTRACTWIDGET, reg);
 }
 
 void LoginSystem::SlotLogin() {
 	if (OPEN_DATATBASE()) {
 		sqlPlugin::DataStructDefine UserData = GET_DATA(QString(SELECT_USER).arg(ui.ComUserName->currentText()));
 		if (UserData.m_lstAllData.isEmpty()) {
-			QMessageBox::warning(this, QString::fromLocal8Bit("´íÎó"),
-				QString::fromLocal8Bit("ÕËºÅÊäÈë´íÎó£¡"));
+			HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("ÕËºÅÊäÈë´íÎó£¡£¡"), this);
+			hint->show();
 			return;
-		} 
+		}
 		QCryptographicHash hash(QCryptographicHash::Md5);
 		hash.addData(ui.EditPassWd->text().toLocal8Bit());
 		QByteArray encryption = hash.result().toHex();
 
 		if (UserData.m_lstAllData[0]["PASSWORD"].toString() != encryption) {
-			QMessageBox::warning(this, QString::fromLocal8Bit("´íÎó"),
-				QString::fromLocal8Bit("ÃÜÂëÊäÈë´íÎó£¡"));
+			HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("ÃÜÂëÊäÈë´íÎó£¡£¡"), this);
+			hint->show();
 			return;
 		}
 		saveUserConfig();
 		SEND_MESSAGE(new QString(UserData.m_lstAllData[0]["USER_NAME"].toString()),
-						new QString(ui.ComUserName->currentText()));
+			new QString(ui.ComUserName->currentText()));
 		SendSIG(Signal_::SWITCHPLUGIN, "FriendListPlugin");
-	} 
-	else
-		QMessageBox::warning(this, QString::fromLocal8Bit("´íÎó"),
-			QString::fromLocal8Bit("ÍøÂçÁ¬½ÓÊ§°Ü£¡"));
+	}
+	else {
+		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("ÍøÂçÁ¬½Ó´íÎó£¡£¡"), this);
+		hint->show();
+	}
 }
-

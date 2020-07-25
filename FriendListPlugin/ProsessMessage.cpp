@@ -26,24 +26,28 @@ int ProsessMessage::RecvMessage()
 
 void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 {
-	protocolType protocol;
-	if (protocol.ParseFromString(proto.toStdString())) {
-		switch (protocol.type()) {
-		case protocolType_Type_ftp:
+	protocol proto_;
+	if (proto_.ParseFromString(proto.toStdString())) {
+		switch (proto_.type()) {
+		case protocol_Type_ftp:
 			break;
-		case protocolType_Type_http:
+		case protocol_Type_http:
 			break;
-		case protocolType_Type_smtp:
+		case protocol_Type_smtp:
 			break;
-		case protocolType_Type_tcp:
-			switch (protocol.chatcontent(0).type())
+		case protocol_Type_tcp:
+			if (proto_.has_addinfor()) {
+				g_FriendList->RecvFriendApply(proto_.mutable_addinfor());
+				return;
+			}
+			switch (proto_.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(protocol.mutable_chatcontent(0)->targetnumber()), true);
+				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(proto_.mutable_chatcontent(0)->targetnumber()), true);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_video:
 
@@ -52,20 +56,19 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 				break;
 			}
 			break;
-		case protocolType_Type_udp:
-			switch (protocol.group(0).type())
+		case protocol_Type_udp:
+			switch (proto_.group(0).type())
 			{
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:
 				break;
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_image:
 				break;
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text:
-				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(protocol.mutable_group(0)->account()), false);
+				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(proto_.mutable_group(0)->account()), false);
 				break;
 			default:
 				break;
 			}
-			break;
 			break;
 		}
 	}
@@ -73,5 +76,5 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 
 ProsessMessage::~ProsessMessage()
 {
-
+	deleteLater();
 }

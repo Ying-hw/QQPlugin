@@ -235,6 +235,8 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddFriend.cpp" />
+    <ClCompile Include="ApplyJoinFriend.cpp" />
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="FriendList.cpp" />
     <ClCompile Include="NetProtocConfig.pb.cc" />
@@ -249,12 +251,16 @@
   <ItemGroup>
     <QtMoc Include="FriendList.h" />
     <ClInclude Include="..\include\SqlStatementDefine.h" />
+    <QtMoc Include="AddFriend.h" />
+    <QtMoc Include="ApplyJoinFriend.h" />
     <ClInclude Include="friendlistplugin_global.h" />
     <ClInclude Include="NetProtocConfig.pb.h" />
     <ClInclude Include="ProsessMessage.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AddFriend.ui" />
+    <QtUic Include="ApplyJoinFriend.ui" />
     <QtUic Include="FriendList.ui">
     </QtUic>
   </ItemGroup>

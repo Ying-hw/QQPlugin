@@ -3,6 +3,6 @@
 #include "LoginSystem.h"
 
 
-extern "C" LOGINPLUGIN_EXPORT QWidget* Handle() {
+extern "C" LOGINPLUGIN_EXPORT AbstractWidget* Handle() {
 	return new LoginSystem();
 }

@@ -71,6 +71,18 @@ bool sqlPlugin::DBSelect::ExecuteSql(const QString &strSql) {
 	return true;
 }
 
+bool sqlPlugin::DBSelect::InsertImage(const QString &strSql, QVariant& ImageData)
+{
+	QSqlQuery query;
+	query.prepare(strSql);
+	query.addBindValue(ImageData);
+	if (!query.exec()) {
+		m_strError = query.lastError().text();
+		return false;
+	}
+	return true;
+}
+
 const sqlPlugin::DataStructDefine& sqlPlugin::DataStructDefine::operator= (const DataStructDefine& that) {
 	if (&that != this) {
 		this->m_lstAllData = that.m_lstAllData;

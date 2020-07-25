@@ -11,6 +11,7 @@
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
 #include "AbstractWidget.h"
+#include "ProsessMessage.h"
 
 /// \brief 自定义按钮工具
 /// 主要把未读消息的画出来
@@ -37,6 +38,34 @@ public:
 	QString& GetPaintContent();
 private:
 	QString m_strPaintContent; ///< 画的内容
+};
+
+/// \brief 好友申请验证
+class CustomAddFriendMessageHint : public AbstractWidget
+{
+	Q_OBJECT
+public:
+	/// \brief 构造函数
+	/// \param[in] parent 父窗口
+	CustomAddFriendMessageHint(AbstractWidget* parent = 0);
+
+	/// \brief 析构函数
+	~CustomAddFriendMessageHint();
+
+	/// \brief 设置布局
+	/// \param[in] infor 好友信息
+	void SetLayout(AddInformation* infor);
+
+private slots:
+	/// \brief 同意添加
+	void ConsentApply();
+
+	/// \brief 显示好友信息
+	void UserInfor();
+private:
+	AbstractWidget* m_UserWidget;  ///< 好友信息
+	bool m_IsAddFriend; ///< 添加群还是好友
+	bool m_Gender; ///< 性别 
 };
 
 class FRIENDLISTPLUGIN_EXPORT FriendList : public AbstractWidget
@@ -80,28 +109,44 @@ public:
 	/// \param[in] strNum 对方账号
 	void StartVideoChat(const QString& strNum);
 
+	/// \brief 接受添加好友的请求
+	/// \param[in] infor 对方信息
+	void RecvFriendApply(AddInformation* infor);
+
+	void paintEvent(QPaintEvent *event);
+
+	static QString* m_pUserNumber;    ///< 本人账号
+
 private slots:
 	/// \brief 开始聊天
-	void StartChat();
+	void SlotStartChat();
 
 	/// \brief 群组聊天
-	void StartGroupChat();
+	void SlotStartGroupChat();
 
 	/// \brief 点击消息的槽函数
 	/// 点击消息开始聊天
-	void StartChatFromMessage();
+	void SlotStartChatFromMessage();
 
-	void StartGroupChatFromMessage();
+	/// \brief 从消息体获取信息并且开始群组聊天
+	void SlotStartGroupChatFromMessage();
+
+	/// \brief 添加朋友或者群组
+	/// \param[in] isClicked 点击标识
+	void SlotAdd(bool isClicked = false);
+
+	/// \brief 切换好友列表消息列表空间
+	void SwitchFriMsgSpace();
+
 private:
 #ifndef CHATMESSAGE_H
 	Ui::FriendList ui;
 #endif
-	QString* m_pUserNumber;    ///< 本人账号
 	QMap<CustomToolButton *, QString> m_mapGroup;    ///< 群组映射
 	QMap<CustomToolButton *, QString> m_mapFriend;   ///< 好友映射
 	QMap<CustomToolButton *, QString> m_mapMesssage;  ///< 消息映射
+	QMenu* m_pSystemMenu;  ///< 系统菜单
 };
-
 
 
 #endif // FRIENDLIST_H

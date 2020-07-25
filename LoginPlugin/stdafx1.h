@@ -16,4 +16,5 @@
 #include <QSqlError>
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
-#include "MacroDefine.h"
+#include <QBitmap>
+#include <QImageReader>
