@@ -162,7 +162,7 @@ QToolButton {
 }
 
 QToolButton:hover {
-    background-color: #333333;
+    background-color: rgb(30,120,150);
     border: 1px solid #444444;
 }
 
@@ -342,6 +342,10 @@ QTableView::item:hover {
     background-color: rgb(30,120,150);
 }
 
+QTableView#tabFriendRecord::item:hover {
+    background-color: rgb(30,100,120)
+}
+
 /* === QTreeView === */
 QTreeView::item {
     background: black;
@@ -394,7 +398,7 @@ QFrame#infoLabel {
 }
 2.
 .QWidget {
-   background-color: beige;
+   background-color: rgb(30,100,100);
 }
 
 QToolBar {
@@ -579,7 +583,7 @@ QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog, QTabBar {
 /* === QWidget === */
 QWidget:window {
     font-family: 'Segoe UI';
-    background-color: #888;
+    background-color: rgb(30,100,100);
 }
 
 /* === QPushButton === */
@@ -663,38 +667,6 @@ QToolBar::separator {
     margin-left: 3px;
     margin-right: 3px;
     background-color: #555;
-}
-
-/* === QToolButton === */
-QToolButton {
-    border: 1px solid #666;
-    margin: 1px;
-}
-
-QToolButton:hover {
-    background-color: #AAA;
-}
-
-QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-    padding-right: 20px; /* make way for the popup button */
-}
-
-QToolButton::menu-button {
-    border-left: 1px solid #666;
-    background: transparent;
-    width: 16px;
-}
-
-QToolButton::menu-button:hover {
-    border-left: 1px solid #666;
-    background: transparent;
-    width: 16px;
-}
-
-QToolButton:checked, QToolButton:pressed {
-    background-color: #000;
-    border: 1px solid #555;
-    color: white;
 }
 
 /* === QScrollBar:vertical === */

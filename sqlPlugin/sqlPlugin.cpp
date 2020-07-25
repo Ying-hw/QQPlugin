@@ -10,7 +10,7 @@ sqlPlugin::DataLib::~DataLib() {
 }
 
 bool sqlPlugin::DataLib::openDataLib() {
-	if (!m_dataBase.contains(QSqlDatabase::defaultConnection)) {
+	if (!m_dataBase.isOpen()) {
 		m_strDataLibUserName = "root";
 		m_strPassWD = "root";
 		m_strDataBaseName = "qq";
@@ -56,8 +56,11 @@ sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(const QString &strSql)
 				rowMapData[query.record().fieldName(i)] = query.value(i);
 			Data.m_lstAllData.append(rowMapData);
 		}
-	else
+	else {
+		if (query.lastError().type() == QSqlError::ConnectionError) 
+			while (!DataLib::GetDataLibInstance()->openDataLib());
 		m_strError = query.lastError().text();
+	}
 	return Data;
 }
 

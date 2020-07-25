@@ -22,7 +22,6 @@ AddFriend::AddFriend(bool isFriend, AbstractWidget *parent) : AbstractWidget(par
 	connect(ui.BtnRecreation, SIGNAL(clicked()), this, SLOT(SlotGroupType()));
 	connect(ui.ChecInputFrame, SIGNAL(stateChanged(int)), this, SLOT(ChangedSelectCondition(int)));
 	connect(ui.ChecCondition, SIGNAL(stateChanged(int)), this, SLOT(ChangedSelectCondition(int)));
-	ui.tabFriendRecord->setColumnCount(COLUMN_COUNT);
 	ui.tabFriendRecord->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.tabFriendRecord->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 	ui.tabFriendRecord->horizontalHeader()->setVisible(false);
@@ -31,6 +30,8 @@ AddFriend::AddFriend(bool isFriend, AbstractWidget *parent) : AbstractWidget(par
 	ui.ComGender->setEnabled(!ui.ChecInputFrame->isChecked());
 	ui.ComHometown->setEnabled(!ui.ChecInputFrame->isChecked());
 	ui.ComOccupation->setEnabled(!ui.ChecInputFrame->isChecked());
+	ui.tabFriendRecord->setColumnCount(5);
+	ui.tabFriendRecord->setObjectName("tabFriendRecord");
 }
 
 AddFriend::~AddFriend()
@@ -85,7 +86,8 @@ void AddFriend::ChangedSelectCondition(int state)
 
 void AddFriend::SlotStartFind()
 {
-	QString strSql = QString(SELECT_FIND_USER).arg(m_isAddFriend ? "user_account" : "group");
+	ui.tabFriendRecord->clearContents();
+	QString strSql = QString(SELECT_FIND_USER).arg(m_isAddFriend ? "user_account" : "groupss");
 	if (m_isAddFriend) 
 		if (ui.ChecCondition->isChecked()) {
 			QStringList strAgeList = ui.ComAge->currentText().split("-", QString::SkipEmptyParts);
@@ -103,10 +105,12 @@ void AddFriend::SlotStartFind()
 	else 
 		strSql += QString(" GROUP_NAME = '%1' OR GROUP_ACCOUNT = '%1'").arg(ui.EditInput->text());
 	sqlPlugin::DataStructDefine& data = GET_DATA(strSql);
-	if (!data.m_lstAllData.isEmpty())
-		ui.tabFriendRecord->setRowCount(!(data.m_lstAllData.size() % COLUMN_COUNT) ? data.m_lstAllData.size() / COLUMN_COUNT : data.m_lstAllData.size() / COLUMN_COUNT + 1);
+	if (!data.m_lstAllData.isEmpty()) {
+		int count = data.m_lstAllData.size();
+		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
+	}
 	for (int i = 0; i < data.m_lstAllData.size(); i++) {
-		QString strGroupName = data.m_lstAllData[i][m_isAddFriend ? "" : "GROUP_NAME"].toString(), strExtraParam;
+		QString strGroupName = data.m_lstAllData[i][m_isAddFriend ? "USER_NAME" : "GROUP_NAME"].toString(), strExtraParam;
 		QByteArray array = data.m_lstAllData[i]["IMAGE"].toByteArray();
 		if (!m_isAddFriend) {
 			QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
@@ -134,8 +138,10 @@ void AddFriend::SlotGroupType()
 	QPushButton *button = qobject_cast<QPushButton*>(sender());
 	QString strSelect = QString(SELECT_GROUP_TYPE).arg(button->text());
 	sqlPlugin::DataStructDefine& data = GET_DATA(strSelect);
-	if (!data.m_lstAllData.isEmpty())
-		ui.tabFriendRecord->setRowCount(!(data.m_lstAllData.size() % COLUMN_COUNT) ? data.m_lstAllData.size() / COLUMN_COUNT : data.m_lstAllData.size() / COLUMN_COUNT + 1);
+	if (!data.m_lstAllData.isEmpty()) {
+		int count = data.m_lstAllData.size();
+		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
+	}
 	for (int i = 0;i < data.m_lstAllData.size();i++) {
 		QString strGroupName = data.m_lstAllData[i]["GROUP_NAME"].toString();
 		QByteArray array = QString::fromUtf8(data.m_lstAllData[i]["IMAGE"].toByteArray()).toLocal8Bit();
@@ -153,13 +159,15 @@ CustomAddInformationWidget::CustomAddInformationWidget(QString strName, QString 
 {
 	m_BtnTgtInfo = new QToolButton(this);
 	QFont f = this->font();
-	f.setPointSize(12);
+	f.setPointSize(14);
 	m_BtnAddButton = new QPushButton("+", this);
 	m_BtnAddButton->setFont(f);
 	QImage image;
 	if (image.loadFromData(arrayImage))
 		m_Pixmap = QPixmap::fromImage(image);
 	m_BtnTgtInfo->setIcon(QIcon(m_Pixmap.scaled(IMAGE_SIZE, IMAGE_SIZE)));
+	m_BtnTgtInfo->setFont(f);
+	m_BtnTgtInfo->setText(m_strUserName);
 	m_BtnTgtInfo->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	m_BtnTgtInfo->setAutoRaise(true);
 	m_BtnTgtInfo->setIconSize(QSize(IMAGE_SIZE, IMAGE_SIZE));

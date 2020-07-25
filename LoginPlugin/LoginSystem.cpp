@@ -35,20 +35,6 @@ void LoginSystem::SetCurrenrtUser()
 
 void LoginSystem::RecoverImage()
 {
-	QString strGetImage = QString(SELECT_USER).arg(ui.ComUserName->currentText());
-	sqlPlugin::DataStructDefine& data = GET_DATA(strGetImage);
-	QByteArray arrayImage;
-	if (!data.m_lstAllData.isEmpty())
-		arrayImage = data.m_lstAllData[0]["IMAGE"].toByteArray();
-	if (!arrayImage.isEmpty()) {
-		QFile file(QString(CONDIGFILE));
-		if (file.open(QIODevice::WriteOnly)) {
-			file.write(arrayImage.data());
-			file.close(); 
-			update();
-			repaint();
-		}
-	}
 	QFile file(CONDIGFILE);
 	if (file.open(QIODevice::ReadOnly)) {
 		ui.LabImage->setAlignment(Qt::AlignCenter);
