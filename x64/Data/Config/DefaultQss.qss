@@ -1,4 +1,35 @@
-QStackedWidget, QLabel, QPushButton, QRadioButton, QCheckBox, 
+/* === QPushButton === */
+QPushButton#BtnClose, #BtnMin{
+	background-color: rgb(30,100,100);
+}
+
+QPushButton#BtnClose:hover, #BtnMin:hover{
+	background-color: rgb(30,120,150);
+}
+
+QPushButton#BtnPicture,#BtnText{
+	background-color: rgb(30,100,100);
+}
+
+QPushButton#BtnLogin,#BtnBackPassWD,#BtnRegister {
+	background-color: rgba(150,255,255, 50);
+	border-width: 2px;
+    padding: 4px;
+	border-radius: 4px;
+    font-family: "Segoe UI";
+}
+
+QPushButton#BtnLogin:hover,#BtnBackPassWD:hover,#BtnRegister:hover {
+	background-color: rgba(150,255,255, 100);
+    color: white;
+}
+
+QPushButton:hover {
+	background-color: rgba(150,255,255, 50);
+    color: white;
+}
+
+QStackedWidget, QLabel, QRadioButton, QCheckBox, QPushButton,
 QGroupBox, QStatusBar, QToolButton, QDialog {
     background-color: rgb(30,100,100);
     color: #BBBBBB;
@@ -17,29 +48,6 @@ QToolTip {
     background-color: #000000;
     border: 2px solid #333333;
     color: yellow;
-}
-
-/* === QPushButton === */
-QPushButton {
-    border: 1px;
-    padding: 4px;
-    min-width: 65px;
-    min-height: 12px;
-}
-
-QPushButton:hover {
-    background-color: rgb(30,160,220);
-    border-color: #444444;
-}
-
-QPushButton:pressed {
-    background-color: #111111;
-    border-color: #333333;
-    color: yellow;
-}
-
-QPushButton:disabled {
-    color: #333333;
 }
 
 /* === Checkable items === */
@@ -465,30 +473,9 @@ QHeaderView::section {
      background-color: red;
  }
 
-
-/* We provide a min-width and min-height for push buttons
-   so that they look elegant regardless of the width of the text. */
-QPushButton {
-    border-width: 2px;
-    border-color: darkkhaki;
-    border-style: solid;
-    border-radius: 5;
-    padding: 3px;
-    min-width: 9ex;
-    min-height: 2.5ex;
-}
-
-QPushButton:hover {
-   background-color: rgb(30,100,150);
-}
-
 /* Increase the padding, so the text is shifted when the button is
    pressed. */
-QPushButton:pressed {
-    padding-left: 5px;
-    padding-top: 5px;
-    background-color: #d0d67c;
-}
+
 
 QLabel, QAbstractButton {
     font: bold;
@@ -586,27 +573,6 @@ QWidget:window {
     background-color: rgb(30,100,100);
 }
 
-/* === QPushButton === */
-QPushButton {
-    border: 1px solid #555;
-    padding: 4px;
-    min-width: 65px;
-    min-height: 12px;
-}
-
-QPushButton:hover {
-    background-color: rgb(30,100,150);
-}
-
-QPushButton:pressed {
-    background-color: #333;
-    border-color: #555;
-    color: #AAA;
-}
-
-QPushButton:disabled {
-    color: #333333;
-}
 
 /* === QComboBox === */
 QComboBox {
@@ -812,3 +778,4 @@ QTreeView::branch:open:has-children:has-siblings {
 QTreeView::branch:open:has-children:!has-siblings {
 
 }
+

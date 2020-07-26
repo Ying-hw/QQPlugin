@@ -13,6 +13,9 @@ LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent), m_BackPassWD(N
 	SetCurrenrtUser();
 	RecoverImage(); 
 	ui.BtnLogin->setShortcut(Qt::Key_Enter);
+	ui.BtnLogin->setObjectName("BtnLogin");
+	ui.BtnBackPassWD->setObjectName("BtnBackPassWD");
+	ui.BtnRegister->setObjectName("BtnRegister");
 }
 
 LoginSystem::~LoginSystem() {
