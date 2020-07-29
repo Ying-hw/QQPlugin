@@ -156,29 +156,30 @@ inline bool ChatRecord_Group_contenttype_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<ChatRecord_Group_contenttype>(
     ChatRecord_Group_contenttype_descriptor(), name, value);
 }
-enum protocol_Type {
-  protocol_Type_tcp = 0,
-  protocol_Type_udp = 1,
-  protocol_Type_http = 2,
-  protocol_Type_smtp = 3,
-  protocol_Type_ftp = 4,
-  protocol_Type_protocol_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
-  protocol_Type_protocol_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+enum protocol_MsgType {
+  protocol_MsgType_tcp = 0,
+  protocol_MsgType_udp = 1,
+  protocol_MsgType_http = 2,
+  protocol_MsgType_smtp = 3,
+  protocol_MsgType_ftp = 4,
+  protocol_MsgType_online = 5,
+  protocol_MsgType_protocol_MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  protocol_MsgType_protocol_MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
-bool protocol_Type_IsValid(int value);
-const protocol_Type protocol_Type_Type_MIN = protocol_Type_tcp;
-const protocol_Type protocol_Type_Type_MAX = protocol_Type_ftp;
-const int protocol_Type_Type_ARRAYSIZE = protocol_Type_Type_MAX + 1;
+bool protocol_MsgType_IsValid(int value);
+const protocol_MsgType protocol_MsgType_MsgType_MIN = protocol_MsgType_tcp;
+const protocol_MsgType protocol_MsgType_MsgType_MAX = protocol_MsgType_online;
+const int protocol_MsgType_MsgType_ARRAYSIZE = protocol_MsgType_MsgType_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* protocol_Type_descriptor();
-inline const ::std::string& protocol_Type_Name(protocol_Type value) {
+const ::google::protobuf::EnumDescriptor* protocol_MsgType_descriptor();
+inline const ::std::string& protocol_MsgType_Name(protocol_MsgType value) {
   return ::google::protobuf::internal::NameOfEnum(
-    protocol_Type_descriptor(), value);
+    protocol_MsgType_descriptor(), value);
 }
-inline bool protocol_Type_Parse(
-    const ::std::string& name, protocol_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<protocol_Type>(
-    protocol_Type_descriptor(), name, value);
+inline bool protocol_MsgType_Parse(
+    const ::std::string& name, protocol_MsgType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<protocol_MsgType>(
+    protocol_MsgType_descriptor(), name, value);
 }
 enum protocol_Chat_OneorMultiple {
   protocol_Chat_OneorMultiple_one = 0,
@@ -1169,36 +1170,38 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   // nested types ----------------------------------------------------
 
-  typedef protocol_Type Type;
-  static const Type tcp =
-    protocol_Type_tcp;
-  static const Type udp =
-    protocol_Type_udp;
-  static const Type http =
-    protocol_Type_http;
-  static const Type smtp =
-    protocol_Type_smtp;
-  static const Type ftp =
-    protocol_Type_ftp;
-  static inline bool Type_IsValid(int value) {
-    return protocol_Type_IsValid(value);
+  typedef protocol_MsgType MsgType;
+  static const MsgType tcp =
+    protocol_MsgType_tcp;
+  static const MsgType udp =
+    protocol_MsgType_udp;
+  static const MsgType http =
+    protocol_MsgType_http;
+  static const MsgType smtp =
+    protocol_MsgType_smtp;
+  static const MsgType ftp =
+    protocol_MsgType_ftp;
+  static const MsgType online =
+    protocol_MsgType_online;
+  static inline bool MsgType_IsValid(int value) {
+    return protocol_MsgType_IsValid(value);
   }
-  static const Type Type_MIN =
-    protocol_Type_Type_MIN;
-  static const Type Type_MAX =
-    protocol_Type_Type_MAX;
-  static const int Type_ARRAYSIZE =
-    protocol_Type_Type_ARRAYSIZE;
+  static const MsgType MsgType_MIN =
+    protocol_MsgType_MsgType_MIN;
+  static const MsgType MsgType_MAX =
+    protocol_MsgType_MsgType_MAX;
+  static const int MsgType_ARRAYSIZE =
+    protocol_MsgType_MsgType_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
-  Type_descriptor() {
-    return protocol_Type_descriptor();
+  MsgType_descriptor() {
+    return protocol_MsgType_descriptor();
   }
-  static inline const ::std::string& Type_Name(Type value) {
-    return protocol_Type_Name(value);
+  static inline const ::std::string& MsgType_Name(MsgType value) {
+    return protocol_MsgType_Name(value);
   }
-  static inline bool Type_Parse(const ::std::string& name,
-      Type* value) {
-    return protocol_Type_Parse(name, value);
+  static inline bool MsgType_Parse(const ::std::string& name,
+      MsgType* value) {
+    return protocol_MsgType_Parse(name, value);
   }
 
   typedef protocol_Chat_OneorMultiple Chat_OneorMultiple;
@@ -1229,10 +1232,10 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   // accessors -------------------------------------------------------
 
-  // repeated .ChatRecord chatContent = 3;
+  // repeated .ChatRecord chatContent = 4;
   int chatcontent_size() const;
   void clear_chatcontent();
-  static const int kChatContentFieldNumber = 3;
+  static const int kChatContentFieldNumber = 4;
   const ::ChatRecord& chatcontent(int index) const;
   ::ChatRecord* mutable_chatcontent(int index);
   ::ChatRecord* add_chatcontent();
@@ -1241,10 +1244,10 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord >&
       chatcontent() const;
 
-  // repeated .ChatRecord_Group group = 4;
+  // repeated .ChatRecord_Group group = 5;
   int group_size() const;
   void clear_group();
-  static const int kGroupFieldNumber = 4;
+  static const int kGroupFieldNumber = 5;
   const ::ChatRecord_Group& group(int index) const;
   ::ChatRecord_Group* mutable_group(int index);
   ::ChatRecord_Group* add_group();
@@ -1253,24 +1256,38 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >&
       group() const;
 
-  // .AddInformation addInfor = 5;
+  // bytes MySelfNum = 2;
+  void clear_myselfnum();
+  static const int kMySelfNumFieldNumber = 2;
+  const ::std::string& myselfnum() const;
+  void set_myselfnum(const ::std::string& value);
+  #if LANG_CXX11
+  void set_myselfnum(::std::string&& value);
+  #endif
+  void set_myselfnum(const char* value);
+  void set_myselfnum(const void* value, size_t size);
+  ::std::string* mutable_myselfnum();
+  ::std::string* release_myselfnum();
+  void set_allocated_myselfnum(::std::string* myselfnum);
+
+  // .AddInformation addInfor = 6;
   bool has_addinfor() const;
   void clear_addinfor();
-  static const int kAddInforFieldNumber = 5;
+  static const int kAddInforFieldNumber = 6;
   const ::AddInformation& addinfor() const;
   ::AddInformation* release_addinfor();
   ::AddInformation* mutable_addinfor();
   void set_allocated_addinfor(::AddInformation* addinfor);
 
-  // .protocol.Type type = 1;
+  // .protocol.MsgType type = 1;
   void clear_type();
   static const int kTypeFieldNumber = 1;
-  ::protocol_Type type() const;
-  void set_type(::protocol_Type value);
+  ::protocol_MsgType type() const;
+  void set_type(::protocol_MsgType value);
 
-  // .protocol.Chat_OneorMultiple count = 2;
+  // .protocol.Chat_OneorMultiple count = 3;
   void clear_count();
-  static const int kCountFieldNumber = 2;
+  static const int kCountFieldNumber = 3;
   ::protocol_Chat_OneorMultiple count() const;
   void set_count(::protocol_Chat_OneorMultiple value);
 
@@ -1280,6 +1297,7 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::RepeatedPtrField< ::ChatRecord > chatcontent_;
   ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group > group_;
+  ::google::protobuf::internal::ArenaStringPtr myselfnum_;
   ::AddInformation* addinfor_;
   int type_;
   int count_;
@@ -2097,21 +2115,74 @@ inline void ChatRecord_Group::set_allocated_selfnumber(::std::string* selfnumber
 
 // protocol
 
-// .protocol.Type type = 1;
+// .protocol.MsgType type = 1;
 inline void protocol::clear_type() {
   type_ = 0;
 }
-inline ::protocol_Type protocol::type() const {
+inline ::protocol_MsgType protocol::type() const {
   // @@protoc_insertion_point(field_get:protocol.type)
-  return static_cast< ::protocol_Type >(type_);
+  return static_cast< ::protocol_MsgType >(type_);
 }
-inline void protocol::set_type(::protocol_Type value) {
+inline void protocol::set_type(::protocol_MsgType value) {
   
   type_ = value;
   // @@protoc_insertion_point(field_set:protocol.type)
 }
 
-// .protocol.Chat_OneorMultiple count = 2;
+// bytes MySelfNum = 2;
+inline void protocol::clear_myselfnum() {
+  myselfnum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& protocol::myselfnum() const {
+  // @@protoc_insertion_point(field_get:protocol.MySelfNum)
+  return myselfnum_.GetNoArena();
+}
+inline void protocol::set_myselfnum(const ::std::string& value) {
+  
+  myselfnum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:protocol.MySelfNum)
+}
+#if LANG_CXX11
+inline void protocol::set_myselfnum(::std::string&& value) {
+  
+  myselfnum_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:protocol.MySelfNum)
+}
+#endif
+inline void protocol::set_myselfnum(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  myselfnum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:protocol.MySelfNum)
+}
+inline void protocol::set_myselfnum(const void* value, size_t size) {
+  
+  myselfnum_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:protocol.MySelfNum)
+}
+inline ::std::string* protocol::mutable_myselfnum() {
+  
+  // @@protoc_insertion_point(field_mutable:protocol.MySelfNum)
+  return myselfnum_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* protocol::release_myselfnum() {
+  // @@protoc_insertion_point(field_release:protocol.MySelfNum)
+  
+  return myselfnum_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void protocol::set_allocated_myselfnum(::std::string* myselfnum) {
+  if (myselfnum != NULL) {
+    
+  } else {
+    
+  }
+  myselfnum_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), myselfnum);
+  // @@protoc_insertion_point(field_set_allocated:protocol.MySelfNum)
+}
+
+// .protocol.Chat_OneorMultiple count = 3;
 inline void protocol::clear_count() {
   count_ = 0;
 }
@@ -2125,7 +2196,7 @@ inline void protocol::set_count(::protocol_Chat_OneorMultiple value) {
   // @@protoc_insertion_point(field_set:protocol.count)
 }
 
-// repeated .ChatRecord chatContent = 3;
+// repeated .ChatRecord chatContent = 4;
 inline int protocol::chatcontent_size() const {
   return chatcontent_.size();
 }
@@ -2155,7 +2226,7 @@ protocol::chatcontent() const {
   return chatcontent_;
 }
 
-// repeated .ChatRecord_Group group = 4;
+// repeated .ChatRecord_Group group = 5;
 inline int protocol::group_size() const {
   return group_.size();
 }
@@ -2185,7 +2256,7 @@ protocol::group() const {
   return group_;
 }
 
-// .AddInformation addInfor = 5;
+// .AddInformation addInfor = 6;
 inline bool protocol::has_addinfor() const {
   return this != internal_default_instance() && addinfor_ != NULL;
 }
@@ -2272,10 +2343,10 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::ChatRecord_Group_contenttype>() {
   return ::ChatRecord_Group_contenttype_descriptor();
 }
-template <> struct is_proto_enum< ::protocol_Type> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::protocol_MsgType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protocol_Type>() {
-  return ::protocol_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol_MsgType>() {
+  return ::protocol_MsgType_descriptor();
 }
 template <> struct is_proto_enum< ::protocol_Chat_OneorMultiple> : ::google::protobuf::internal::true_type {};
 template <>

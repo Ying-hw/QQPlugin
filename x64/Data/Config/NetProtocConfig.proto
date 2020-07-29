@@ -65,24 +65,26 @@ message ChatRecord_Group
 
 message protocol
 {
-	enum Type
+	enum MsgType
 	{
 		tcp  = 0;
 		udp  = 1;
 		http = 2;
 		smtp = 3;
 		ftp  = 4;
+		online = 5;
 	}
 	enum Chat_OneorMultiple
 	{
 		one      = 0;
 		multiple = 1;
 	}
-	Type                      type         = 1;
-	Chat_OneorMultiple        count        = 2;
-	repeated ChatRecord       chatContent  = 3;
-	repeated ChatRecord_Group group        = 4;
-	AddInformation            addInfor     = 5;
+	MsgType                   type         = 1;
+	bytes                     MySelfNum    = 2;
+	Chat_OneorMultiple        count        = 3;
+	repeated ChatRecord       chatContent  = 4;
+	repeated ChatRecord_Group group        = 5;
+	AddInformation            addInfor     = 6;
 }
 
 
