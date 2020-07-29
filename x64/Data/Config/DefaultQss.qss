@@ -1,4 +1,9 @@
 /* === QPushButton === */
+
+QToolButton#m_BtnTgtInfo{
+	border: none;
+}
+
 QPushButton#BtnClose, #BtnMin{
 	background-color: rgb(30,100,100);
 }
@@ -356,16 +361,15 @@ QTableView#tabFriendRecord::item:hover {
 
 /* === QTreeView === */
 QTreeView::item {
-    background: black;
+    background: rgb(30,100,120);
 }
 
 QTreeView::item:hover {
-    background: #333333;
+    background: rgb(30,100,150);
 }
 
 QTreeView::item:selected {
-    background: #111111;
-    color: yellow;
+    background: rgb(30,100,150);
 }
 
 QTreeView::branch {
@@ -410,10 +414,6 @@ QFrame#infoLabel {
 }
 
 QToolBar {
-    background-color: beige;
-}
-
-QDialog, QFileDialog {
     background-color: beige;
 }
 
@@ -733,49 +733,4 @@ QListView::item:selected {
     color: #AAA;
 }
 
-/* === QTreeView === */
-QTreeView::item {
-    background: #AAA;
-}
-
-QTreeView::item:hover {
-    background: #CCC;
-}
-
-QTreeView::item:selected {
-    background: #333;
-    color: #AAA;
-}
-
-QTreeView::branch {
-
-}
-
-QTreeView::branch:has-siblings:adjoins-item {
-
-}
-
-QTreeView::branch:has-siblings:!adjoins-item {
-
-}
-
-QTreeView::branch:closed:has-children:has-siblings {
-
-}
-
-QTreeView::branch:has-children:!has-siblings:closed {
-
-}
-
-QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-
-}
-
-QTreeView::branch:open:has-children:has-siblings {
-
-}
-
-QTreeView::branch:open:has-children:!has-siblings {
-
-}
 

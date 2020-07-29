@@ -13,6 +13,7 @@
 #include "AbstractWidget.h"
 #include "ProsessMessage.h"
 
+
 /// \brief 自定义按钮工具
 /// 主要把未读消息的画出来
 class FRIENDLISTPLUGIN_EXPORT CustomToolButton : public QToolButton 
@@ -45,7 +46,7 @@ class CustomAddFriendMessageHint : public AbstractWidget
 {
 	Q_OBJECT
 public:
-	/// \brief 构造函数
+	/// \brief 构造函数         
 	/// \param[in] parent 父窗口
 	CustomAddFriendMessageHint(AbstractWidget* parent = 0);
 

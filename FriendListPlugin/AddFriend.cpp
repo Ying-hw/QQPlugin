@@ -4,7 +4,7 @@
 #include "SqlStatementDefine.h"
 #include "ApplyJoinFriend.h"
 
-#define IMAGE_SIZE  80
+#define IMAGE_SIZE  60
 #define COLUMN_COUNT 5
 
 AddFriend::AddFriend(bool isFriend, AbstractWidget *parent) : AbstractWidget(parent), m_isAddFriend(isFriend)
@@ -110,19 +110,35 @@ void AddFriend::SlotStartFind()
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
 	}
 	for (int i = 0; i < data.m_lstAllData.size(); i++) {
-		QString strGroupName = data.m_lstAllData[i][m_isAddFriend ? "USER_NAME" : "GROUP_NAME"].toString(), strExtraParam;
+		QString strGroupName = data.m_lstAllData[i][m_isAddFriend ? "USER_NAME" : "GROUP_NAME"].toString();
 		QByteArray array = data.m_lstAllData[i]["IMAGE"].toByteArray();
+		QImage im;
+		im.loadFromData(array);
+		TargetInfor infor;
+		infor.m_IsFriend = m_isAddFriend;
 		if (!m_isAddFriend) {
 			QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
 			sqlPlugin::DataStructDefine& dataCount = GET_DATA(strCount);
-			strExtraParam = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString() + " " + QString::number(dataCount.m_lstAllData.size()) + QString::fromLocal8Bit("ÈË");
+			infor.memberCount = dataCount.m_lstAllData.size();
+			infor.m_strNumber = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
+			infor.m_strGroupType = dataCount.m_lstAllData[0]["TYPE"].toString();
+			infor.m_strName = dataCount.m_lstAllData[0]["GROUP_NAME"].toString();
+			infor.pix = QPixmap::fromImage(im);	
 		}
 		else {
 			QString strUser = QString(SELECT_USER).arg(data.m_lstAllData[i]["USER_NUMBER"].toString());
 			sqlPlugin::DataStructDefine& UserData = GET_DATA(strUser);
-			strExtraParam = UserData.m_lstAllData[0]["USER_NUMBER"].toString();
+			infor.m_strName = UserData.m_lstAllData[0]["USER_NAME"].toString();
+			infor.pix = QPixmap::fromImage(im);
+			infor.m_Address = UserData.m_lstAllData[0]["ADDRESS"].toString();
+			infor.m_strNumber = UserData.m_lstAllData[i]["USER_NUMBER"].toString();
+			infor.m_strSchool = UserData.m_lstAllData[i]["SCHOOL"].toString();
+			infor.m_strBirthPlace = UserData.m_lstAllData[i]["BIRTHPLACE"].toString();
+			infor.m_Occupational = UserData.m_lstAllData[i]["OCCUPATIONAL"].toString();
+			infor.m_Gender = UserData.m_lstAllData[i]["GENDER"].toInt() ? QString::fromLocal8Bit("Å®") : QString::fromLocal8Bit("ÄÐ");
+			infor.m_Age = UserData.m_lstAllData[i]["AGE"].toUInt();
 		}
-		CustomAddInformationWidget* pAddInfor = new CustomAddInformationWidget(strGroupName, strExtraParam, array, m_isAddFriend, this);
+		CustomAddInformationWidget* pAddInfor = new CustomAddInformationWidget(infor, this);
 		ui.tabFriendRecord->setCellWidget(i / COLUMN_COUNT, i % COLUMN_COUNT, pAddInfor);
 	}
 }
@@ -143,45 +159,56 @@ void AddFriend::SlotGroupType()
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
 	}
 	for (int i = 0;i < data.m_lstAllData.size();i++) {
+		TargetInfor infor;
 		QString strGroupName = data.m_lstAllData[i]["GROUP_NAME"].toString();
 		QByteArray array = QString::fromUtf8(data.m_lstAllData[i]["IMAGE"].toByteArray()).toLocal8Bit();
 		QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
 		sqlPlugin::DataStructDefine& dataCount = GET_DATA(strCount);
-		QString strExtraParam  = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString() + " " + QString::number(dataCount.m_lstAllData.size()) + QString::fromLocal8Bit("ÈË");
-		CustomAddInformationWidget* pAddInfor = new CustomAddInformationWidget(strGroupName, strExtraParam, array, false, this);
+
+		QImage im;
+		im.loadFromData(array);
+		infor.memberCount = dataCount.m_lstAllData.size();
+		infor.m_strNumber = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
+		infor.m_strGroupType = dataCount.m_lstAllData[0]["TYPE"].toString();
+		infor.m_strName = dataCount.m_lstAllData[0]["GROUP_NAME"].toString();
+		infor.pix = QPixmap::fromImage(im);
+
+		CustomAddInformationWidget* pAddInfor = new CustomAddInformationWidget(infor, this);
 		ui.tabFriendRecord->setCellWidget(i / COLUMN_COUNT, i % COLUMN_COUNT, pAddInfor);
 	}
 }
 
 
-CustomAddInformationWidget::CustomAddInformationWidget(QString strName, QString strAttr, QByteArray& arrayImage, bool isFriend, AbstractWidget* parent /*= 0*/) :
-	m_strUserName(strName), m_ExtraParam(strAttr), AbstractWidget(parent), m_Apply(NULL), m_IsFriend(isFriend)
+CustomAddInformationWidget::CustomAddInformationWidget(TargetInfor& infor, AbstractWidget* parent /*= 0*/) : 
+	AbstractWidget(parent), m_Apply(NULL), m_Infor(infor)
 {
+	QString strExtra = m_Infor.m_IsFriend ? m_Infor.m_Gender + " " + QString::number(m_Infor.m_Age) + " " + m_Infor.m_strBirthPlace
+		: QString::number(m_Infor.memberCount) + " " + m_Infor.m_strGroupType;
 	m_BtnTgtInfo = new QToolButton(this);
+	m_BtnTgtInfo->setObjectName("m_BtnTgtInfo");
+	
 	QFont f = this->font();
-	f.setPointSize(14);
+	f.setPointSize(12);
 	m_BtnAddButton = new QPushButton("+", this);
 	m_BtnAddButton->setFont(f);
-	QImage image;
-	if (image.loadFromData(arrayImage))
-		m_Pixmap = QPixmap::fromImage(image);
-	m_BtnTgtInfo->setIcon(QIcon(m_Pixmap.scaled(IMAGE_SIZE, IMAGE_SIZE)));
+	m_BtnTgtInfo->setIcon(QIcon(infor.pix.scaled(IMAGE_SIZE, IMAGE_SIZE)));
 	m_BtnTgtInfo->setFont(f);
-	m_BtnTgtInfo->setText(m_strUserName);
+	m_BtnTgtInfo->setText(infor.m_strName + "(" + strExtra + ")");
+	m_BtnTgtInfo->setToolTip(infor.m_strName + "(" + strExtra + ")");
 	m_BtnTgtInfo->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	m_BtnTgtInfo->setAutoRaise(true);
 	m_BtnTgtInfo->setIconSize(QSize(IMAGE_SIZE, IMAGE_SIZE));
+	
 	connect(m_BtnTgtInfo, SIGNAL(clicked()), this, SLOT(TgtInfor()));
 	connect(m_BtnAddButton, SIGNAL(clicked()), this, SLOT(Add()));
 	QGridLayout* lay = new QGridLayout;
 	lay->addWidget(m_BtnTgtInfo, 0, 0, 1, 2);
 	m_BtnTgtInfo->setSizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-	QSpacerItem* item = new QSpacerItem(40, 20, QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::Fixed);
+	QSpacerItem* item = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Fixed);
 	lay->addItem(item, 1, 0);
 	lay->addWidget(m_BtnAddButton, 1, 1);
-	lay->setContentsMargins(0, 0, 0, 0);
-	lay->setVerticalSpacing(0);
-	lay->setHorizontalSpacing(0);
+	lay->setContentsMargins(6, 6, 6, 6);
+	lay->setSpacing(0);
 	setLayout(lay);
 }
 
@@ -199,35 +226,9 @@ void CustomAddInformationWidget::paintEvent(QPaintEvent *event)
 {
 	QPainter pa(this);
 	pa.begin(this);
-
-	QPen pen(QColor(100, 200, 40));
-	pa.setPen(pen);
-	
-
-	QFont fName = this->font();
-	QFont fAttr = this->font();
-	fName.setPointSize(16);
-	fAttr.setPointSize(10);
-	pa.setFont(fName);
-
-	pa.setBrush(QBrush(Qt::white));
+	pa.setBrush(QBrush(QColor(30,100,100)));
 	pa.drawRect(this->rect());
-
-	QRect re = this->geometry();
-	pa.drawText(IMAGE_SIZE + 20, re.center().y() - IMAGE_SIZE / 4, m_strUserName);
-	pa.setFont(fAttr);
-	pa.drawText(IMAGE_SIZE + 20, re.center().y() + IMAGE_SIZE / 4, m_ExtraParam);
-	pa.end();
-	QWidget::paintEvent(event);
-}
-
-void CustomAddInformationWidget::SetAttribute(QString strName, QString strAttr, QByteArray& arrayImage)
-{
-	m_strUserName = strName;
-	m_ExtraParam = strAttr;
-	QImage image;
-	if (image.loadFromData(arrayImage))
-		m_Pixmap = QPixmap::fromImage(image); 
+	AbstractWidget::paintEvent(event);
 }
 
 void CustomAddInformationWidget::TgtInfor()
@@ -237,13 +238,45 @@ void CustomAddInformationWidget::TgtInfor()
 		QLabel* labImage = new QLabel(m_UserWidget);
 		QLabel* labUserName = new QLabel(m_UserWidget);
 		QLabel* labNumber = new QLabel(m_UserWidget);
-		labImage->setPixmap(m_Pixmap);
-		labUserName->setText(m_strUserName);
-		labNumber->setText(m_ExtraParam.section(" ", 0, 0));
+		labImage->setPixmap(m_Infor.pix);
+		labUserName->setText(m_Infor.m_strName);
+		labNumber->setText(m_Infor.m_strNumber);
 		QVBoxLayout* lay = new QVBoxLayout;
 		lay->addWidget(labImage);
 		lay->addWidget(labUserName);
 		lay->addWidget(labNumber);
+
+		if (m_Infor.m_IsFriend) {
+			QLabel* labAge = new QLabel(m_UserWidget);
+			QLabel* labSchool = new QLabel(m_UserWidget);
+			QLabel* labBirthPlace = new QLabel(m_UserWidget);
+			QLabel* labQccupational = new QLabel(m_UserWidget);
+			QLabel* labGender = new QLabel(m_UserWidget);
+			QLabel* labAddress = new QLabel(m_UserWidget);
+
+			labAge->setText(QString::number(m_Infor.m_Age));
+			labSchool->setText(m_Infor.m_strSchool);
+			labBirthPlace->setText(m_Infor.m_strBirthPlace);
+			labQccupational->setText(m_Infor.m_Occupational);
+			labGender->setText(m_Infor.m_Gender);
+			labAddress->setText(m_Infor.m_Address);
+
+			lay->addWidget(labAge);
+			lay->addWidget(labGender);
+			lay->addWidget(labAddress);
+			lay->addWidget(labBirthPlace);
+			lay->addWidget(labSchool);
+			lay->addWidget(labQccupational);
+		}
+		else {
+			QLabel* labGroupType = new QLabel(m_UserWidget);
+			QLabel* labMemberCount = new QLabel(m_UserWidget);
+			labGroupType->setText(m_Infor.m_strGroupType);
+			labMemberCount->setText(QString::number(m_Infor.memberCount));
+			lay->addWidget(labMemberCount);
+			lay->addWidget(labGroupType);
+		}
+
 		labImage->setMinimumSize(300, 300);
 		m_UserWidget->setLayout(lay);
 		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, m_UserWidget);
@@ -253,7 +286,9 @@ void CustomAddInformationWidget::TgtInfor()
 void CustomAddInformationWidget::Add()
 {
 	if (!m_Apply) {
-		m_Apply = new ApplyJoinFriend(m_strUserName, m_ExtraParam, m_Pixmap, m_IsFriend, this);
+		m_Apply = new ApplyJoinFriend(m_Infor, this);
 		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, m_Apply);
 	}
 }
+
+

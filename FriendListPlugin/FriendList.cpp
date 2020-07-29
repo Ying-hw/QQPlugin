@@ -289,7 +289,7 @@ void FriendList::SlotAdd(bool isClicked /*= false*/)
 	{
 	}
 	else if (pTgt->text() == QString::fromLocal8Bit("¸ü»»Í·Ïñ")) {
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), "/", tr("Image Files (*.png *.jpg *.bmp)"));
+		QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), "/", tr("Image Files (*.png *.jpg *.bmp)"), 0, QFileDialog::DontUseNativeDialog);
 		ui.LabImage->setPixmap(PixmapToRound(QPixmap(fileName), 40));
 		QFile image(fileName);
 		if (image.open(QIODevice::ReadOnly)) {

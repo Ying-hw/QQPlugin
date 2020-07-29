@@ -1,10 +1,26 @@
 #ifndef       __ADDFRIEND__
 #define       __ADDFRIEND__
-
-
 #include "AbstractWidget.h"
 #include "ui_AddFriend.h"
 #include "ApplyJoinFriend.h"
+
+/// \brief 用户信息定义
+struct TargetInfor
+{
+	quint32 m_Age;				///< 年龄
+	quint32 memberCount;        ///< 群成员数量
+	QString m_strGroupType;     ///< 群组类型
+	QString m_Occupational;		///< 职业
+	QString m_Address;			///< 地址
+	QString m_strNumber;		///< 账号
+	QString m_strSchool;        ///< 毕业院校
+	QString m_strBirthPlace;	///< 故乡
+	QString m_strName;          ///< 用户名称
+	QString m_Gender;           ///< 性别
+	QPixmap pix;                ///< 头像
+	bool m_IsFriend;            ///< 用户或者群
+
+};
 
 /// \brief 此类提供了添加好友和添加群组的功能
 class AddFriend : public AbstractWidget
@@ -53,11 +69,9 @@ class CustomAddInformationWidget : public AbstractWidget {
 	Q_OBJECT
 public:
 	/// \brief 构造函数
-	/// \param[in] strName 用户名称
-	/// \param[in] strAttr 用户属性
-	/// \param[in] arrayImage 图像数据
+	/// \param[in] infor 目标信息
 	/// \param[in] parent 父窗口
-	CustomAddInformationWidget(QString strName, QString strAttr, QByteArray& arrayImage, bool isFriend, AbstractWidget* parent = 0);
+	CustomAddInformationWidget(TargetInfor& infor, AbstractWidget* parent = 0);
 
 	/// \brief 构造函数
 	/// \param[in] parent 父窗口
@@ -70,12 +84,6 @@ public:
 	/// \param[in] event 系统参数
 	void paintEvent(QPaintEvent *event);
 
-	/// \brief 设置用户属性
-	/// \param[in] strName 用户名称
-	/// \param[in] strAttr 用户属性
-	/// \param[in] arrayImage 图像数据
-	void SetAttribute(QString strName, QString strAttr, QByteArray& arrayImage);
-
 private slots:
 
 	/// \brief 显示目标信息
@@ -86,13 +94,8 @@ private slots:
 private:
 	QPushButton* m_BtnAddButton;
 	QToolButton* m_BtnTgtInfo;
-	QString m_strUserName;
-	QString m_ExtraParam;
-	QPixmap m_Pixmap;
 	ApplyJoinFriend* m_Apply;
-	bool m_IsFriend;
+	TargetInfor m_Infor;
 	AbstractWidget* m_UserWidget;
 };
-
-
 #endif

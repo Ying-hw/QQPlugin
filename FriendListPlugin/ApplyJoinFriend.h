@@ -3,13 +3,14 @@
 
 #include "AbstractWidget.h"
 #include "ui_ApplyJoinFriend.h"
+struct TargetInfor;
 
 class ApplyJoinFriend : public AbstractWidget
 {
 	Q_OBJECT
 
 public:
-	ApplyJoinFriend(QString strName, QString strAttr, QPixmap& arrayImage, bool isFriend, AbstractWidget *parent = Q_NULLPTR);
+	ApplyJoinFriend(TargetInfor& infor, AbstractWidget *parent = Q_NULLPTR);
 	~ApplyJoinFriend();
 
 private slots:
