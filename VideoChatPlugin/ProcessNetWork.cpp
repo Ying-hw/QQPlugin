@@ -28,19 +28,19 @@ int ProcessNetWork::RecvMessage()
 	return size;
 }
 
-void ProcessNetWork::AnalysisProtocol(QByteArray& proto)
+void ProcessNetWork::AnalysisProtocol(QByteArray& protoArray)
 {
-	protocolType protocol;
-	if (protocol.ParseFromString(proto.toStdString())) {
-		switch (protocol.type()) {
-		case protocolType_Type_ftp:
+	protocol proto;
+	if (proto.ParseFromString(protoArray.toStdString())) {
+		switch (proto.type()) {
+		case protocol_MsgType_ftp:
 			break;
-		case protocolType_Type_http:
+		case protocol_MsgType_http:
 			break;
-		case protocolType_Type_smtp:
+		case protocol_MsgType_smtp:
 			break;
-		case protocolType_Type_tcp:
-			switch (protocol.chatcontent(0).type())
+		case protocol_MsgType_tcp:
+			switch (proto.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
 				break;
@@ -52,7 +52,7 @@ void ProcessNetWork::AnalysisProtocol(QByteArray& proto)
 			{
 				g_VideoChat->SlotConsent();
 				QImage image;
-				if (image.loadFromData(protocol.mutable_chatcontent(0)->content().c_str()))
+				if (image.loadFromData(proto.mutable_chatcontent(0)->content().c_str()))
 					g_VideoChat->RefreshImage(image);
 				break;
 			}
@@ -60,8 +60,8 @@ void ProcessNetWork::AnalysisProtocol(QByteArray& proto)
 				break;
 			}
 			break;
-		case protocolType_Type_udp:
-			switch (protocol.group(0).type())
+		case protocol_MsgType_udp:
+			switch (proto.group(0).type())
 			{
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:
 				break;

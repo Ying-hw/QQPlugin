@@ -52,7 +52,7 @@ void VideoChat::paintEvent(QPaintEvent *event)
 	im = im.mirrored(true, false);
 	ui.LabVideoImage->setPixmap(QPixmap::fromImage(im));
 	ui.LabVideoImage->resize(im.size());
-	protocolType protype;
+	protocol protype;
 	ChatRecord* pRecord = protype.add_chatcontent();
 	QByteArray array;
 	QBuffer buffer(&array);

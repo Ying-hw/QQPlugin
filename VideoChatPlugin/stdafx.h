@@ -11,3 +11,4 @@
 #include <QByteArray>
 #include <QBuffer>
 #include <QDomNode>
+#include <QLibrary>

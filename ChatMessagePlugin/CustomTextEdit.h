@@ -20,6 +20,7 @@ public:
 	void clearCache();
 private:
 	QStringList m_strFilePath;
+	QStringList m_strSuffixList;
 };
 
 #endif

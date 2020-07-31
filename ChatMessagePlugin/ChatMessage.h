@@ -17,7 +17,9 @@ struct Message_Content {
 	enum class Content_Type {
 		file,  ///< 文件
 		image, ///< 图片
-		text   ///< 文本
+		text,   ///< 文本
+		folder,  ///< 文件夹
+		voice   ///< 语音 
 	};
 	Content_Type type; ///< 消息类型
 	bool is_Self;  ///< 是否属于自己发送的消息
@@ -52,13 +54,14 @@ public:
 	/// \brief 添加聊天消息
 	/// \param[in] strTgtNum 对方账号
 	/// \param[in] strMsg 消息内容
-	void SetAddMessage(const QString strTgtNum, const QString strMsg);
+	/// \param[in] msgtype 消息类型
+	void SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype);
 
 	/// \brief 添加聊天对象
 	/// \param[in] pToolTgt 对方信息
 	/// \param[in] strTgtNum 对方账号
 	/// \param[in] strSelfNum 本人账号
-	void SetAddChatTgt(QToolButton* pToolTgt, const QString& strTgtNum, const QString& strSelfNum);
+	void SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strTgtNum, const QString& strSelfNum);
 
 	/// \brief 接收消息
 	void OnMessage();
@@ -75,6 +78,10 @@ public:
 	/// \brief 启动视频聊天
 	/// \param[in] strNum 对方账号
 	void StartVideoChat(const QString& strNum);
+
+	/// \brief 初始化局部协议
+	/// \retval 返回协议
+	protocol* InitPartProtocol();
 
 private slots:
 	
@@ -133,9 +140,11 @@ private:
 	};
 	QString m_strSelfNum;       ///< 本人账号
 	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 
-	QMap<QString, QTableWidget *> m_mapFriend_GroupTgt; ///< 账号映射到聊天界面表格
-	QMap<CustomToolButton *, NumInfo> m_mapFriend_Group;  ///< 是单聊还是多人聊天
+	QMap<QString, QTableWidget *> m_mapNumberToTable; ///< 账号映射到聊天界面表格
+	QMap<CustomToolButton *, NumInfo> m_mapFriendState;  ///< 是单聊还是多人聊天，以及好友的状态
 	QMap<CustomMessageWidget*, QString> m_MsgSourceNum;   ///< 聊天内容--好友账号，保存该聊天内容是哪个账号的
+	QMap<QString, QList<quint64>> m_mapNumberToTime;  ///< 好友账号映射到聊天时间
+	QMap<CustomToolButton*, CustomTextEdit*> m_mapFriendToTextEdit;  ///< 好友对应文字编辑框
 };
 
 /// \brief 气泡界面定义
@@ -149,7 +158,8 @@ public:
 		file,   ///< 文件
 		image,  ///< 图像
 		text,   ///< 文本
-		folder  ///< 文件夹
+		folder,  ///< 文件夹
+		voice   ///< 语音
 	};
 
     /// \brief 构造函数
@@ -160,11 +170,15 @@ public:
     /// \brief 设置消息文本内容
     /// \param[in] strContent 消息
     /// \param[in] isSelf 是否是自己的消息
-	void SetText(const QString& strContent, bool isSelf, ContentType type = ContentType::text);
+	void SetContent(const QString& strContent, bool isSelf, ContentType type);
     
     /// \brief 计算坐标，绘制聊天气泡
     /// \paran[in] event 系统参数
 	void paintEvent(QPaintEvent* event);
+
+	/// \brief 初始化文字
+	/// \isSelf 是不是自己发的消息
+	void InitText(bool isSelf);
 
 	/// \brief 返回消息的类型
 	/// \retval 消息类型
@@ -177,6 +191,8 @@ public:
 private:
 	QTextEdit* m_pMessageContent;    ///< 气泡
     QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
+	QMediaPlayer m_player;  ///< 播放语音消息
+	bool m_IsClicked;  ///< 语音消息
 };
 
 

@@ -29,13 +29,13 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 	protocol proto_;
 	if (proto_.ParseFromString(proto.toStdString())) {
 		switch (proto_.type()) {
-		case protocol_Type_ftp:
+		case protocol_MsgType_ftp:
 			break;
-		case protocol_Type_http:
+		case protocol_MsgType_http:
 			break;
-		case protocol_Type_smtp:
+		case protocol_MsgType_smtp:
 			break;
-		case protocol_Type_tcp:
+		case protocol_MsgType_tcp:
 			if (proto_.has_addinfor()) {
 				g_FriendList->RecvFriendApply(proto_.mutable_addinfor());
 				return;
@@ -56,7 +56,7 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 				break;
 			}
 			break;
-		case protocol_Type_udp:
+		case protocol_MsgType_udp:
 			switch (proto_.group(0).type())
 			{
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:

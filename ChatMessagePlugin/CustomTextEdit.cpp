@@ -13,13 +13,15 @@ CustomTextEdit::~CustomTextEdit()
 
 void CustomTextEdit::dragEnterEvent(QDragEnterEvent *event)
 {
+	if (!isReadOnly())
+		clear();
+	setReadOnly(false);
 	event->acceptProposedAction();
 	QTextEdit::dragEnterEvent(event);
 }
 
 void CustomTextEdit::dropEvent(QDropEvent *event)
 {
-	m_strFilePath.clear();
 	QList<QUrl> lsturl = event->mimeData()->urls();
 	foreach(QUrl ur, lsturl) {
 		QFile f(ur.toLocalFile());
@@ -30,6 +32,7 @@ void CustomTextEdit::dropEvent(QDropEvent *event)
 		QImage imIcon = ic.pixmap(QSize(40, 40)).toImage();
 		textCursor().insertImage(imIcon);
 	}
+	setReadOnly(true);
 	QTextEdit::dropEvent(event);
 }
 

@@ -22,3 +22,6 @@
 #include <QAction>
 #include <QMenu>
 #include <QDomNode>
+#include <QAudioRecorder>
+#include <QProgressBar>
+#include <QMediaPlayer>

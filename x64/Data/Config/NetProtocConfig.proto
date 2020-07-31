@@ -11,6 +11,7 @@ message ChatRecord
 		text   = 2;
 		video  = 3;
 		folder = 4;
+		audio  = 5;
 	}
 	contenttype type   			= 2;
 	bytes 		content      	= 3;
@@ -57,6 +58,8 @@ message ChatRecord_Group
 		file  = 0;
 		image = 1;
 		text  = 2;
+		folder= 3;
+		audio = 4;
 	}
 	contenttype type       = 3;
 	bytes 		content    = 4;

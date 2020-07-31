@@ -4,15 +4,17 @@
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
 #include "CustomTextEdit.h"
+#include "HintFrameWidget.h"
 
 #define LAYOUT_MESSAEG_WIDGET   10
+#define TEMP_FILE  "../Data/Config/temp"
 
 ChatMessage* g_pChatMessage = NULL;
 ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NULL)
 {
 	ui.setupUi(this);
 	g_pChatMessage = this;
-	ui.TexEditContent->resize(ui.TexEditContent->width(), 50);
+	ui.TexEditContent->resize(ui.TexEditContent->width(), 80);
 	QHostAddress host("192.168.1.17");
 	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
 	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
@@ -21,10 +23,10 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	CustomToolButton* pToolBu = (CustomToolButton*)GET_MESSAGE(2);
 	bool bType = (bool)GET_MESSAGE(3);
 	NumInfo num(bType, true, *strTargetNum, 0);
-	m_mapFriend_Group[pToolBu] = num;
+	m_mapFriendState[pToolBu] = num;
 	m_strSelfNum = *strSelfNum;
-	CustomToolButton* cus = qobject_cast<CustomToolButton*>(pToolBu); 
 	SetAddChatTgt(pToolBu, *strSelfNum, *strTargetNum);
+	m_mapFriendToTextEdit[pToolBu] = ui.TexEditContent;
 	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strSelfNum).arg(*strTargetNum);
 	DataStructDefine& data = GET_DATA(strChat);
 	ui.BtnEnter->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -46,8 +48,15 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	connect(ui.BtnEnter, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(SlotCustomMenu(const QPoint&)));
 	connect(pAction_enter, SIGNAL(toggled(bool)), this, SLOT(SlotBindEnter(bool)));
 	connect(pAction_No_Enter, SIGNAL(toggled(bool)), this, SLOT(SlotRemoveBindEnter(bool)));
-	m_mapFriend_GroupTgt[*strTargetNum] = ui.tab_MessageContent;
+	connect(ui.BtnClear, &QPushButton::clicked, [this]() {
+		CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+		m_mapFriendToTextEdit[pTgtBu]->clear();
+		m_mapFriendToTextEdit[pTgtBu]->setReadOnly(false);
+	});
+	m_mapNumberToTable[*strTargetNum] = ui.tab_MessageContent;
 	InitChatMessage(data, ui.tab_MessageContent);
+	ui.TexEditContent->setFocus();
+	ui.widget_2->setFixedHeight(50);
 }
 
 ChatMessage::~ChatMessage()
@@ -60,19 +69,22 @@ void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage, QTableW
 	QMap<quint64, QList<Message_Content>> mapMessage;
 	QList<Message_Content> currentContent;
 	QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
-	protocolType protocol;
-	if (protocol.ParseFromString(strContent.toStdString())) {
-		for (int i = 0; i < protocol.chatcontent_size(); i++) {
-			std::string message_content = protocol.chatcontent(i).content();
+	protocol proto;
+	if (proto.ParseFromString(strContent.toStdString())) {
+		for (int i = 0; i < proto.chatcontent_size(); i++) {
+			std::string message_content = proto.chatcontent(i).content();
 			Message_Content Message;
-			Message.type = (Message_Content::Content_Type)protocol.chatcontent(i).type();
+			Message.type = (Message_Content::Content_Type)proto.chatcontent(i).type();
 			Message.strContent = QString::fromStdString(message_content);
-			Message.is_Self = protocol.chatcontent(i).isself();
+			Message.is_Self = proto.chatcontent(i).isself();
 			currentContent << Message;
-			quint64 message_time = protocol.chatcontent(i).time();
+			quint64 message_time = proto.chatcontent(i).time();
 			if (!mapMessage.contains(message_time))
 				currentContent.clear();
 			mapMessage[message_time] = currentContent;
+			QList<quint64> time;
+			time << message_time;
+			m_mapNumberToTime[targetMessage.m_lstAllData[0]["FRIEND_ACCOUNT"].toString()] = time;
 		}
 	}
 	InitMessageUI(mapMessage, tab);
@@ -87,48 +99,39 @@ void ChatMessage::InitMessageUI(const QMap<quint64, QList<Message_Content>>& tar
 	tab->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
 	tab->resizeRowsToContents();
 	for (auto it = targetContent.end(); it != targetContent.begin();it--) {
-		tab->setItem(Row, 0, new QTableWidgetItem(QString::number(it.key())));
+		tab->setItem(Row, 0, new QTableWidgetItem(QDateTime::fromMSecsSinceEpoch(it.key()).toString("MM-dd hh:mm:ss")));
 		tab->item(Row, 0)->setTextAlignment(Qt::AlignHCenter);
         Row++;
 		for (auto it_ = (*it).begin(); it_ != (*it).end();it_++) {
             CustomMessageWidget* MessWidget = new CustomMessageWidget(tab);
-			switch (it_->type)
-			{
-            case Message_Content::Content_Type::text:
-				tab->setCellWidget(Row, 0, MessWidget);
-                MessWidget->SetText(it_->strContent, it_->is_Self);
-				break;
-			case Message_Content::Content_Type::file:
-				tab->setCellWidget(Row, 0, MessWidget);
-                MessWidget->SetText(it_->strContent, it_->is_Self);
-                break;
-			case Message_Content::Content_Type::image:
-				tab->setCellWidget(Row, 0, MessWidget);
-                MessWidget->SetText(it_->strContent, it_->is_Self);
-                break;
-			default:
-				break;
-			}
+			tab->setCellWidget(Row, 0, MessWidget);
+			MessWidget->SetContent(it_->strContent, it_->is_Self, (CustomMessageWidget::ContentType)(it_->type));
             Row++;
 		}
 	}
 }
 
-void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg)
+void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype)
 {
-	for (QMap<CustomToolButton*, NumInfo>::iterator it = m_mapFriend_Group.begin();
-		it != m_mapFriend_Group.end(); it++) 
+	for (QMap<CustomToolButton*, NumInfo>::iterator it = m_mapFriendState.begin();
+		it != m_mapFriendState.end(); it++) 
 		if (it->m_strNum == strTgtNum && !(it->m_isCurrent)) { //如果找到对应的对方账号的话，且不是当前正在聊天的账号，就把消息加一
 			it->m_unknowMessage++;
 			it.key()->SetPaintContent(QString::number(it->m_unknowMessage));
 		}
+	if (m_mapNumberToTime.contains(strTgtNum) && m_mapNumberToTime[strTgtNum].last() != time) {  //如果最后的时间不等于将要接受的时间的话就显示这个新的时间
+		QTableWidgetItem* item = new QTableWidgetItem();
+		item->setTextAlignment(Qt::AlignCenter);
+		item->setText(QDateTime::fromMSecsSinceEpoch(time).toString("MM-dd hh:mm:ss"));
+		m_mapNumberToTable[strTgtNum]->setItem(m_mapNumberToTable[strTgtNum]->rowCount() - 1, 0, item);
+	}
 	CustomMessageWidget* MessWidget = new CustomMessageWidget();
-	MessWidget->SetText(strMsg, false);
-	m_mapFriend_GroupTgt[strTgtNum]->setCellWidget(ui.tab_MessageContent->rowCount() - 1, 0, MessWidget);
+	MessWidget->SetContent(strMsg, false, (CustomMessageWidget::ContentType)msgtype);
+	m_mapNumberToTable[strTgtNum]->setCellWidget(m_mapNumberToTable[strTgtNum]->rowCount() - 1, 0, MessWidget);
 	m_MsgSourceNum[MessWidget] = strTgtNum;
 }
 
-void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum, const QString& strTgtNum)
+void ChatMessage::SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strSelfNum, const QString& strTgtNum)
 {
 	QListWidgetItem* pItemWidget = new QListWidgetItem(ui.LstFriend);
 	ui.LstFriend->addItem(pItemWidget);
@@ -213,7 +216,7 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		splitter_3->addWidget(tab_MessageContent);
 		tab_MessageContent->horizontalHeader()->setVisible(false);
 		tab_MessageContent->verticalHeader()->setVisible(false);
-		m_mapFriend_GroupTgt[strTgtNum] = tab_MessageContent;
+		m_mapNumberToTable[strTgtNum] = tab_MessageContent;
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(strSelfNum).arg(strTgtNum);
 		DataStructDefine& data = GET_DATA(strChat);
 		InitChatMessage(data, tab_MessageContent);
@@ -228,6 +231,7 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		QWidget* widget_2 = new QWidget(layoutWidget1);
 		widget_2->setObjectName("widget_2");
 		widget_2->setStyleSheet("background-color: rgb(255, 255, 255);");
+		ui.widget_2->setFixedHeight(50);
 		QGridLayout* gridLayout_2 = new QGridLayout(widget_2);
 		gridLayout_2->setSpacing(6);
 		gridLayout_2->setObjectName("gridLayout_2");
@@ -278,6 +282,9 @@ void ChatMessage::SetAddChatTgt(QToolButton* pToolTgt, const QString& strSelfNum
 		gridLayout_2->addItem(horizontalSpacer, 0, 4, 1, 1);
 		gridLayout_3->addWidget(widget_2, 0, 0, 1, 1);
 		CustomTextEdit* TexEditContent = new CustomTextEdit(layoutWidget1);
+		TexEditContent->setFocus();
+		TexEditContent->resize(TexEditContent->width(), 80);
+		m_mapFriendToTextEdit[pToolTgt] = TexEditContent;
 		TexEditContent->setObjectName("TexEditContent");
 		TexEditContent->setFrameShape(QFrame::NoFrame);
 		TexEditContent->setFrameShadow(QFrame::Raised);
@@ -309,8 +316,38 @@ QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
 
 void ChatMessage::StartVideoChat(const QString& strNum)
 {
-	SEND_MESSAGE(false, new QString(m_strSelfNum), new QString(strNum));  //代表被动接受
-	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
+	DataStructDefine& data = GET_DATA(QString(SELECT_USER).arg(strNum));
+	QString strUserName = data.m_lstAllData[0]["USER_NAME"].toString();
+	QString strHint = strUserName + QString::fromLocal8Bit("发来视频通话，是否接受？");
+	if (QMessageBox::information(this, QString::fromLocal8Bit("视频通话"), strHint, QMessageBox::Ok | QMessageBox::No) == QMessageBox::Yes) {
+		SEND_MESSAGE(false, new QString(m_strSelfNum), new QString(strNum));  //代表被动接受
+		SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
+	}
+}
+
+protocol* ChatMessage::InitPartProtocol()
+{
+	if (ui.LstFriend->currentItem() == NULL)
+		return NULL;
+	CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+	if (!pTgtBu)
+		return NULL;
+	protocol* proto = new protocol;
+	bool isFriend = m_mapFriendState.contains(pTgtBu);
+	if (isFriend)
+		if (m_mapFriendState[pTgtBu].m_Friend_Group) {
+			proto->set_type(protocol_MsgType_tcp);
+			proto->set_count(protocol_Chat_OneorMultiple_one);
+			proto->set_myselfnum(m_strSelfNum.toStdString());
+		}
+		else {
+			proto->set_type(protocol_MsgType_udp);
+			proto->set_count(protocol_Chat_OneorMultiple_multiple);
+			proto->set_myselfnum(m_strSelfNum.toStdString());
+		}
+	else 
+		return NULL;
+	return proto;
 }
 
 void ChatMessage::OnMessage()
@@ -322,28 +359,28 @@ void ChatMessage::OnMessage()
 	for (int i = 0;i < ui.LstFriend->count();i++) 
 		if (ui.LstFriend->itemWidget(ui.LstFriend->item(i)) == pToolBu)
 			return;
-	for (QMap<CustomToolButton*, ChatMessage::NumInfo>::iterator it = m_mapFriend_Group.begin();
-		it != m_mapFriend_Group.end();it++) {
+	for (QMap<CustomToolButton*, ChatMessage::NumInfo>::iterator it = m_mapFriendState.begin();
+		it != m_mapFriendState.end();it++) {
 		it->m_isCurrent = false; //全部重置
 	}
 	NumInfo num(isFriend, true, *strTgtNumber, 0);
-	m_mapFriend_Group[pToolBu] = num;
+	m_mapFriendState[pToolBu] = num;
 	SetAddChatTgt(pToolBu, *strTgtNumber, *strSelfNumber);
 }
 
 void ChatMessage::SaveChatRecord()
 {
 	//在窗口关闭的时候保存聊天记录
-	for (QMap<QString, QTableWidget *>::iterator it = m_mapFriend_GroupTgt.begin();
-		it != m_mapFriend_GroupTgt.end(); it++) {
+	for (QMap<QString, QTableWidget *>::iterator it = m_mapNumberToTable.begin();
+		it != m_mapNumberToTable.end(); it++) {
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(m_strSelfNum).arg(it.key());
 		DataStructDefine& data = GET_DATA(strChat);
-		protocolType protocol;
+		protocol proto;
 		for (int i = 0; i < (*it)->rowCount(); i++) {
 			CustomMessageWidget* pMsgWidget = static_cast<CustomMessageWidget*>((*it)->cellWidget(i, 0));
 			QString strContent = QString::fromUtf8(data.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
-			if (protocol.ParseFromString(strContent.toStdString())) {
-				ChatRecord* record = protocol.add_chatcontent();
+			if (proto.ParseFromString(strContent.toStdString())) {
+				ChatRecord* record = proto.add_chatcontent();
 				if (m_MsgSourceNum.contains(pMsgWidget))
 					if (m_MsgSourceNum[pMsgWidget] == m_strSelfNum) 
 						record->set_selfnumber(m_strSelfNum.toStdString());
@@ -373,42 +410,68 @@ void ChatMessage::SaveChatRecord()
 	}
 }
 
-void ChatMessage::SlotSendTextContent()
+void ChatMessage::SlotSendTextContent()  //发送类型待区分
 {
-	protocolType proto;
+	protocol* proto = InitPartProtocol();
+	if (!proto)
+		return;
 	CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
-	if (m_mapFriend_Group.contains(pTgtBu)) 
-		if (m_mapFriend_Group[pTgtBu].m_Friend_Group) {
-			proto.set_type(protocolType_Type_tcp);
-			proto.set_count(protocolType_Chat_OneorMultiple_one);
-			m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::TCP);
-			if (!ui.TexEditContent->toPlainText().isEmpty()) {
-				ChatRecord* chat = proto.add_chatcontent();
-				chat->set_content(ui.TexEditContent->toPlainText().toStdString());
-				chat->set_time(QDateTime::currentMSecsSinceEpoch());
-				chat->set_targetnumber(m_mapFriend_Group[pTgtBu].m_strNum.toStdString());
-				chat->set_selfnumber(m_strSelfNum.toStdString());
-				chat->set_isself(true);
-				chat->set_type(ChatRecord_contenttype_text);  /*默认文字，后续更改*/
-				if (m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString())) > 0) 
-					SetAddMessage(m_strSelfNum, ui.TexEditContent->toPlainText());
+	if(proto->count() == protocol_Chat_OneorMultiple_one) {
+		m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::TCP);	
+		if (!m_mapFriendToTextEdit[pTgtBu]->toPlainText().isEmpty()) {
+			ChatRecord* chat = proto->add_chatcontent();
+			chat->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
+			chat->set_time(QDateTime::currentMSecsSinceEpoch());
+			chat->set_targetnumber(m_mapFriendState[pTgtBu].m_strNum.toStdString());
+			chat->set_selfnumber(m_strSelfNum.toStdString());
+			chat->set_isself(true);
+			for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
+				QFileInfo info(strFile);
+				if (info.suffix() == "jpeg" || info.suffix() == "png" ||
+					info.suffix() == "bmp"  || info.suffix() == "jpg")
+					chat->set_type(ChatRecord_contenttype_image);
+				else if (info.isDir())
+					chat->set_type(ChatRecord_contenttype_folder);
+				else
+					chat->set_type(ChatRecord_contenttype_file);
 			}
+			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty())
+				chat->set_type(ChatRecord_contenttype_text);
+			if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
+				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), chat->time(), (Message_Content::Content_Type)chat->type());
+			m_mapFriendToTextEdit[pTgtBu]->clearCache();
+			m_mapFriendToTextEdit[pTgtBu]->clear();
 		}
-		else {
-			proto.set_type(protocolType_Type_udp);
-			proto.set_count(protocolType_Chat_OneorMultiple_multiple);
-			m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::UDP);
-			if (!ui.TexEditContent->toPlainText().isEmpty()) {
-				ChatRecord_Group* pGroup = proto.add_group();
-				pGroup->set_account(m_mapFriend_Group[pTgtBu].m_strNum.toStdString());
-				pGroup->set_selfnumber(m_strSelfNum.toStdString());
-				pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
-				pGroup->set_content(ui.TexEditContent->toPlainText().toStdString());
-				pGroup->set_type(ChatRecord_Group_contenttype_text);  /*默认文字，后续更改*/
-				if(m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString())) > 0)
-					SetAddMessage(m_mapFriend_Group[pTgtBu].m_strNum, ui.TexEditContent->toPlainText());
+	}
+	else {
+		m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::UDP);
+		if (!m_mapFriendToTextEdit[pTgtBu]->toPlainText().isEmpty()) {
+			ChatRecord_Group* pGroup = proto->add_group();
+			CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+			pGroup->set_account(m_mapFriendState[pTgtBu].m_strNum.toStdString());
+			pGroup->set_selfnumber(m_strSelfNum.toStdString());
+			pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
+			pGroup->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
+			for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
+				QFileInfo info(strFile);
+				if (info.suffix() == "jpeg" || info.suffix() == "png" ||
+					info.suffix() == "bmp" || info.suffix() == "jpg")
+					pGroup->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_image);
+				else if (info.isDir())
+					pGroup->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_folder);
+				else
+					pGroup->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file);
 			}
+			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty())
+				pGroup->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text);
+			if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
+				SetAddMessage(m_mapFriendState[pTgtBu].m_strNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
+			m_mapFriendToTextEdit[pTgtBu]->clearCache();
+			m_mapFriendToTextEdit[pTgtBu]->clear();
 		}
+	}
+	delete proto;
+	proto = NULL;
 }
 
 
@@ -417,16 +480,16 @@ void ChatMessage::SlotSwitchFriend(QListWidgetItem *current, QListWidgetItem *pr
 	//切换到之前的聊天
 	ui.stackedWidget->setCurrentIndex(ui.LstFriend->currentRow());
 	CustomToolButton* pToolBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(current));
-	m_mapFriend_Group[pToolBu].m_unknowMessage = 0;
-	for (QMap<CustomToolButton*, ChatMessage::NumInfo>::iterator it = m_mapFriend_Group.begin();it != m_mapFriend_Group.end(); it++) it->m_isCurrent = false; //全部重置
-	m_mapFriend_Group[pToolBu].m_isCurrent = true;
+	m_mapFriendState[pToolBu].m_unknowMessage = 0;
+	for (QMap<CustomToolButton*, ChatMessage::NumInfo>::iterator it = m_mapFriendState.begin();it != m_mapFriendState.end(); it++) it->m_isCurrent = false; //全部重置
+	m_mapFriendState[pToolBu].m_isCurrent = true;
 	pToolBu->SetPaintContent("");
 }
 
 void ChatMessage::SlotBtnVideo()
 {
 	CustomToolButton* pTgt = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
-	SEND_MESSAGE(true, new QString(m_strSelfNum), new QString(m_mapFriend_Group[pTgt].m_strNum));
+	SEND_MESSAGE(true, new QString(m_strSelfNum), new QString(m_mapFriendState[pTgt].m_strNum));
 	SendSIG(Signal_::LOADPLUG, "VideoChatPlugin");
 }
 
@@ -455,10 +518,84 @@ void ChatMessage::SlotBtnVibration()
 
 }
 
+//语音··
 void ChatMessage::SlotBtnVoice()
 {
-
-}
+	protocol* proto = InitPartProtocol();
+	if (!proto)
+		return;
+	QAudioRecorder *audio = new QAudioRecorder;
+	QStringList strAudio = audio->audioInputs();
+	if (strAudio.isEmpty()) {
+		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("当前没有可用的音频设备！"), this);
+		hint->show();
+		return;
+	}
+	QWidget* audioWidget = new QWidget(this);
+	audioWidget->setAttribute(Qt::WA_DeleteOnClose);
+	audioWidget->setWindowFlag(Qt::FramelessWindowHint);
+	QPushButton* buttonSend = new QPushButton(QString::fromLocal8Bit("发送"), audioWidget);
+	QPushButton* buttonCancle = new QPushButton(QString::fromLocal8Bit("关闭"), audioWidget);
+	QPushButton* buttonStart = new QPushButton(QString::fromLocal8Bit("开始"), audioWidget);
+	connect(buttonStart, &QPushButton::clicked, [audio]() {
+		audio->setAudioInput(audio->defaultAudioInput());
+		QFile audioFile("../Data/Config/temp");
+		audioFile.open(QIODevice::WriteOnly);
+		audioFile.close();
+		audio->setOutputLocation(QUrl::fromLocalFile("../Data/Config/temp"));
+		audio->record();
+	});
+	connect(buttonCancle, &QPushButton::clicked, [audioWidget, &audio]() {
+		audio->stop();
+		delete audio;
+		audio = NULL;
+		audioWidget->close();
+	});
+	connect(buttonSend, &QPushButton::clicked, [&audio, proto, this]()mutable {
+		if (proto->count() == protocol_Chat_OneorMultiple_one) {
+			ChatRecord* rec = proto->add_chatcontent();
+			rec->set_selfnumber(m_strSelfNum.toStdString());
+			CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+			rec->set_targetnumber(m_mapFriendState[pTgtBu].m_strNum.toStdString());
+			rec->set_time(QDateTime::currentMSecsSinceEpoch());
+			rec->set_isself(true);
+			QFile audioFile(TEMP_FILE);
+			if(audioFile.open(QIODevice::ReadOnly)) {
+				rec->set_content(audioFile.readAll().data());
+				audioFile.close();
+			}
+			rec->set_type(ChatRecord_contenttype_audio);
+		} 
+		else {
+			ChatRecord_Group* group = proto->add_group();
+			CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+			group->set_account(m_mapFriendState[pTgtBu].m_strNum.toStdString());
+			QFile audioFile("../Data/Config/temp");
+			if (audioFile.open(QIODevice::ReadOnly)) {
+				group->set_content(audioFile.readAll().data());
+				audioFile.close();
+			}
+			group->set_currtime(QDateTime::currentMSecsSinceEpoch());
+			group->set_selfnumber(m_strSelfNum.toStdString());
+			group->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_audio);
+		}
+		m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString()));
+		delete proto;
+		proto = NULL;
+	});
+	QProgressBar* proBar = new QProgressBar(audioWidget);
+	proBar->setRange(0, 0);
+	proBar->setEnabled(false);
+	QHBoxLayout* hBlayout = new QHBoxLayout(audioWidget);
+	proBar->setFixedWidth(ui.tab_MessageContent->width() - 100);
+	hBlayout->addWidget(proBar);
+	hBlayout->addWidget(buttonStart);
+	hBlayout->addWidget(buttonSend);
+	hBlayout->addWidget(buttonCancle);
+	hBlayout->setContentsMargins(0, 0, 0, 0);
+	audioWidget->setLayout(hBlayout);
+	audioWidget->show();
+} 
 
 void ChatMessage::SlotCustomMenu(const QPoint& point)
 {
@@ -478,7 +615,7 @@ void ChatMessage::SlotRemoveBindEnter(bool isClicked)
 
 QFont g_Message_Font;
 CustomMessageWidget::CustomMessageWidget(QWidget* parent /*= 0*/) : QWidget(parent),
-    m_pTargetTab(static_cast<QTableWidget*>(parent)), m_pMessageContent(nullptr)
+    m_pTargetTab(static_cast<QTableWidget*>(parent)), m_pMessageContent(nullptr), m_IsClicked(false)
 {
 	g_Message_Font.setFamily("Microsoft YaHei");
 	g_Message_Font.setPixelSize(18);  //此处应该根据系统的分辨率调整
@@ -489,11 +626,125 @@ CustomMessageWidget::~CustomMessageWidget()
 
 }
 
-void CustomMessageWidget::SetText(const QString& strContent, bool isSelf, ContentType type)
+void CustomMessageWidget::SetContent(const QString& strContent, bool isSelf, ContentType type)
 {
-	
+	m_ArrayData = strContent.toLocal8Bit().data();
 	m_MsgType = type; 
-	m_strContent = const_cast<QString&>(strContent);
+	switch(m_MsgType) 
+	{
+	case ContentType::text:
+		m_strContent = const_cast<QString&>(strContent);
+		InitText(isSelf);
+		break;
+	case ContentType::file:
+	{
+		m_strContent = const_cast<QString&>(strContent);
+		QLabel* labFile = new QLabel(this);
+		labFile->setWordWrap(true);
+		labFile->setText(QString::fromLocal8Bit("文件:") + strContent);
+		QGridLayout* lay = new QGridLayout;
+		lay->setContentsMargins(0, 0, 0, 0);
+		lay->addWidget(labFile);
+		setLayout(lay);
+	}
+		break;
+	case ContentType::folder:
+	{
+		m_strContent = const_cast<QString&>(strContent);
+		QLabel* labFile = new QLabel(this);
+		labFile->setWordWrap(true);
+		labFile->setText(QString::fromLocal8Bit("文件夹:") + strContent);
+		QGridLayout* lay = new QGridLayout;
+		lay->setContentsMargins(0, 0, 0, 0);
+		lay->addWidget(labFile);
+		setLayout(lay);
+	}
+		break;
+	case ContentType::image:
+	{
+		QLabel* labFile = new QLabel(this);
+		labFile->setPixmap(QPixmap::fromImage(QImage::fromData(strContent.toStdString().c_str())).scaled(100,100));
+		QGridLayout* lay = new QGridLayout;
+		lay->setContentsMargins(0, 0, 0, 0);
+		lay->addWidget(labFile);
+		setLayout(lay);
+	}
+		break;
+	case ContentType::voice:
+	{
+		QPushButton* buttonVoice = new QPushButton(this);
+		buttonVoice->setFlat(true);
+		buttonVoice->setIcon(QIcon("../Data/Image/voice.png"));
+		buttonVoice->setText(QString::fromLocal8Bit("语音"));
+		connect(buttonVoice, &QPushButton::clicked, [this]() {
+			QFile file(TEMP_FILE);
+			if (file.open(QIODevice::ReadWrite)) {
+				if (!m_IsClicked) {
+					m_IsClicked = !m_IsClicked;
+					m_player.stop();
+					return;
+				}
+				m_IsClicked = !m_IsClicked;
+				file.write(m_ArrayData);
+				file.seek(0);
+				m_player.setMedia(QMediaContent(QUrl::fromLocalFile(TEMP_FILE)), &file);
+				m_player.play();
+			}
+		});
+		QGridLayout* lay = new QGridLayout;
+		lay->setContentsMargins(0, 0, 0, 0);
+		lay->addWidget(buttonVoice);
+		setLayout(lay);
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+void CustomMessageWidget::paintEvent(QPaintEvent *event)
+{
+	switch (m_MsgType) {
+	case ContentType::text:
+	case ContentType::file:
+	case ContentType::folder:
+	{
+		QFontMetrics fmf(g_Message_Font);
+		QRect textRange = fmf.boundingRect(m_strContent);
+		int lineHeight = fmf.lineSpacing();
+		textRange.setWidth(textRange.width() + fmf.averageCharWidth() * m_strContent.count(" "));
+		int residu = textRange.width() / (m_pTargetTab->width() - 113);
+		lineHeight *= ++residu;
+		if (textRange.width() > (m_pTargetTab->width() - 80)) {
+			m_pMessageContent->setFixedWidth(m_pTargetTab->width() - 110);
+			m_pMessageContent->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) - LAYOUT_MESSAEG_WIDGET);
+			this->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
+			for (int r = 0; r < m_pTargetTab->rowCount(); r++)
+				if (m_pTargetTab->cellWidget(r, 0) == this) {
+					m_pTargetTab->setRowHeight(r, lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
+					break;
+				}
+		}
+		else {
+			for (int r = 0; r < m_pTargetTab->rowCount(); r++)
+				if (m_pTargetTab->cellWidget(r, 0) == this) {
+					m_pTargetTab->setRowHeight(r, textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
+					break;
+				}
+			m_pMessageContent->setFixedWidth(textRange.width() + LAYOUT_MESSAEG_WIDGET * 2);
+			m_pMessageContent->setFixedHeight(textRange.height() + (fmf.ascent() - fmf.descent()));
+			this->setFixedHeight(textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
+		}
+	}
+		break;
+	default:
+		break;
+	}
+    QWidget::paintEvent(event);
+}
+
+void CustomMessageWidget::InitText(bool isSelf)
+{
 	QPushButton* button = new QPushButton(this);
 	m_pMessageContent = new QTextEdit(this);
 	m_pMessageContent->setText(m_strContent);
@@ -521,37 +772,6 @@ void CustomMessageWidget::SetText(const QString& strContent, bool isSelf, Conten
 	}
 	lay->setContentsMargins(0, LAYOUT_MESSAEG_WIDGET, 0, LAYOUT_MESSAEG_WIDGET);
 	setLayout(lay);
-}
-
-void CustomMessageWidget::paintEvent(QPaintEvent *event)
-{
-	QFontMetrics fmf(g_Message_Font);
-	QRect textRange = fmf.boundingRect(m_strContent);
-	int lineHeight = fmf.lineSpacing();
-    textRange.setWidth(textRange.width() + fmf.averageCharWidth() * m_strContent.count(" "));
-    int residu = textRange.width() / (m_pTargetTab->width() - 113);
-	lineHeight *= ++residu;
-	if (textRange.width() > (m_pTargetTab->width() - 80)) {
-        m_pMessageContent->setFixedWidth(m_pTargetTab->width() - 110);
-        m_pMessageContent->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) - LAYOUT_MESSAEG_WIDGET);
-		this->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
-		for (int r = 0; r < m_pTargetTab->rowCount(); r++) 
-            if (m_pTargetTab->cellWidget(r, 0) == this) {
-                m_pTargetTab->setRowHeight(r, lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
-                break;
-            }
-	}
-	else {
-		for (int r = 0; r < m_pTargetTab->rowCount(); r++)
-			if (m_pTargetTab->cellWidget(r, 0) == this) {
-                m_pTargetTab->setRowHeight(r, textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
-                break;
-			}
-        m_pMessageContent->setFixedWidth(textRange.width() + LAYOUT_MESSAEG_WIDGET * 2);
-        m_pMessageContent->setFixedHeight(textRange.height() + (fmf.ascent() - fmf.descent()));
-		this->setFixedHeight(textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
-	}
-    QWidget::paintEvent(event);
 }
 
 CustomMessageWidget::ContentType CustomMessageWidget::GetType()

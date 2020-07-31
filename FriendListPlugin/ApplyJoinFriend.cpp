@@ -50,6 +50,6 @@ void ApplyJoinFriend::SlotBtnSend()
 	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
 	protocol proto;
 	proto.set_allocated_addinfor(&add_info);
-	proto.set_type(protocol_Type_tcp);
+	proto.set_type(protocol_MsgType_tcp);
 	m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString()));
 }

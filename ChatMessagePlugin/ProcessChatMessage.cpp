@@ -28,44 +28,53 @@ int ProcessChatMessage::RecvMessage()
 	return size;
 }
 
-void ProcessChatMessage::AnalysisProtocol(QByteArray& proto)
+void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 {
-	protocolType protocol;
-	if (protocol.ParseFromString(proto.toStdString())) {
-		switch (protocol.type()) {
-		case protocolType_Type_ftp:
+	protocol proto;
+	if (proto.ParseFromString(protoArray.toStdString())) {
+		switch (proto.type()) {
+		case protocol_MsgType_ftp:
 			break;
-		case protocolType_Type_http:
+		case protocol_MsgType_http:
 			break;
-		case protocolType_Type_smtp:
+		case protocol_MsgType_smtp:
 			break;
-		case protocolType_Type_tcp:
-			switch (protocol.chatcontent(0).type())
+		case protocol_MsgType_tcp:
+			switch (proto.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()), QString::fromLocal8Bit("文件："));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), QString::fromLocal8Bit("文件："), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::file);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::image);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(protocol.chatcontent(0).content()));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::text);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_video:
-				g_pChatMessage->StartVideoChat(QString::fromStdString(protocol.mutable_chatcontent(0)->selfnumber()));
+				g_pChatMessage->StartVideoChat(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()));
+				break;
+			case ChatRecord_contenttype::ChatRecord_contenttype_audio:
+				g_pChatMessage->SetAddMessage(proto.mutable_chatcontent(0)->selfnumber().c_str(), proto.mutable_chatcontent(0)->content().c_str(), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::voice);
 				break;
 			default:
 				break;
 			}
 			break;
-		case protocolType_Type_udp:
-			switch (protocol.group(0).type())
+		case protocol_MsgType_udp:
+			switch (proto.group(0).type())
 			{
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_file:
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_group(0)->account()), QString::fromStdString(proto.mutable_group(0)->content()), proto.mutable_group(0)->currtime(), Message_Content::Content_Type::file);
 				break;
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_image:
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_group(0)->account()), QString::fromStdString(proto.mutable_group(0)->content()), proto.mutable_group(0)->currtime(), Message_Content::Content_Type::image);
 				break;
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(protocol.mutable_group(0)->account()), QString::fromStdString(protocol.mutable_group(0)->content()));
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_group(0)->account()), QString::fromStdString(proto.mutable_group(0)->content()), proto.mutable_group(0)->currtime(), Message_Content::Content_Type::text);
+				break;
+			case ChatRecord_contenttype::ChatRecord_contenttype_audio:
+				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_group(0)->account()), QString::fromStdString(proto.mutable_group(0)->content()), proto.mutable_group(0)->currtime(), Message_Content::Content_Type::voice);
 				break;
 			default:
 				break;

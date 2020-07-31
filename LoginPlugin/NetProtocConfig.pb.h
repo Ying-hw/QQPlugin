@@ -95,12 +95,13 @@ enum ChatRecord_contenttype {
   ChatRecord_contenttype_text = 2,
   ChatRecord_contenttype_video = 3,
   ChatRecord_contenttype_folder = 4,
+  ChatRecord_contenttype_audio = 5,
   ChatRecord_contenttype_ChatRecord_contenttype_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   ChatRecord_contenttype_ChatRecord_contenttype_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool ChatRecord_contenttype_IsValid(int value);
 const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MIN = ChatRecord_contenttype_file;
-const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MAX = ChatRecord_contenttype_folder;
+const ChatRecord_contenttype ChatRecord_contenttype_contenttype_MAX = ChatRecord_contenttype_audio;
 const int ChatRecord_contenttype_contenttype_ARRAYSIZE = ChatRecord_contenttype_contenttype_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ChatRecord_contenttype_descriptor();
@@ -138,12 +139,14 @@ enum ChatRecord_Group_contenttype {
   ChatRecord_Group_contenttype_file = 0,
   ChatRecord_Group_contenttype_image = 1,
   ChatRecord_Group_contenttype_text = 2,
+  ChatRecord_Group_contenttype_folder = 3,
+  ChatRecord_Group_contenttype_audio = 4,
   ChatRecord_Group_contenttype_ChatRecord_Group_contenttype_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   ChatRecord_Group_contenttype_ChatRecord_Group_contenttype_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool ChatRecord_Group_contenttype_IsValid(int value);
 const ChatRecord_Group_contenttype ChatRecord_Group_contenttype_contenttype_MIN = ChatRecord_Group_contenttype_file;
-const ChatRecord_Group_contenttype ChatRecord_Group_contenttype_contenttype_MAX = ChatRecord_Group_contenttype_text;
+const ChatRecord_Group_contenttype ChatRecord_Group_contenttype_contenttype_MAX = ChatRecord_Group_contenttype_audio;
 const int ChatRecord_Group_contenttype_contenttype_ARRAYSIZE = ChatRecord_Group_contenttype_contenttype_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ChatRecord_Group_contenttype_descriptor();
@@ -411,6 +414,8 @@ class ChatRecord : public ::google::protobuf::Message /* @@protoc_insertion_poin
     ChatRecord_contenttype_video;
   static const contenttype folder =
     ChatRecord_contenttype_folder;
+  static const contenttype audio =
+    ChatRecord_contenttype_audio;
   static inline bool contenttype_IsValid(int value) {
     return ChatRecord_contenttype_IsValid(value);
   }
@@ -998,6 +1003,10 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
     ChatRecord_Group_contenttype_image;
   static const contenttype text =
     ChatRecord_Group_contenttype_text;
+  static const contenttype folder =
+    ChatRecord_Group_contenttype_folder;
+  static const contenttype audio =
+    ChatRecord_Group_contenttype_audio;
   static inline bool contenttype_IsValid(int value) {
     return ChatRecord_Group_contenttype_IsValid(value);
   }
