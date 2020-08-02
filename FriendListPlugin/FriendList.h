@@ -114,7 +114,20 @@ public:
 	/// \param[in] infor 对方信息
 	void RecvFriendApply(AddInformation* infor);
 
+	/// \brief 调整菜单位置
+	/// \param[in] event 系统参数
 	void paintEvent(QPaintEvent *event);
+
+	/// \brief 更新好友的状态
+	/// \param[in] strNum 好友账号
+	/// \param[in] state 状态信息
+	void UpdateFriendState(const QString strNum, protocol_StateMsg state);
+
+	/// \brief 彩色头像转换灰度图像
+	/// \param[in] icon 图像源
+	/// \param[in] size 大小
+	/// \retval 返回转换后的灰度头像
+	static QImage convertImage(QIcon iconSource, QSize size);
 
 	static QString* m_pUserNumber;    ///< 本人账号
 
@@ -139,6 +152,10 @@ private slots:
 	/// \brief 切换好友列表消息列表空间
 	void SwitchFriMsgSpace();
 
+	/// \brief 状态改变（在线，离线，隐身，勿扰）
+	/// \param[in] strCurrentText 当前状态
+	void SlotChangedState(const QString &strCurrentText);
+
 private:
 #ifndef CHATMESSAGE_H
 	Ui::FriendList ui;
@@ -147,6 +164,7 @@ private:
 	QMap<CustomToolButton *, QString> m_mapFriend;   ///< 好友映射
 	QMap<CustomToolButton *, QString> m_mapMesssage;  ///< 消息映射
 	QMenu* m_pSystemMenu;  ///< 系统菜单
+	ProsessMessage m_NetWorkProsess;  ///< 处理网络消息
 };
 
 

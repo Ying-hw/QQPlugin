@@ -80,6 +80,10 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 				break;
 			}
 			break;
+		case protocol_MsgType_state:
+			g_pChatMessage->UpdateFriendState(QString::fromStdString(proto.myselfnum()), proto.currstate());
+		default:
+			break;
 		}
 	}
 }

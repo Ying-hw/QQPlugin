@@ -2,6 +2,7 @@
 #define CHATMESSAGE_H
 
 #include "ui_ChatMessage.h"
+#include "NetProtocConfig.pb.h"
 #include "MacroDefine.h"
 #include "ProcessChatMessage.h"
 #include "sqlPlugin.h"
@@ -83,6 +84,11 @@ public:
 	/// \retval 返回协议
 	protocol* InitPartProtocol();
 
+	/// \brief 更新好友状态
+	/// \param[in] strNum 好友账号
+	/// \param[in] state 状态
+	void UpdateFriendState(QString strNum, protocol_StateMsg state);
+
 private slots:
 	
     /// \brief 发送网络消息 
@@ -130,10 +136,10 @@ private:
 	Ui::ChatMessage ui;		///< 界面对象
 	struct NumInfo
 	{
-		NumInfo() : m_unknowMessage(0), m_Friend_Group(true), m_isCurrent(false) {}
+		NumInfo() : m_unknowMessage(0), m_IsFriend(true), m_isCurrent(false) {}
 		NumInfo(bool Friend_Group, bool isCurrent, QString& strNum, quint32 unknowMessage)
-			: m_Friend_Group(Friend_Group), m_isCurrent(isCurrent), m_strNum(strNum), m_unknowMessage(unknowMessage) {}
-		bool m_Friend_Group;
+			: m_IsFriend(Friend_Group), m_isCurrent(isCurrent), m_strNum(strNum), m_unknowMessage(unknowMessage) {}
+		bool m_IsFriend;
 		bool m_isCurrent;
 		QString m_strNum;
 		quint32 m_unknowMessage;
@@ -141,10 +147,11 @@ private:
 	QString m_strSelfNum;       ///< 本人账号
 	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 
 	QMap<QString, QTableWidget *> m_mapNumberToTable; ///< 账号映射到聊天界面表格
-	QMap<CustomToolButton *, NumInfo> m_mapFriendState;  ///< 是单聊还是多人聊天，以及好友的状态
+	QMap<CustomToolButton *, NumInfo> m_mapFriendInfo;  ///< 是单聊还是多人聊天，以及好友的状态
 	QMap<CustomMessageWidget*, QString> m_MsgSourceNum;   ///< 聊天内容--好友账号，保存该聊天内容是哪个账号的
-	QMap<QString, QList<quint64>> m_mapNumberToTime;  ///< 好友账号映射到聊天时间
+	QMap<QString, QList<quint64>> m_mapNumberToTime;  ///< 好友映射到聊天时间
 	QMap<CustomToolButton*, CustomTextEdit*> m_mapFriendToTextEdit;  ///< 好友对应文字编辑框
+	QMap<QString, QLabel*> m_mapFriendState; ///< 好友状态
 };
 
 /// \brief 气泡界面定义

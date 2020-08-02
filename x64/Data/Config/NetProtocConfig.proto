@@ -70,24 +70,32 @@ message protocol
 {
 	enum MsgType
 	{
-		tcp  = 0;
-		udp  = 1;
-		http = 2;
-		smtp = 3;
-		ftp  = 4;
-		online = 5;
+		tcp    = 0;
+		udp    = 1;
+		http   = 2;
+		smtp   = 3;
+		ftp    = 4;
+		state  = 5;
 	}
 	enum Chat_OneorMultiple
 	{
 		one      = 0;
 		multiple = 1;
 	}
+	enum StateMsg
+	{
+		Online     = 0;
+		Offline    = 1;
+		hide       = 2;
+		dontexcuse = 3;
+	}
 	MsgType                   type         = 1;
-	bytes                     MySelfNum    = 2;
-	Chat_OneorMultiple        count        = 3;
-	repeated ChatRecord       chatContent  = 4;
-	repeated ChatRecord_Group group        = 5;
-	AddInformation            addInfor     = 6;
+	StateMsg                  currState    = 2;
+	bytes                     MySelfNum    = 3;
+	Chat_OneorMultiple        count        = 4;
+	repeated ChatRecord       chatContent  = 5;
+	repeated ChatRecord_Group group        = 6;
+	AddInformation            addInfor     = 7;
 }
 
 

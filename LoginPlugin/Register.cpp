@@ -157,12 +157,13 @@ void Register::AddUserToSqldatabase()
 		.arg(gender).arg(age).arg(strAddress)
 		.arg(strOccupational).arg(strBirthplace)
 		.arg(strSchool).arg(strIdentify);
+	QString strInsertState = QString(INSERT_FRIENDSTATE).arg(ui.EditUserNumber->text()).arg(QString::fromLocal8Bit("在线"));
 
-	if (OPEN_DATATBASE() && EXECUTE(strRegisterUserSql) && UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(strAccount), QVariant(LoadDefaultImage()))) {
+	if (OPEN_DATATBASE() && EXECUTE(strRegisterUserSql) && UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(strAccount), QVariant(LoadDefaultImage())) && EXECUTE(strInsertState)) {
 		QMessageBox::critical(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功"));
 		ui.BtnReturn->click();
 	}
-	else
+	else 
 		QMessageBox::warning(this, QString::fromLocal8Bit("错误"),
 			QString::fromLocal8Bit("网络连接失败！"));
 }

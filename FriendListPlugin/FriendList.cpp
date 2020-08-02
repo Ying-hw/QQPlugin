@@ -6,7 +6,7 @@
 FriendList* g_FriendList = NULL;
 QString* FriendList::m_pUserNumber = NULL;
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
-FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL)
+FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL), m_NetWorkProsess(AbstractNetWork::ProtoType::TCP, QHostAddress("192.168.1.17") , 7007, this)
 {
 	ui.setupUi(this);
 	g_FriendList = this;
@@ -48,6 +48,7 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(ui.ComState, SIGNAL(clicked(currentIndexChanged(const QString&))), this, SLOT(SlotChangedState(const QString&)));
 	ui.LabImage->setPixmap(PixmapToRound(QPixmap(CONDIGFILE), 40));
 	QMenu* pMenu = new QMenu(this);
 	pMenu->addAction(pAction_enter);
@@ -57,22 +58,33 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 
 FriendList::~FriendList()
 {
+	SlotChangedState(QString::fromLocal8Bit("离线"));
 }
 
 void FriendList::RecoveryChatRecord()
 {
-	protocol protoContent;
 	QMap<QString, protocol> mapChat;
 	QString strSelectFriend = QString(SELECT_CHAT_CONTENT).arg(*m_pUserNumber);
 	sqlPlugin::DataStructDefine& target = GET_DATA(strSelectFriend);
 	for (int i = 0; i < target.m_lstAllData.size();i++) {
+		protocol protoContent;
 		std::string array = QString::fromUtf8(target.m_lstAllData[i]["CHAT_RECORD"].toByteArray().data()).toStdString();
-		if (protoContent.ParseFromString(array) && !array.empty()) {
+		if (!array.empty() && protoContent.ParseFromString(array)) {
 			QString strAccount = target.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+			if (strAccount == *m_pUserNumber)
+				strAccount = target.m_lstAllData[i]["USER_ACCOUNT"].toString();
+			mapChat[strAccount] = protoContent;
+		}
+		std::string unknowArray = QString::fromUtf8(target.m_lstAllData[i]["UNKNOW_MSG"].toByteArray().data()).toStdString();
+		protocol pro;
+		if (!unknowArray.empty() && pro.ParseFromString(unknowArray)) {
+			protoContent.MergeFrom(pro);
+			QString strAccount = target.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+			if (strAccount == *m_pUserNumber)
+				strAccount = target.m_lstAllData[i]["USER_ACCOUNT"].toString();
 			mapChat[strAccount] = protoContent;
 		}
 	}
-
 	for (QMap<QString, protocol>::const_iterator it = mapChat.constBegin();
 		it != mapChat.constEnd(); it++) {
 		QString strSelectUser = QString(SELECT_USER).arg(it.key());
@@ -121,9 +133,16 @@ void FriendList::InitFriendList()
 			QByteArray arrayImage = friendata.m_lstAllData[0]["IMAGE"].toByteArray();
 			QString strName = friendata.m_lstAllData[0]["USER_NAME"].toString();
 			if (pix.loadFromData(arrayImage)) {
-				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-				newpix = PixmapToRound(newpix, 50);
+				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);				
 				CustomToolButton* pToolBu = new CustomToolButton(ui.Friend_List);
+				QString strState = QString(SELECT_STATE).arg(data.m_lstAllData[i]["FRIEND_ACCOUNT"].toString());
+				sqlPlugin::DataStructDefine& userState = GET_DATA(strState);
+				if (!userState.m_lstAllData.isEmpty()) {
+					QString strState = userState.m_lstAllData[0]["STATE"].toString();
+					if (strState == QString::fromLocal8Bit("离线") || strState == QString::fromLocal8Bit("隐身"))
+						newpix = QPixmap::fromImage(convertImage(QIcon(newpix), pToolBu->iconSize()));
+				}
+				newpix = PixmapToRound(newpix, 50);
 				pToolBu->setIcon(newpix);
 				pToolBu->setText(strName);
 				pToolBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -187,8 +206,7 @@ QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
 	QSize size(2 * radius, 2 * radius);
 	QBitmap mask(size);
 	QPainter painter(&mask);
-	painter.setRenderHint(QPainter::Antialiasing);
-	painter.setRenderHint(QPainter::SmoothPixmapTransform);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 	painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
 	painter.setBrush(QColor(0, 0, 0));
 	painter.drawRoundedRect(0, 0, size.width(), size.height(), 99, 99);
@@ -241,6 +259,44 @@ void FriendList::paintEvent(QPaintEvent *event)
 {
 	m_pSystemMenu->move(QCursor::pos());
 	AbstractWidget::paintEvent(event);
+}
+
+void FriendList::UpdateFriendState(const QString strNum, protocol_StateMsg state)
+{
+	for (QMap<CustomToolButton *, QString>::iterator it = m_mapFriend.begin();
+		it != m_mapFriend.end();it++) 
+		if (*it == strNum) {
+			switch (state)
+			{
+			case protocol_StateMsg::protocol_StateMsg_Offline:
+			case protocol_StateMsg::protocol_StateMsg_hide:
+				it.key()->setIcon(QIcon(QPixmap::fromImage(convertImage(it.key()->icon(), it.key()->iconSize()))));
+				break;
+			case protocol_StateMsg::protocol_StateMsg_Online:
+			case protocol_StateMsg::protocol_StateMsg_dontexcuse:
+			{
+				sqlPlugin::DataStructDefine& data = GET_DATA(QString(SELECT_USER_IMAGE).arg(strNum));
+				QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
+				QImage im;
+				if (im.loadFromData(array)) 
+					it.key()->setIcon(QIcon(PixmapToRound(QPixmap::fromImage(im), 50)));
+			}
+				break;
+			default:
+				break;
+			}
+		}
+}
+
+QImage FriendList::convertImage(QIcon iconSource, QSize size)
+{
+	QImage im = iconSource.pixmap(size).toImage();
+	for (int i = 0; i < im.width(); i++)
+		for (int j = 0; j < im.height(); j++) {
+			QRgb color = im.pixel(i, j);
+			im.setPixel(i, j, qRgba(qGray(color), qGray(color), qGray(color), qAlpha(color)));
+		}
+	return g_FriendList->PixmapToRound(QPixmap::fromImage(im), 50).toImage();
 }
 
 void FriendList::SlotStartChat()
@@ -329,6 +385,23 @@ void FriendList::SwitchFriMsgSpace()
 		ui.listV_Message->hide();
 		ui.list_Space->showMaximized();
 	}
+}
+
+void FriendList::SlotChangedState(const QString &strCurrentText)
+{
+	//写数据库
+	QString strUpdateState = QString(UPDATESTATE).arg(*m_pUserNumber).arg(strCurrentText);
+	EXECUTE(strUpdateState);
+	protocol proto;
+	proto.set_myselfnum(m_pUserNumber->toStdString());
+	if (strCurrentText == QString::fromLocal8Bit("在线"))
+		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_Online);
+	else if(strCurrentText == QString::fromLocal8Bit("隐身"))
+		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_hide);
+	else 
+		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_dontexcuse);
+	proto.set_type(protocol_MsgType_state);
+	m_NetWorkProsess.SendMsg(QString::fromStdString(proto.SerializeAsString()));
 }
 
 CustomToolButton::CustomToolButton(QWidget* parent /*= 0*/) : QToolButton(parent)

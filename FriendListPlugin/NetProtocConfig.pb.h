@@ -165,13 +165,13 @@ enum protocol_MsgType {
   protocol_MsgType_http = 2,
   protocol_MsgType_smtp = 3,
   protocol_MsgType_ftp = 4,
-  protocol_MsgType_online = 5,
+  protocol_MsgType_state = 5,
   protocol_MsgType_protocol_MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   protocol_MsgType_protocol_MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool protocol_MsgType_IsValid(int value);
 const protocol_MsgType protocol_MsgType_MsgType_MIN = protocol_MsgType_tcp;
-const protocol_MsgType protocol_MsgType_MsgType_MAX = protocol_MsgType_online;
+const protocol_MsgType protocol_MsgType_MsgType_MAX = protocol_MsgType_state;
 const int protocol_MsgType_MsgType_ARRAYSIZE = protocol_MsgType_MsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* protocol_MsgType_descriptor();
@@ -204,6 +204,29 @@ inline bool protocol_Chat_OneorMultiple_Parse(
     const ::std::string& name, protocol_Chat_OneorMultiple* value) {
   return ::google::protobuf::internal::ParseNamedEnum<protocol_Chat_OneorMultiple>(
     protocol_Chat_OneorMultiple_descriptor(), name, value);
+}
+enum protocol_StateMsg {
+  protocol_StateMsg_Online = 0,
+  protocol_StateMsg_Offline = 1,
+  protocol_StateMsg_hide = 2,
+  protocol_StateMsg_dontexcuse = 3,
+  protocol_StateMsg_protocol_StateMsg_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  protocol_StateMsg_protocol_StateMsg_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool protocol_StateMsg_IsValid(int value);
+const protocol_StateMsg protocol_StateMsg_StateMsg_MIN = protocol_StateMsg_Online;
+const protocol_StateMsg protocol_StateMsg_StateMsg_MAX = protocol_StateMsg_dontexcuse;
+const int protocol_StateMsg_StateMsg_ARRAYSIZE = protocol_StateMsg_StateMsg_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* protocol_StateMsg_descriptor();
+inline const ::std::string& protocol_StateMsg_Name(protocol_StateMsg value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    protocol_StateMsg_descriptor(), value);
+}
+inline bool protocol_StateMsg_Parse(
+    const ::std::string& name, protocol_StateMsg* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<protocol_StateMsg>(
+    protocol_StateMsg_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -1190,8 +1213,8 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
     protocol_MsgType_smtp;
   static const MsgType ftp =
     protocol_MsgType_ftp;
-  static const MsgType online =
-    protocol_MsgType_online;
+  static const MsgType state =
+    protocol_MsgType_state;
   static inline bool MsgType_IsValid(int value) {
     return protocol_MsgType_IsValid(value);
   }
@@ -1239,12 +1262,42 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
     return protocol_Chat_OneorMultiple_Parse(name, value);
   }
 
+  typedef protocol_StateMsg StateMsg;
+  static const StateMsg Online =
+    protocol_StateMsg_Online;
+  static const StateMsg Offline =
+    protocol_StateMsg_Offline;
+  static const StateMsg hide =
+    protocol_StateMsg_hide;
+  static const StateMsg dontexcuse =
+    protocol_StateMsg_dontexcuse;
+  static inline bool StateMsg_IsValid(int value) {
+    return protocol_StateMsg_IsValid(value);
+  }
+  static const StateMsg StateMsg_MIN =
+    protocol_StateMsg_StateMsg_MIN;
+  static const StateMsg StateMsg_MAX =
+    protocol_StateMsg_StateMsg_MAX;
+  static const int StateMsg_ARRAYSIZE =
+    protocol_StateMsg_StateMsg_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  StateMsg_descriptor() {
+    return protocol_StateMsg_descriptor();
+  }
+  static inline const ::std::string& StateMsg_Name(StateMsg value) {
+    return protocol_StateMsg_Name(value);
+  }
+  static inline bool StateMsg_Parse(const ::std::string& name,
+      StateMsg* value) {
+    return protocol_StateMsg_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
-  // repeated .ChatRecord chatContent = 4;
+  // repeated .ChatRecord chatContent = 5;
   int chatcontent_size() const;
   void clear_chatcontent();
-  static const int kChatContentFieldNumber = 4;
+  static const int kChatContentFieldNumber = 5;
   const ::ChatRecord& chatcontent(int index) const;
   ::ChatRecord* mutable_chatcontent(int index);
   ::ChatRecord* add_chatcontent();
@@ -1253,10 +1306,10 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord >&
       chatcontent() const;
 
-  // repeated .ChatRecord_Group group = 5;
+  // repeated .ChatRecord_Group group = 6;
   int group_size() const;
   void clear_group();
-  static const int kGroupFieldNumber = 5;
+  static const int kGroupFieldNumber = 6;
   const ::ChatRecord_Group& group(int index) const;
   ::ChatRecord_Group* mutable_group(int index);
   ::ChatRecord_Group* add_group();
@@ -1265,9 +1318,9 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >&
       group() const;
 
-  // bytes MySelfNum = 2;
+  // bytes MySelfNum = 3;
   void clear_myselfnum();
-  static const int kMySelfNumFieldNumber = 2;
+  static const int kMySelfNumFieldNumber = 3;
   const ::std::string& myselfnum() const;
   void set_myselfnum(const ::std::string& value);
   #if LANG_CXX11
@@ -1279,10 +1332,10 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::std::string* release_myselfnum();
   void set_allocated_myselfnum(::std::string* myselfnum);
 
-  // .AddInformation addInfor = 6;
+  // .AddInformation addInfor = 7;
   bool has_addinfor() const;
   void clear_addinfor();
-  static const int kAddInforFieldNumber = 6;
+  static const int kAddInforFieldNumber = 7;
   const ::AddInformation& addinfor() const;
   ::AddInformation* release_addinfor();
   ::AddInformation* mutable_addinfor();
@@ -1294,9 +1347,15 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::protocol_MsgType type() const;
   void set_type(::protocol_MsgType value);
 
-  // .protocol.Chat_OneorMultiple count = 3;
+  // .protocol.StateMsg currState = 2;
+  void clear_currstate();
+  static const int kCurrStateFieldNumber = 2;
+  ::protocol_StateMsg currstate() const;
+  void set_currstate(::protocol_StateMsg value);
+
+  // .protocol.Chat_OneorMultiple count = 4;
   void clear_count();
-  static const int kCountFieldNumber = 3;
+  static const int kCountFieldNumber = 4;
   ::protocol_Chat_OneorMultiple count() const;
   void set_count(::protocol_Chat_OneorMultiple value);
 
@@ -1309,6 +1368,7 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::ArenaStringPtr myselfnum_;
   ::AddInformation* addinfor_;
   int type_;
+  int currstate_;
   int count_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
@@ -2138,7 +2198,21 @@ inline void protocol::set_type(::protocol_MsgType value) {
   // @@protoc_insertion_point(field_set:protocol.type)
 }
 
-// bytes MySelfNum = 2;
+// .protocol.StateMsg currState = 2;
+inline void protocol::clear_currstate() {
+  currstate_ = 0;
+}
+inline ::protocol_StateMsg protocol::currstate() const {
+  // @@protoc_insertion_point(field_get:protocol.currState)
+  return static_cast< ::protocol_StateMsg >(currstate_);
+}
+inline void protocol::set_currstate(::protocol_StateMsg value) {
+  
+  currstate_ = value;
+  // @@protoc_insertion_point(field_set:protocol.currState)
+}
+
+// bytes MySelfNum = 3;
 inline void protocol::clear_myselfnum() {
   myselfnum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2191,7 +2265,7 @@ inline void protocol::set_allocated_myselfnum(::std::string* myselfnum) {
   // @@protoc_insertion_point(field_set_allocated:protocol.MySelfNum)
 }
 
-// .protocol.Chat_OneorMultiple count = 3;
+// .protocol.Chat_OneorMultiple count = 4;
 inline void protocol::clear_count() {
   count_ = 0;
 }
@@ -2205,7 +2279,7 @@ inline void protocol::set_count(::protocol_Chat_OneorMultiple value) {
   // @@protoc_insertion_point(field_set:protocol.count)
 }
 
-// repeated .ChatRecord chatContent = 4;
+// repeated .ChatRecord chatContent = 5;
 inline int protocol::chatcontent_size() const {
   return chatcontent_.size();
 }
@@ -2235,7 +2309,7 @@ protocol::chatcontent() const {
   return chatcontent_;
 }
 
-// repeated .ChatRecord_Group group = 5;
+// repeated .ChatRecord_Group group = 6;
 inline int protocol::group_size() const {
   return group_.size();
 }
@@ -2265,7 +2339,7 @@ protocol::group() const {
   return group_;
 }
 
-// .AddInformation addInfor = 6;
+// .AddInformation addInfor = 7;
 inline bool protocol::has_addinfor() const {
   return this != internal_default_instance() && addinfor_ != NULL;
 }
@@ -2361,6 +2435,11 @@ template <> struct is_proto_enum< ::protocol_Chat_OneorMultiple> : ::google::pro
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protocol_Chat_OneorMultiple>() {
   return ::protocol_Chat_OneorMultiple_descriptor();
+}
+template <> struct is_proto_enum< ::protocol_StateMsg> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol_StateMsg>() {
+  return ::protocol_StateMsg_descriptor();
 }
 
 }  // namespace protobuf

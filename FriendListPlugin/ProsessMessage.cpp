@@ -70,6 +70,10 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 				break;
 			}
 			break;
+		case protocol_MsgType_state:
+			g_FriendList->UpdateFriendState(QString::fromStdString(proto_.myselfnum()), proto_.currstate());
+		default:
+			break;
 		}
 	}
 }

@@ -194,7 +194,7 @@
            <x>0</x>
            <y>0</y>
            <width>58</width>
-           <height>351</height>
+           <height>342</height>
           </rect>
          </property>
          <attribute name="label">
@@ -207,7 +207,7 @@
            <x>0</x>
            <y>0</y>
            <width>58</width>
-           <height>351</height>
+           <height>342</height>
           </rect>
          </property>
          <attribute name="label">
@@ -288,12 +288,7 @@
               </item>
               <item>
                <property name="text">
-                <string>忙碌</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string/>
+                <string>勿扰</string>
                </property>
               </item>
              </widget>

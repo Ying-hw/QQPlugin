@@ -208,7 +208,7 @@ void InitDefaultsprotocol() {
 }
 
 ::google::protobuf::Metadata file_level_metadata[7];
-const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[5];
+const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[6];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -268,6 +268,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocol, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocol, currstate_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocol, myselfnum_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocol, count_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::protocol, chatcontent_),
@@ -335,19 +336,21 @@ void AddDescriptorsImpl() {
       "pe\030\003 \001(\0162\035.ChatRecord_Group.contenttype\022"
       "\017\n\007content\030\004 \001(\014\022\022\n\nselfNumber\030\005 \001(\014\"C\n\013"
       "contenttype\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text"
-      "\020\002\022\n\n\006folder\020\003\022\t\n\005audio\020\004\"\305\002\n\010protocol\022\037"
-      "\n\004type\030\001 \001(\0162\021.protocol.MsgType\022\021\n\tMySel"
-      "fNum\030\002 \001(\014\022+\n\005count\030\003 \001(\0162\034.protocol.Cha"
-      "t_OneorMultiple\022 \n\013chatContent\030\004 \003(\0132\013.C"
-      "hatRecord\022 \n\005group\030\005 \003(\0132\021.ChatRecord_Gr"
-      "oup\022!\n\010addInfor\030\006 \001(\0132\017.AddInformation\"D"
-      "\n\007MsgType\022\007\n\003tcp\020\000\022\007\n\003udp\020\001\022\010\n\004http\020\002\022\010\n"
-      "\004smtp\020\003\022\007\n\003ftp\020\004\022\n\n\006online\020\005\"+\n\022Chat_One"
-      "orMultiple\022\007\n\003one\020\000\022\014\n\010multiple\020\001B\002H\001b\006p"
-      "roto3"
+      "\020\002\022\n\n\006folder\020\003\022\t\n\005audio\020\004\"\252\003\n\010protocol\022\037"
+      "\n\004type\030\001 \001(\0162\021.protocol.MsgType\022%\n\tcurrS"
+      "tate\030\002 \001(\0162\022.protocol.StateMsg\022\021\n\tMySelf"
+      "Num\030\003 \001(\014\022+\n\005count\030\004 \001(\0162\034.protocol.Chat"
+      "_OneorMultiple\022 \n\013chatContent\030\005 \003(\0132\013.Ch"
+      "atRecord\022 \n\005group\030\006 \003(\0132\021.ChatRecord_Gro"
+      "up\022!\n\010addInfor\030\007 \001(\0132\017.AddInformation\"C\n"
+      "\007MsgType\022\007\n\003tcp\020\000\022\007\n\003udp\020\001\022\010\n\004http\020\002\022\010\n\004"
+      "smtp\020\003\022\007\n\003ftp\020\004\022\t\n\005state\020\005\"+\n\022Chat_Oneor"
+      "Multiple\022\007\n\003one\020\000\022\014\n\010multiple\020\001\"=\n\010State"
+      "Msg\022\n\n\006Online\020\000\022\013\n\007Offline\020\001\022\010\n\004hide\020\002\022\016"
+      "\n\ndontexcuse\020\003B\002H\001b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1125);
+      descriptor, 1226);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetProtocConfig.proto", &protobuf_RegisterTypes);
 }
@@ -464,7 +467,7 @@ const protocol_MsgType protocol::udp;
 const protocol_MsgType protocol::http;
 const protocol_MsgType protocol::smtp;
 const protocol_MsgType protocol::ftp;
-const protocol_MsgType protocol::online;
+const protocol_MsgType protocol::state;
 const protocol_MsgType protocol::MsgType_MIN;
 const protocol_MsgType protocol::MsgType_MAX;
 const int protocol::MsgType_ARRAYSIZE;
@@ -489,6 +492,31 @@ const protocol_Chat_OneorMultiple protocol::multiple;
 const protocol_Chat_OneorMultiple protocol::Chat_OneorMultiple_MIN;
 const protocol_Chat_OneorMultiple protocol::Chat_OneorMultiple_MAX;
 const int protocol::Chat_OneorMultiple_ARRAYSIZE;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+const ::google::protobuf::EnumDescriptor* protocol_StateMsg_descriptor() {
+  protobuf_NetProtocConfig_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_NetProtocConfig_2eproto::file_level_enum_descriptors[5];
+}
+bool protocol_StateMsg_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const protocol_StateMsg protocol::Online;
+const protocol_StateMsg protocol::Offline;
+const protocol_StateMsg protocol::hide;
+const protocol_StateMsg protocol::dontexcuse;
+const protocol_StateMsg protocol::StateMsg_MIN;
+const protocol_StateMsg protocol::StateMsg_MAX;
+const int protocol::StateMsg_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 // ===================================================================
@@ -2596,6 +2624,7 @@ void protocol::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int protocol::kTypeFieldNumber;
+const int protocol::kCurrStateFieldNumber;
 const int protocol::kMySelfNumFieldNumber;
 const int protocol::kCountFieldNumber;
 const int protocol::kChatContentFieldNumber;
@@ -2718,10 +2747,25 @@ bool protocol::MergePartialFromCodedStream(
         break;
       }
 
-      // bytes MySelfNum = 2;
+      // .protocol.StateMsg currState = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_currstate(static_cast< ::protocol_StateMsg >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bytes MySelfNum = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_myselfnum()));
         } else {
@@ -2730,10 +2774,10 @@ bool protocol::MergePartialFromCodedStream(
         break;
       }
 
-      // .protocol.Chat_OneorMultiple count = 3;
-      case 3: {
+      // .protocol.Chat_OneorMultiple count = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -2745,10 +2789,10 @@ bool protocol::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .ChatRecord chatContent = 4;
-      case 4: {
+      // repeated .ChatRecord chatContent = 5;
+      case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(input, add_chatcontent()));
         } else {
           goto handle_unusual;
@@ -2756,10 +2800,10 @@ bool protocol::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .ChatRecord_Group group = 5;
-      case 5: {
+      // repeated .ChatRecord_Group group = 6;
+      case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(input, add_group()));
         } else {
           goto handle_unusual;
@@ -2767,10 +2811,10 @@ bool protocol::MergePartialFromCodedStream(
         break;
       }
 
-      // .AddInformation addInfor = 6;
-      case 6: {
+      // .AddInformation addInfor = 7;
+      case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_addinfor()));
         } else {
@@ -2811,36 +2855,42 @@ void protocol::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // bytes MySelfNum = 2;
+  // .protocol.StateMsg currState = 2;
+  if (this->currstate() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->currstate(), output);
+  }
+
+  // bytes MySelfNum = 3;
   if (this->myselfnum().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->myselfnum(), output);
+      3, this->myselfnum(), output);
   }
 
-  // .protocol.Chat_OneorMultiple count = 3;
+  // .protocol.Chat_OneorMultiple count = 4;
   if (this->count() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      3, this->count(), output);
+      4, this->count(), output);
   }
 
-  // repeated .ChatRecord chatContent = 4;
+  // repeated .ChatRecord chatContent = 5;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->chatcontent_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->chatcontent(static_cast<int>(i)), output);
+      5, this->chatcontent(static_cast<int>(i)), output);
   }
 
-  // repeated .ChatRecord_Group group = 5;
+  // repeated .ChatRecord_Group group = 6;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->group_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->group(static_cast<int>(i)), output);
+      6, this->group(static_cast<int>(i)), output);
   }
 
-  // .AddInformation addInfor = 6;
+  // .AddInformation addInfor = 7;
   if (this->has_addinfor()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, *this->addinfor_, output);
+      7, *this->addinfor_, output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2863,40 +2913,46 @@ void protocol::SerializeWithCachedSizes(
       1, this->type(), target);
   }
 
-  // bytes MySelfNum = 2;
+  // .protocol.StateMsg currState = 2;
+  if (this->currstate() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->currstate(), target);
+  }
+
+  // bytes MySelfNum = 3;
   if (this->myselfnum().size() > 0) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->myselfnum(), target);
+        3, this->myselfnum(), target);
   }
 
-  // .protocol.Chat_OneorMultiple count = 3;
+  // .protocol.Chat_OneorMultiple count = 4;
   if (this->count() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      3, this->count(), target);
+      4, this->count(), target);
   }
 
-  // repeated .ChatRecord chatContent = 4;
+  // repeated .ChatRecord chatContent = 5;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->chatcontent_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        4, this->chatcontent(static_cast<int>(i)), deterministic, target);
+        5, this->chatcontent(static_cast<int>(i)), deterministic, target);
   }
 
-  // repeated .ChatRecord_Group group = 5;
+  // repeated .ChatRecord_Group group = 6;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->group_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        5, this->group(static_cast<int>(i)), deterministic, target);
+        6, this->group(static_cast<int>(i)), deterministic, target);
   }
 
-  // .AddInformation addInfor = 6;
+  // .AddInformation addInfor = 7;
   if (this->has_addinfor()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        6, *this->addinfor_, deterministic, target);
+        7, *this->addinfor_, deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2916,7 +2972,7 @@ size_t protocol::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // repeated .ChatRecord chatContent = 4;
+  // repeated .ChatRecord chatContent = 5;
   {
     unsigned int count = static_cast<unsigned int>(this->chatcontent_size());
     total_size += 1UL * count;
@@ -2927,7 +2983,7 @@ size_t protocol::ByteSizeLong() const {
     }
   }
 
-  // repeated .ChatRecord_Group group = 5;
+  // repeated .ChatRecord_Group group = 6;
   {
     unsigned int count = static_cast<unsigned int>(this->group_size());
     total_size += 1UL * count;
@@ -2938,14 +2994,14 @@ size_t protocol::ByteSizeLong() const {
     }
   }
 
-  // bytes MySelfNum = 2;
+  // bytes MySelfNum = 3;
   if (this->myselfnum().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->myselfnum());
   }
 
-  // .AddInformation addInfor = 6;
+  // .AddInformation addInfor = 7;
   if (this->has_addinfor()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -2958,7 +3014,13 @@ size_t protocol::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
   }
 
-  // .protocol.Chat_OneorMultiple count = 3;
+  // .protocol.StateMsg currState = 2;
+  if (this->currstate() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->currstate());
+  }
+
+  // .protocol.Chat_OneorMultiple count = 4;
   if (this->count() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->count());
@@ -3005,6 +3067,9 @@ void protocol::MergeFrom(const protocol& from) {
   if (from.type() != 0) {
     set_type(from.type());
   }
+  if (from.currstate() != 0) {
+    set_currstate(from.currstate());
+  }
   if (from.count() != 0) {
     set_count(from.count());
   }
@@ -3039,6 +3104,7 @@ void protocol::InternalSwap(protocol* other) {
   myselfnum_.Swap(&other->myselfnum_);
   swap(addinfor_, other->addinfor_);
   swap(type_, other->type_);
+  swap(currstate_, other->currstate_);
   swap(count_, other->count_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);

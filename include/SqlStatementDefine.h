@@ -5,15 +5,19 @@
 
 #define  SELECT_USER				"SELECT * FROM user_account WHERE USER_NUMBER = '%1';"
 
+#define  SELECT_USER_IMAGE          "SELECT IMAGE FROM user_account WHERE USER_NUMBER = '%1';"
+
 #define  SELECT_1					"SELECT 1;"
 
-#define  SELECT_CHAT_CONTENT		"SELECT * FROM chat_content WHERE USER_ACCOUNT = '%1';"
+#define  SELECT_CHAT_CONTENT		"SELECT * FROM chat_content WHERE USER_ACCOUNT = '%1' OR FRIEND_ACCOUNT = '%1';"
 
 #define  SELECT_FRIEND				"SELECT * FROM friend WHERE USER_ACCOUNT = '%1';"
 
 #define  SELECT_GROUP				"SELECT * FROM groupss WHERE USER_ACCOUNT = '%1';"
 
-#define  SELECT_CHAT_MESSAGE		"SELECT CHAT_RECORD FROM chat_content WHERE USER_ACCOUNT = '%1' AND FRIEND_ACCOUNT = '%2'"
+#define  SELECT_CHAT_MESSAGE		"SELECT * FROM chat_content WHERE (USER_ACCOUNT = '%1' AND FRIEND_ACCOUNT = '%2') OR (USER_ACCOUNT = '%2' AND FRIEND_ACCOUNT = '%1')"
+
+#define  INSERT_CHAT_MESSAGE        "INSERT INTO chat_content VALUES('%1', NULL, '%2', '%3',NULL);"
 
 #define  SELECT_GROUP_TYPE			"SELECT DISTINCT GROUP_ACCOUNT FROM group WHERE TYPE = '%1'"
 
@@ -23,6 +27,12 @@
 
 #define  INSERT_MAP                 "INSERT INTO friend VALUES('%1','%2','%3')"
 
+#define  INSERT_FRIENDSTATE         "INSERT INTO state_machine VALUES('%1', '%2')"
+
 #define  UPDATEIMAGE                "UPDATE %1 SET IMAGE = ? WHERE USER_NUMBER = '%2'"
+
+#define  UPDATESTATE                "UPDATE state_machine SET STATE = '%1' WHERE USER_NUMBER = '%2'"
+
+#define  SELECT_STATE               "SELECT * FROM state_machine WHERE USER_NUMBER = '%1'"
 
 #endif //SQLSTATEMENTDEFINE
