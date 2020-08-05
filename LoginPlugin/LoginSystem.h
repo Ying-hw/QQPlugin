@@ -8,6 +8,7 @@
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
 #include "AbstractWidget.h"
+#include <QTcpServer>
 
 
 class LOGINPLUGIN_EXPORT LoginSystem : public AbstractWidget

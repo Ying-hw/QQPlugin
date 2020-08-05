@@ -121,13 +121,17 @@ public:
 	/// \brief 更新好友的状态
 	/// \param[in] strNum 好友账号
 	/// \param[in] state 状态信息
-	void UpdateFriendState(const QString strNum, protocol_StateMsg state);
+	void UpdateFriendState(const QString strNum, StateInformation state);
 
 	/// \brief 彩色头像转换灰度图像
 	/// \param[in] icon 图像源
 	/// \param[in] size 大小
 	/// \retval 返回转换后的灰度头像
 	static QImage convertImage(QIcon iconSource, QSize size);
+
+	/// \brief 保存聊天记录
+	/// \param[in] proto 协议
+	void SaveChatRecord(protocol& proto);
 
 	static QString* m_pUserNumber;    ///< 本人账号
 

@@ -37,7 +37,7 @@ namespace protobuf_NetProtocConfig_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[7];
+  static const ::google::protobuf::internal::ParseTable schema[9];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -53,8 +53,12 @@ void InitDefaultsUser_loginUserImpl();
 void InitDefaultsUser_loginUser();
 void InitDefaultsUserImpl();
 void InitDefaultsUser();
+void InitDefaultsChatRecord_Group_HeadInforImpl();
+void InitDefaultsChatRecord_Group_HeadInfor();
 void InitDefaultsChatRecord_GroupImpl();
 void InitDefaultsChatRecord_Group();
+void InitDefaultsStateInformationImpl();
+void InitDefaultsStateInformation();
 void InitDefaultsprotocolImpl();
 void InitDefaultsprotocol();
 inline void InitDefaults() {
@@ -63,7 +67,9 @@ inline void InitDefaults() {
   InitDefaultsAddInformation();
   InitDefaultsUser_loginUser();
   InitDefaultsUser();
+  InitDefaultsChatRecord_Group_HeadInfor();
   InitDefaultsChatRecord_Group();
+  InitDefaultsStateInformation();
   InitDefaultsprotocol();
 }
 }  // namespace protobuf_NetProtocConfig_2eproto
@@ -76,9 +82,15 @@ extern ChatRecordDefaultTypeInternal _ChatRecord_default_instance_;
 class ChatRecord_Group;
 class ChatRecord_GroupDefaultTypeInternal;
 extern ChatRecord_GroupDefaultTypeInternal _ChatRecord_Group_default_instance_;
+class ChatRecord_Group_HeadInfor;
+class ChatRecord_Group_HeadInforDefaultTypeInternal;
+extern ChatRecord_Group_HeadInforDefaultTypeInternal _ChatRecord_Group_HeadInfor_default_instance_;
 class ChatRecord_HeadInfor;
 class ChatRecord_HeadInforDefaultTypeInternal;
 extern ChatRecord_HeadInforDefaultTypeInternal _ChatRecord_HeadInfor_default_instance_;
+class StateInformation;
+class StateInformationDefaultTypeInternal;
+extern StateInformationDefaultTypeInternal _StateInformation_default_instance_;
 class User;
 class UserDefaultTypeInternal;
 extern UserDefaultTypeInternal _User_default_instance_;
@@ -159,19 +171,42 @@ inline bool ChatRecord_Group_contenttype_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<ChatRecord_Group_contenttype>(
     ChatRecord_Group_contenttype_descriptor(), name, value);
 }
+enum StateInformation_StateMsg {
+  StateInformation_StateMsg_Online = 0,
+  StateInformation_StateMsg_offline = 1,
+  StateInformation_StateMsg_hide = 2,
+  StateInformation_StateMsg_dontexcuse = 3,
+  StateInformation_StateMsg_StateInformation_StateMsg_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  StateInformation_StateMsg_StateInformation_StateMsg_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool StateInformation_StateMsg_IsValid(int value);
+const StateInformation_StateMsg StateInformation_StateMsg_StateMsg_MIN = StateInformation_StateMsg_Online;
+const StateInformation_StateMsg StateInformation_StateMsg_StateMsg_MAX = StateInformation_StateMsg_dontexcuse;
+const int StateInformation_StateMsg_StateMsg_ARRAYSIZE = StateInformation_StateMsg_StateMsg_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* StateInformation_StateMsg_descriptor();
+inline const ::std::string& StateInformation_StateMsg_Name(StateInformation_StateMsg value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    StateInformation_StateMsg_descriptor(), value);
+}
+inline bool StateInformation_StateMsg_Parse(
+    const ::std::string& name, StateInformation_StateMsg* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<StateInformation_StateMsg>(
+    StateInformation_StateMsg_descriptor(), name, value);
+}
 enum protocol_MsgType {
   protocol_MsgType_tcp = 0,
   protocol_MsgType_udp = 1,
   protocol_MsgType_http = 2,
   protocol_MsgType_smtp = 3,
   protocol_MsgType_ftp = 4,
-  protocol_MsgType_state = 5,
+  protocol_MsgType_stateInfor = 5,
   protocol_MsgType_protocol_MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   protocol_MsgType_protocol_MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool protocol_MsgType_IsValid(int value);
 const protocol_MsgType protocol_MsgType_MsgType_MIN = protocol_MsgType_tcp;
-const protocol_MsgType protocol_MsgType_MsgType_MAX = protocol_MsgType_state;
+const protocol_MsgType protocol_MsgType_MsgType_MAX = protocol_MsgType_stateInfor;
 const int protocol_MsgType_MsgType_ARRAYSIZE = protocol_MsgType_MsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* protocol_MsgType_descriptor();
@@ -204,29 +239,6 @@ inline bool protocol_Chat_OneorMultiple_Parse(
     const ::std::string& name, protocol_Chat_OneorMultiple* value) {
   return ::google::protobuf::internal::ParseNamedEnum<protocol_Chat_OneorMultiple>(
     protocol_Chat_OneorMultiple_descriptor(), name, value);
-}
-enum protocol_StateMsg {
-  protocol_StateMsg_Online = 0,
-  protocol_StateMsg_Offline = 1,
-  protocol_StateMsg_hide = 2,
-  protocol_StateMsg_dontexcuse = 3,
-  protocol_StateMsg_protocol_StateMsg_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
-  protocol_StateMsg_protocol_StateMsg_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
-};
-bool protocol_StateMsg_IsValid(int value);
-const protocol_StateMsg protocol_StateMsg_StateMsg_MIN = protocol_StateMsg_Online;
-const protocol_StateMsg protocol_StateMsg_StateMsg_MAX = protocol_StateMsg_dontexcuse;
-const int protocol_StateMsg_StateMsg_ARRAYSIZE = protocol_StateMsg_StateMsg_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* protocol_StateMsg_descriptor();
-inline const ::std::string& protocol_StateMsg_Name(protocol_StateMsg value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    protocol_StateMsg_descriptor(), value);
-}
-inline bool protocol_StateMsg_Parse(
-    const ::std::string& name, protocol_StateMsg* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<protocol_StateMsg>(
-    protocol_StateMsg_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -312,9 +324,9 @@ class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_inse
 
   // accessors -------------------------------------------------------
 
-  // bytes name = 2;
+  // bytes name = 3;
   void clear_name();
-  static const int kNameFieldNumber = 2;
+  static const int kNameFieldNumber = 3;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   #if LANG_CXX11
@@ -326,18 +338,25 @@ class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // uint64 size = 1;
-  void clear_size();
-  static const int kSizeFieldNumber = 1;
-  ::google::protobuf::uint64 size() const;
-  void set_size(::google::protobuf::uint64 value);
+  // uint64 FileSize = 1;
+  void clear_filesize();
+  static const int kFileSizeFieldNumber = 1;
+  ::google::protobuf::uint64 filesize() const;
+  void set_filesize(::google::protobuf::uint64 value);
+
+  // uint64 AllSize = 2;
+  void clear_allsize();
+  static const int kAllSizeFieldNumber = 2;
+  ::google::protobuf::uint64 allsize() const;
+  void set_allsize(::google::protobuf::uint64 value);
 
   // @@protoc_insertion_point(class_scope:ChatRecord.HeadInfor)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
-  ::google::protobuf::uint64 size_;
+  ::google::protobuf::uint64 filesize_;
+  ::google::protobuf::uint64 allsize_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_HeadInforImpl();
@@ -939,6 +958,127 @@ class User : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
 };
 // -------------------------------------------------------------------
 
+class ChatRecord_Group_HeadInfor : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ChatRecord_Group.HeadInfor) */ {
+ public:
+  ChatRecord_Group_HeadInfor();
+  virtual ~ChatRecord_Group_HeadInfor();
+
+  ChatRecord_Group_HeadInfor(const ChatRecord_Group_HeadInfor& from);
+
+  inline ChatRecord_Group_HeadInfor& operator=(const ChatRecord_Group_HeadInfor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  ChatRecord_Group_HeadInfor(ChatRecord_Group_HeadInfor&& from) noexcept
+    : ChatRecord_Group_HeadInfor() {
+    *this = ::std::move(from);
+  }
+
+  inline ChatRecord_Group_HeadInfor& operator=(ChatRecord_Group_HeadInfor&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ChatRecord_Group_HeadInfor& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const ChatRecord_Group_HeadInfor* internal_default_instance() {
+    return reinterpret_cast<const ChatRecord_Group_HeadInfor*>(
+               &_ChatRecord_Group_HeadInfor_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    5;
+
+  void Swap(ChatRecord_Group_HeadInfor* other);
+  friend void swap(ChatRecord_Group_HeadInfor& a, ChatRecord_Group_HeadInfor& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ChatRecord_Group_HeadInfor* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  ChatRecord_Group_HeadInfor* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const ChatRecord_Group_HeadInfor& from);
+  void MergeFrom(const ChatRecord_Group_HeadInfor& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(ChatRecord_Group_HeadInfor* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bytes name = 3;
+  void clear_name();
+  static const int kNameFieldNumber = 3;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_name(::std::string&& value);
+  #endif
+  void set_name(const char* value);
+  void set_name(const void* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
+  // uint64 FileSize = 1;
+  void clear_filesize();
+  static const int kFileSizeFieldNumber = 1;
+  ::google::protobuf::uint64 filesize() const;
+  void set_filesize(::google::protobuf::uint64 value);
+
+  // uint64 AllSize = 2;
+  void clear_allsize();
+  static const int kAllSizeFieldNumber = 2;
+  ::google::protobuf::uint64 allsize() const;
+  void set_allsize(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:ChatRecord_Group.HeadInfor)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
+  ::google::protobuf::uint64 filesize_;
+  ::google::protobuf::uint64 allsize_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
+  friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_Group_HeadInforImpl();
+};
+// -------------------------------------------------------------------
+
 class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ChatRecord_Group) */ {
  public:
   ChatRecord_Group();
@@ -974,7 +1114,7 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
                &_ChatRecord_Group_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(ChatRecord_Group* other);
   friend void swap(ChatRecord_Group& a, ChatRecord_Group& b) {
@@ -1018,6 +1158,8 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
   // nested types ----------------------------------------------------
+
+  typedef ChatRecord_Group_HeadInfor HeadInfor;
 
   typedef ChatRecord_Group_contenttype contenttype;
   static const contenttype file =
@@ -1095,6 +1237,15 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
   ::std::string* release_selfnumber();
   void set_allocated_selfnumber(::std::string* selfnumber);
 
+  // .ChatRecord_Group.HeadInfor head = 6;
+  bool has_head() const;
+  void clear_head();
+  static const int kHeadFieldNumber = 6;
+  const ::ChatRecord_Group_HeadInfor& head() const;
+  ::ChatRecord_Group_HeadInfor* release_head();
+  ::ChatRecord_Group_HeadInfor* mutable_head();
+  void set_allocated_head(::ChatRecord_Group_HeadInfor* head);
+
   // uint64 currtime = 1;
   void clear_currtime();
   static const int kCurrtimeFieldNumber = 1;
@@ -1114,11 +1265,164 @@ class ChatRecord_Group : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::internal::ArenaStringPtr account_;
   ::google::protobuf::internal::ArenaStringPtr content_;
   ::google::protobuf::internal::ArenaStringPtr selfnumber_;
+  ::ChatRecord_Group_HeadInfor* head_;
   ::google::protobuf::uint64 currtime_;
   int type_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_GroupImpl();
+};
+// -------------------------------------------------------------------
+
+class StateInformation : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:StateInformation) */ {
+ public:
+  StateInformation();
+  virtual ~StateInformation();
+
+  StateInformation(const StateInformation& from);
+
+  inline StateInformation& operator=(const StateInformation& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  StateInformation(StateInformation&& from) noexcept
+    : StateInformation() {
+    *this = ::std::move(from);
+  }
+
+  inline StateInformation& operator=(StateInformation&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StateInformation& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const StateInformation* internal_default_instance() {
+    return reinterpret_cast<const StateInformation*>(
+               &_StateInformation_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    7;
+
+  void Swap(StateInformation* other);
+  friend void swap(StateInformation& a, StateInformation& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline StateInformation* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  StateInformation* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const StateInformation& from);
+  void MergeFrom(const StateInformation& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(StateInformation* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  typedef StateInformation_StateMsg StateMsg;
+  static const StateMsg Online =
+    StateInformation_StateMsg_Online;
+  static const StateMsg offline =
+    StateInformation_StateMsg_offline;
+  static const StateMsg hide =
+    StateInformation_StateMsg_hide;
+  static const StateMsg dontexcuse =
+    StateInformation_StateMsg_dontexcuse;
+  static inline bool StateMsg_IsValid(int value) {
+    return StateInformation_StateMsg_IsValid(value);
+  }
+  static const StateMsg StateMsg_MIN =
+    StateInformation_StateMsg_StateMsg_MIN;
+  static const StateMsg StateMsg_MAX =
+    StateInformation_StateMsg_StateMsg_MAX;
+  static const int StateMsg_ARRAYSIZE =
+    StateInformation_StateMsg_StateMsg_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  StateMsg_descriptor() {
+    return StateInformation_StateMsg_descriptor();
+  }
+  static inline const ::std::string& StateMsg_Name(StateMsg value) {
+    return StateInformation_StateMsg_Name(value);
+  }
+  static inline bool StateMsg_Parse(const ::std::string& name,
+      StateMsg* value) {
+    return StateInformation_StateMsg_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // repeated bytes AllFriend = 2;
+  int allfriend_size() const;
+  void clear_allfriend();
+  static const int kAllFriendFieldNumber = 2;
+  const ::std::string& allfriend(int index) const;
+  ::std::string* mutable_allfriend(int index);
+  void set_allfriend(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_allfriend(int index, ::std::string&& value);
+  #endif
+  void set_allfriend(int index, const char* value);
+  void set_allfriend(int index, const void* value, size_t size);
+  ::std::string* add_allfriend();
+  void add_allfriend(const ::std::string& value);
+  #if LANG_CXX11
+  void add_allfriend(::std::string&& value);
+  #endif
+  void add_allfriend(const char* value);
+  void add_allfriend(const void* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& allfriend() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_allfriend();
+
+  // .StateInformation.StateMsg currState = 1;
+  void clear_currstate();
+  static const int kCurrStateFieldNumber = 1;
+  ::StateInformation_StateMsg currstate() const;
+  void set_currstate(::StateInformation_StateMsg value);
+
+  // @@protoc_insertion_point(class_scope:StateInformation)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> allfriend_;
+  int currstate_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
+  friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsStateInformationImpl();
 };
 // -------------------------------------------------------------------
 
@@ -1157,7 +1461,7 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
                &_protocol_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    6;
+    8;
 
   void Swap(protocol* other);
   friend void swap(protocol& a, protocol& b) {
@@ -1213,8 +1517,8 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
     protocol_MsgType_smtp;
   static const MsgType ftp =
     protocol_MsgType_ftp;
-  static const MsgType state =
-    protocol_MsgType_state;
+  static const MsgType stateInfor =
+    protocol_MsgType_stateInfor;
   static inline bool MsgType_IsValid(int value) {
     return protocol_MsgType_IsValid(value);
   }
@@ -1262,42 +1566,12 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
     return protocol_Chat_OneorMultiple_Parse(name, value);
   }
 
-  typedef protocol_StateMsg StateMsg;
-  static const StateMsg Online =
-    protocol_StateMsg_Online;
-  static const StateMsg Offline =
-    protocol_StateMsg_Offline;
-  static const StateMsg hide =
-    protocol_StateMsg_hide;
-  static const StateMsg dontexcuse =
-    protocol_StateMsg_dontexcuse;
-  static inline bool StateMsg_IsValid(int value) {
-    return protocol_StateMsg_IsValid(value);
-  }
-  static const StateMsg StateMsg_MIN =
-    protocol_StateMsg_StateMsg_MIN;
-  static const StateMsg StateMsg_MAX =
-    protocol_StateMsg_StateMsg_MAX;
-  static const int StateMsg_ARRAYSIZE =
-    protocol_StateMsg_StateMsg_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  StateMsg_descriptor() {
-    return protocol_StateMsg_descriptor();
-  }
-  static inline const ::std::string& StateMsg_Name(StateMsg value) {
-    return protocol_StateMsg_Name(value);
-  }
-  static inline bool StateMsg_Parse(const ::std::string& name,
-      StateMsg* value) {
-    return protocol_StateMsg_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // repeated .ChatRecord chatContent = 5;
+  // repeated .ChatRecord chatContent = 4;
   int chatcontent_size() const;
   void clear_chatcontent();
-  static const int kChatContentFieldNumber = 5;
+  static const int kChatContentFieldNumber = 4;
   const ::ChatRecord& chatcontent(int index) const;
   ::ChatRecord* mutable_chatcontent(int index);
   ::ChatRecord* add_chatcontent();
@@ -1306,10 +1580,10 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord >&
       chatcontent() const;
 
-  // repeated .ChatRecord_Group group = 6;
+  // repeated .ChatRecord_Group group = 5;
   int group_size() const;
   void clear_group();
-  static const int kGroupFieldNumber = 6;
+  static const int kGroupFieldNumber = 5;
   const ::ChatRecord_Group& group(int index) const;
   ::ChatRecord_Group* mutable_group(int index);
   ::ChatRecord_Group* add_group();
@@ -1318,9 +1592,9 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   const ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group >&
       group() const;
 
-  // bytes MySelfNum = 3;
+  // bytes MySelfNum = 2;
   void clear_myselfnum();
-  static const int kMySelfNumFieldNumber = 3;
+  static const int kMySelfNumFieldNumber = 2;
   const ::std::string& myselfnum() const;
   void set_myselfnum(const ::std::string& value);
   #if LANG_CXX11
@@ -1332,14 +1606,23 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::std::string* release_myselfnum();
   void set_allocated_myselfnum(::std::string* myselfnum);
 
-  // .AddInformation addInfor = 7;
+  // .AddInformation addInfor = 6;
   bool has_addinfor() const;
   void clear_addinfor();
-  static const int kAddInforFieldNumber = 7;
+  static const int kAddInforFieldNumber = 6;
   const ::AddInformation& addinfor() const;
   ::AddInformation* release_addinfor();
   ::AddInformation* mutable_addinfor();
   void set_allocated_addinfor(::AddInformation* addinfor);
+
+  // .StateInformation state = 7;
+  bool has_state() const;
+  void clear_state();
+  static const int kStateFieldNumber = 7;
+  const ::StateInformation& state() const;
+  ::StateInformation* release_state();
+  ::StateInformation* mutable_state();
+  void set_allocated_state(::StateInformation* state);
 
   // .protocol.MsgType type = 1;
   void clear_type();
@@ -1347,15 +1630,9 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::protocol_MsgType type() const;
   void set_type(::protocol_MsgType value);
 
-  // .protocol.StateMsg currState = 2;
-  void clear_currstate();
-  static const int kCurrStateFieldNumber = 2;
-  ::protocol_StateMsg currstate() const;
-  void set_currstate(::protocol_StateMsg value);
-
-  // .protocol.Chat_OneorMultiple count = 4;
+  // .protocol.Chat_OneorMultiple count = 3;
   void clear_count();
-  static const int kCountFieldNumber = 4;
+  static const int kCountFieldNumber = 3;
   ::protocol_Chat_OneorMultiple count() const;
   void set_count(::protocol_Chat_OneorMultiple value);
 
@@ -1367,8 +1644,8 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::RepeatedPtrField< ::ChatRecord_Group > group_;
   ::google::protobuf::internal::ArenaStringPtr myselfnum_;
   ::AddInformation* addinfor_;
+  ::StateInformation* state_;
   int type_;
-  int currstate_;
   int count_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
@@ -1385,21 +1662,35 @@ class protocol : public ::google::protobuf::Message /* @@protoc_insertion_point(
 #endif  // __GNUC__
 // ChatRecord_HeadInfor
 
-// uint64 size = 1;
-inline void ChatRecord_HeadInfor::clear_size() {
-  size_ = GOOGLE_ULONGLONG(0);
+// uint64 FileSize = 1;
+inline void ChatRecord_HeadInfor::clear_filesize() {
+  filesize_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::uint64 ChatRecord_HeadInfor::size() const {
-  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.size)
-  return size_;
+inline ::google::protobuf::uint64 ChatRecord_HeadInfor::filesize() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.FileSize)
+  return filesize_;
 }
-inline void ChatRecord_HeadInfor::set_size(::google::protobuf::uint64 value) {
+inline void ChatRecord_HeadInfor::set_filesize(::google::protobuf::uint64 value) {
   
-  size_ = value;
-  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.size)
+  filesize_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.FileSize)
 }
 
-// bytes name = 2;
+// uint64 AllSize = 2;
+inline void ChatRecord_HeadInfor::clear_allsize() {
+  allsize_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 ChatRecord_HeadInfor::allsize() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.AllSize)
+  return allsize_;
+}
+inline void ChatRecord_HeadInfor::set_allsize(::google::protobuf::uint64 value) {
+  
+  allsize_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.AllSize)
+}
+
+// bytes name = 3;
 inline void ChatRecord_HeadInfor::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1991,6 +2282,91 @@ User::login() const {
 
 // -------------------------------------------------------------------
 
+// ChatRecord_Group_HeadInfor
+
+// uint64 FileSize = 1;
+inline void ChatRecord_Group_HeadInfor::clear_filesize() {
+  filesize_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 ChatRecord_Group_HeadInfor::filesize() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.HeadInfor.FileSize)
+  return filesize_;
+}
+inline void ChatRecord_Group_HeadInfor::set_filesize(::google::protobuf::uint64 value) {
+  
+  filesize_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.FileSize)
+}
+
+// uint64 AllSize = 2;
+inline void ChatRecord_Group_HeadInfor::clear_allsize() {
+  allsize_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 ChatRecord_Group_HeadInfor::allsize() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.HeadInfor.AllSize)
+  return allsize_;
+}
+inline void ChatRecord_Group_HeadInfor::set_allsize(::google::protobuf::uint64 value) {
+  
+  allsize_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.AllSize)
+}
+
+// bytes name = 3;
+inline void ChatRecord_Group_HeadInfor::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatRecord_Group_HeadInfor::name() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.HeadInfor.name)
+  return name_.GetNoArena();
+}
+inline void ChatRecord_Group_HeadInfor::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.name)
+}
+#if LANG_CXX11
+inline void ChatRecord_Group_HeadInfor::set_name(::std::string&& value) {
+  
+  name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:ChatRecord_Group.HeadInfor.name)
+}
+#endif
+inline void ChatRecord_Group_HeadInfor::set_name(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ChatRecord_Group.HeadInfor.name)
+}
+inline void ChatRecord_Group_HeadInfor::set_name(const void* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ChatRecord_Group.HeadInfor.name)
+}
+inline ::std::string* ChatRecord_Group_HeadInfor::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.HeadInfor.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChatRecord_Group_HeadInfor::release_name() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.HeadInfor.name)
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatRecord_Group_HeadInfor::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.HeadInfor.name)
+}
+
+// -------------------------------------------------------------------
+
 // ChatRecord_Group
 
 // uint64 currtime = 1;
@@ -2180,6 +2556,143 @@ inline void ChatRecord_Group::set_allocated_selfnumber(::std::string* selfnumber
   // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.selfNumber)
 }
 
+// .ChatRecord_Group.HeadInfor head = 6;
+inline bool ChatRecord_Group::has_head() const {
+  return this != internal_default_instance() && head_ != NULL;
+}
+inline void ChatRecord_Group::clear_head() {
+  if (GetArenaNoVirtual() == NULL && head_ != NULL) {
+    delete head_;
+  }
+  head_ = NULL;
+}
+inline const ::ChatRecord_Group_HeadInfor& ChatRecord_Group::head() const {
+  const ::ChatRecord_Group_HeadInfor* p = head_;
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.head)
+  return p != NULL ? *p : *reinterpret_cast<const ::ChatRecord_Group_HeadInfor*>(
+      &::_ChatRecord_Group_HeadInfor_default_instance_);
+}
+inline ::ChatRecord_Group_HeadInfor* ChatRecord_Group::release_head() {
+  // @@protoc_insertion_point(field_release:ChatRecord_Group.head)
+  
+  ::ChatRecord_Group_HeadInfor* temp = head_;
+  head_ = NULL;
+  return temp;
+}
+inline ::ChatRecord_Group_HeadInfor* ChatRecord_Group::mutable_head() {
+  
+  if (head_ == NULL) {
+    head_ = new ::ChatRecord_Group_HeadInfor;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatRecord_Group.head)
+  return head_;
+}
+inline void ChatRecord_Group::set_allocated_head(::ChatRecord_Group_HeadInfor* head) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete head_;
+  }
+  if (head) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      head = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, head, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  head_ = head;
+  // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.head)
+}
+
+// -------------------------------------------------------------------
+
+// StateInformation
+
+// .StateInformation.StateMsg currState = 1;
+inline void StateInformation::clear_currstate() {
+  currstate_ = 0;
+}
+inline ::StateInformation_StateMsg StateInformation::currstate() const {
+  // @@protoc_insertion_point(field_get:StateInformation.currState)
+  return static_cast< ::StateInformation_StateMsg >(currstate_);
+}
+inline void StateInformation::set_currstate(::StateInformation_StateMsg value) {
+  
+  currstate_ = value;
+  // @@protoc_insertion_point(field_set:StateInformation.currState)
+}
+
+// repeated bytes AllFriend = 2;
+inline int StateInformation::allfriend_size() const {
+  return allfriend_.size();
+}
+inline void StateInformation::clear_allfriend() {
+  allfriend_.Clear();
+}
+inline const ::std::string& StateInformation::allfriend(int index) const {
+  // @@protoc_insertion_point(field_get:StateInformation.AllFriend)
+  return allfriend_.Get(index);
+}
+inline ::std::string* StateInformation::mutable_allfriend(int index) {
+  // @@protoc_insertion_point(field_mutable:StateInformation.AllFriend)
+  return allfriend_.Mutable(index);
+}
+inline void StateInformation::set_allfriend(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:StateInformation.AllFriend)
+  allfriend_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void StateInformation::set_allfriend(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:StateInformation.AllFriend)
+  allfriend_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void StateInformation::set_allfriend(int index, const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  allfriend_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:StateInformation.AllFriend)
+}
+inline void StateInformation::set_allfriend(int index, const void* value, size_t size) {
+  allfriend_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:StateInformation.AllFriend)
+}
+inline ::std::string* StateInformation::add_allfriend() {
+  // @@protoc_insertion_point(field_add_mutable:StateInformation.AllFriend)
+  return allfriend_.Add();
+}
+inline void StateInformation::add_allfriend(const ::std::string& value) {
+  allfriend_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:StateInformation.AllFriend)
+}
+#if LANG_CXX11
+inline void StateInformation::add_allfriend(::std::string&& value) {
+  allfriend_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:StateInformation.AllFriend)
+}
+#endif
+inline void StateInformation::add_allfriend(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  allfriend_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:StateInformation.AllFriend)
+}
+inline void StateInformation::add_allfriend(const void* value, size_t size) {
+  allfriend_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:StateInformation.AllFriend)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+StateInformation::allfriend() const {
+  // @@protoc_insertion_point(field_list:StateInformation.AllFriend)
+  return allfriend_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+StateInformation::mutable_allfriend() {
+  // @@protoc_insertion_point(field_mutable_list:StateInformation.AllFriend)
+  return &allfriend_;
+}
+
 // -------------------------------------------------------------------
 
 // protocol
@@ -2198,21 +2711,7 @@ inline void protocol::set_type(::protocol_MsgType value) {
   // @@protoc_insertion_point(field_set:protocol.type)
 }
 
-// .protocol.StateMsg currState = 2;
-inline void protocol::clear_currstate() {
-  currstate_ = 0;
-}
-inline ::protocol_StateMsg protocol::currstate() const {
-  // @@protoc_insertion_point(field_get:protocol.currState)
-  return static_cast< ::protocol_StateMsg >(currstate_);
-}
-inline void protocol::set_currstate(::protocol_StateMsg value) {
-  
-  currstate_ = value;
-  // @@protoc_insertion_point(field_set:protocol.currState)
-}
-
-// bytes MySelfNum = 3;
+// bytes MySelfNum = 2;
 inline void protocol::clear_myselfnum() {
   myselfnum_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2265,7 +2764,7 @@ inline void protocol::set_allocated_myselfnum(::std::string* myselfnum) {
   // @@protoc_insertion_point(field_set_allocated:protocol.MySelfNum)
 }
 
-// .protocol.Chat_OneorMultiple count = 4;
+// .protocol.Chat_OneorMultiple count = 3;
 inline void protocol::clear_count() {
   count_ = 0;
 }
@@ -2279,7 +2778,7 @@ inline void protocol::set_count(::protocol_Chat_OneorMultiple value) {
   // @@protoc_insertion_point(field_set:protocol.count)
 }
 
-// repeated .ChatRecord chatContent = 5;
+// repeated .ChatRecord chatContent = 4;
 inline int protocol::chatcontent_size() const {
   return chatcontent_.size();
 }
@@ -2309,7 +2808,7 @@ protocol::chatcontent() const {
   return chatcontent_;
 }
 
-// repeated .ChatRecord_Group group = 6;
+// repeated .ChatRecord_Group group = 5;
 inline int protocol::group_size() const {
   return group_.size();
 }
@@ -2339,7 +2838,7 @@ protocol::group() const {
   return group_;
 }
 
-// .AddInformation addInfor = 7;
+// .AddInformation addInfor = 6;
 inline bool protocol::has_addinfor() const {
   return this != internal_default_instance() && addinfor_ != NULL;
 }
@@ -2389,9 +2888,63 @@ inline void protocol::set_allocated_addinfor(::AddInformation* addinfor) {
   // @@protoc_insertion_point(field_set_allocated:protocol.addInfor)
 }
 
+// .StateInformation state = 7;
+inline bool protocol::has_state() const {
+  return this != internal_default_instance() && state_ != NULL;
+}
+inline void protocol::clear_state() {
+  if (GetArenaNoVirtual() == NULL && state_ != NULL) {
+    delete state_;
+  }
+  state_ = NULL;
+}
+inline const ::StateInformation& protocol::state() const {
+  const ::StateInformation* p = state_;
+  // @@protoc_insertion_point(field_get:protocol.state)
+  return p != NULL ? *p : *reinterpret_cast<const ::StateInformation*>(
+      &::_StateInformation_default_instance_);
+}
+inline ::StateInformation* protocol::release_state() {
+  // @@protoc_insertion_point(field_release:protocol.state)
+  
+  ::StateInformation* temp = state_;
+  state_ = NULL;
+  return temp;
+}
+inline ::StateInformation* protocol::mutable_state() {
+  
+  if (state_ == NULL) {
+    state_ = new ::StateInformation;
+  }
+  // @@protoc_insertion_point(field_mutable:protocol.state)
+  return state_;
+}
+inline void protocol::set_allocated_state(::StateInformation* state) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete state_;
+  }
+  if (state) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      state = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  state_ = state;
+  // @@protoc_insertion_point(field_set_allocated:protocol.state)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -2426,6 +2979,11 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::ChatRecord_Group_contenttype>() {
   return ::ChatRecord_Group_contenttype_descriptor();
 }
+template <> struct is_proto_enum< ::StateInformation_StateMsg> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::StateInformation_StateMsg>() {
+  return ::StateInformation_StateMsg_descriptor();
+}
 template <> struct is_proto_enum< ::protocol_MsgType> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protocol_MsgType>() {
@@ -2435,11 +2993,6 @@ template <> struct is_proto_enum< ::protocol_Chat_OneorMultiple> : ::google::pro
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protocol_Chat_OneorMultiple>() {
   return ::protocol_Chat_OneorMultiple_descriptor();
-}
-template <> struct is_proto_enum< ::protocol_StateMsg> : ::google::protobuf::internal::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protocol_StateMsg>() {
-  return ::protocol_StateMsg_descriptor();
 }
 
 }  // namespace protobuf

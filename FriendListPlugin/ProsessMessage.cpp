@@ -28,6 +28,7 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 {
 	protocol proto_;
 	if (proto_.ParseFromString(proto.toStdString())) {
+		g_FriendList->SaveChatRecord(proto_);
 		switch (proto_.type()) {
 		case protocol_MsgType_ftp:
 			break;
@@ -43,14 +44,12 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 			switch (proto_.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
-				break;
+			case ChatRecord_contenttype::ChatRecord_contenttype_video:
+			case ChatRecord_contenttype::ChatRecord_contenttype_folder:
+			case ChatRecord_contenttype::ChatRecord_contenttype_audio:
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
-				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
 				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(proto_.mutable_chatcontent(0)->targetnumber()), true);
-				break;
-			case ChatRecord_contenttype::ChatRecord_contenttype_video:
-
 				break;
 			default:
 				break;
@@ -66,12 +65,16 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_text:
 				g_FriendList->ShowUnknownMsgCount(QString::fromStdString(proto_.mutable_group(0)->account()), false);
 				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_folder:
+				break;
+			case ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_audio:
+				break;
 			default:
 				break;
 			}
 			break;
-		case protocol_MsgType_state:
-			g_FriendList->UpdateFriendState(QString::fromStdString(proto_.myselfnum()), proto_.currstate());
+		case protocol_MsgType_stateInfor:
+			g_FriendList->UpdateFriendState(QString::fromStdString(proto_.myselfnum()), proto_.state());
 		default:
 			break;
 		}

@@ -218,7 +218,7 @@ QPixmap FriendList::PixmapToRound(const QPixmap &src, int radius)
 void FriendList::ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend)
 {
 	for (QMap<CustomToolButton *, QString>::iterator it = m_mapMesssage.begin();
-		it != m_mapMesssage.end();it++) {
+		it != m_mapMesssage.end();it++) 
 		if (*it == strTgtNum) {
 			if (it.key()->GetPaintContent().isEmpty())
 				it.key()->SetPaintContent(QString::number(1));
@@ -233,7 +233,6 @@ void FriendList::ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend)
 			}
 			return;
 		}
-	}
 	QString strFriendInfo = QString(SELECT_USER).arg(strTgtNum);
 	sqlPlugin::DataStructDefine& data = GET_DATA(strFriendInfo);
 	if (!data.m_lstAllData.isEmpty()) {
@@ -261,19 +260,19 @@ void FriendList::paintEvent(QPaintEvent *event)
 	AbstractWidget::paintEvent(event);
 }
 
-void FriendList::UpdateFriendState(const QString strNum, protocol_StateMsg state)
+void FriendList::UpdateFriendState(const QString strNum, StateInformation state)
 {
 	for (QMap<CustomToolButton *, QString>::iterator it = m_mapFriend.begin();
 		it != m_mapFriend.end();it++) 
 		if (*it == strNum) {
-			switch (state)
+			switch (state.currstate())
 			{
-			case protocol_StateMsg::protocol_StateMsg_Offline:
-			case protocol_StateMsg::protocol_StateMsg_hide:
+			case StateInformation::StateMsg::StateInformation_StateMsg_offline:
+			case StateInformation::StateMsg::StateInformation_StateMsg_hide:
 				it.key()->setIcon(QIcon(QPixmap::fromImage(convertImage(it.key()->icon(), it.key()->iconSize()))));
 				break;
-			case protocol_StateMsg::protocol_StateMsg_Online:
-			case protocol_StateMsg::protocol_StateMsg_dontexcuse:
+			case StateInformation::StateMsg::StateInformation_StateMsg_Online:
+			case StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse:
 			{
 				sqlPlugin::DataStructDefine& data = GET_DATA(QString(SELECT_USER_IMAGE).arg(strNum));
 				QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
@@ -297,6 +296,40 @@ QImage FriendList::convertImage(QIcon iconSource, QSize size)
 			im.setPixel(i, j, qRgba(qGray(color), qGray(color), qGray(color), qAlpha(color)));
 		}
 	return g_FriendList->PixmapToRound(QPixmap::fromImage(im), 50).toImage();
+}
+
+void FriendList::SaveChatRecord(protocol& proto)
+{
+	switch (proto.type()) {
+	case protocol_MsgType_tcp:
+	{
+		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*m_pUserNumber).arg(proto.chatcontent(0).targetnumber().c_str());
+		sqlPlugin::DataStructDefine& targetMessage = GET_DATA(strChat);
+		QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
+		protocol pro;
+		if (pro.ParseFromString(strContent.toStdString())) {
+			pro.MergeFrom(proto);
+			QString strUpdateChat = QString(UPDATE_CHAT_MESSAGE).arg(pro.SerializeAsString().c_str()).arg(*m_pUserNumber).arg(proto.chatcontent(0).targetnumber().c_str());
+			EXECUTE(strUpdateChat);
+		}
+	}
+		break;
+	case protocol_MsgType_udp:
+	{
+		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*m_pUserNumber).arg(proto.group(0).account().c_str());
+		sqlPlugin::DataStructDefine& targetMessage = GET_DATA(strChat);
+		QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
+		protocol pro;
+		if (pro.ParseFromString(strContent.toStdString())) {
+			pro.MergeFrom(proto);
+			QString strUpdateChat = QString(UPDATE_CHAT_MESSAGE).arg(pro.SerializeAsString().c_str()).arg(*m_pUserNumber).arg(proto.group(0).account().c_str());
+			EXECUTE(strUpdateChat);
+		}
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 void FriendList::SlotStartChat()
@@ -353,7 +386,7 @@ void FriendList::SlotAdd(bool isClicked /*= false*/)
 			UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(*m_pUserNumber), QVariant(array));
 			QFile fileImage(CONDIGFILE);
 			if (fileImage.open(QIODevice::WriteOnly)) {
-				fileImage.write(array);
+				fileImage.write(array); 
 				fileImage.close();
 			}
 			image.close();
@@ -395,12 +428,12 @@ void FriendList::SlotChangedState(const QString &strCurrentText)
 	protocol proto;
 	proto.set_myselfnum(m_pUserNumber->toStdString());
 	if (strCurrentText == QString::fromLocal8Bit("ÔÚÏß"))
-		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_Online);
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
 	else if(strCurrentText == QString::fromLocal8Bit("ÒþÉí"))
-		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_hide);
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_hide);
 	else 
-		proto.set_currstate(protocol_StateMsg::protocol_StateMsg_dontexcuse);
-	proto.set_type(protocol_MsgType_state);
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
+	proto.set_type(protocol_MsgType_stateInfor);
 	m_NetWorkProsess.SendMsg(QString::fromStdString(proto.SerializeAsString()));
 }
 

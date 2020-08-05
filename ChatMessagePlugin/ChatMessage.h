@@ -27,7 +27,76 @@ struct Message_Content {
 };
 
 using namespace sqlPlugin;
-class CustomMessageWidget;
+/// \brief 气泡界面定义
+class CustomMessageWidget : public QWidget
+{
+	Q_OBJECT
+public:
+	/// \brief 内容类型定义
+	enum class ContentType
+	{
+		file,   ///< 文件
+		image,  ///< 图像
+		text,   ///< 文本
+		folder,  ///< 文件夹
+		voice   ///< 语音
+	};
+	struct FileProperty {
+		quint64 size;
+		QString strName;
+		QByteArray fileData;
+	};
+	union ContentArray {
+		ContentArray() {}
+		~ContentArray() {}
+		QString strContent;
+		QByteArray arrayContent;
+	};
+
+	/// \brief 构造函数
+	/// \param[in] parent 父窗口
+	CustomMessageWidget(QWidget* parent = 0);
+
+	/// \brief 析构函数
+	~CustomMessageWidget();
+
+	/// \brief 设置消息文本内容
+	/// \param[in] strContent 消息
+	/// \param[in] isSelf 是否是自己的消息
+	/// \param[in] type 消息类型
+	void SetContent(const QString& strContent, bool isSelf, ContentType type);
+
+	/// \brief 传输文件与文件夹
+	/// \param[in] property 文件信息
+	/// \param[in] isSelf 是否是自己的消息
+	/// \param[in] type 消息类型
+	void SetContent(FileProperty property, bool isSelf, ContentType type);
+
+	/// \brief 计算坐标，绘制聊天气泡
+	/// \paran[in] event 系统参数
+	void paintEvent(QPaintEvent* event);
+
+	/// \brief 初始化文字
+	/// \isSelf 是不是自己发的消息
+	void InitText(bool isSelf);
+
+	/// \brief 返回消息的类型
+	/// \retval 消息类型
+	ContentType GetType();
+private slots:
+	void SlotRecv();
+
+public:
+	ContentType m_MsgType;          ///< 消息类型
+	FileProperty m_MsgProperty;     ///< 消息属性  
+	ContentArray m_unionContent;         ///< 消息体
+private:
+	QTextEdit* m_pMessageContent;    ///< 气泡
+	QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
+	QMediaPlayer m_player;  ///< 播放语音消息
+	bool m_IsClicked;  ///< 语音消息
+	QProgressBar m_Bar;  ///< 读取文件进度条
+};
 
 /// \brief 聊天界面功能定义
 class CHATMESSAGEPLUGIN_EXPORT ChatMessage : public AbstractWidget
@@ -55,8 +124,17 @@ public:
 	/// \brief 添加聊天消息
 	/// \param[in] strTgtNum 对方账号
 	/// \param[in] strMsg 消息内容
+	/// \param[in] time 发送的时间
 	/// \param[in] msgtype 消息类型
 	void SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype);
+
+
+	/// \brief 发送文件或者文件夹的时候添加此消息
+	/// \param[in] strTgtNum 对方账号
+	/// \param[in] content 消息结构
+	/// \param[in] time 发送消息的时间
+	/// \param[in] msgtype 消息类型
+	void SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty content, quint64 time, Message_Content::Content_Type msgtype);
 
 	/// \brief 添加聊天对象
 	/// \param[in] pToolTgt 对方信息
@@ -87,7 +165,15 @@ public:
 	/// \brief 更新好友状态
 	/// \param[in] strNum 好友账号
 	/// \param[in] state 状态
-	void UpdateFriendState(QString strNum, protocol_StateMsg state);
+	void UpdateFriendState(QString strNum, StateInformation state);
+
+	/// \brief 初始化要发送的文件
+	/// \param[out] rec 单人聊天协议
+	/// \param[out] recGroup 群聊协议
+	/// \param[in] isOne 是否是单人
+	/// \param[in] info 文件信息
+	/// \param[out] proto 协议
+	void InitSendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, QFileInfo& info, protocol* proto);
 
 private slots:
 	
@@ -152,54 +238,6 @@ private:
 	QMap<QString, QList<quint64>> m_mapNumberToTime;  ///< 好友映射到聊天时间
 	QMap<CustomToolButton*, CustomTextEdit*> m_mapFriendToTextEdit;  ///< 好友对应文字编辑框
 	QMap<QString, QLabel*> m_mapFriendState; ///< 好友状态
-};
-
-/// \brief 气泡界面定义
-class CustomMessageWidget : public QWidget 
-{
-	
-public:
-	/// \brief 内容类型定义
-	enum class ContentType
-	{
-		file,   ///< 文件
-		image,  ///< 图像
-		text,   ///< 文本
-		folder,  ///< 文件夹
-		voice   ///< 语音
-	};
-
-    /// \brief 构造函数
-    /// \param[in] parent 父窗口
-	CustomMessageWidget(QWidget* parent = 0);
-	~CustomMessageWidget();
-  
-    /// \brief 设置消息文本内容
-    /// \param[in] strContent 消息
-    /// \param[in] isSelf 是否是自己的消息
-	void SetContent(const QString& strContent, bool isSelf, ContentType type);
-    
-    /// \brief 计算坐标，绘制聊天气泡
-    /// \paran[in] event 系统参数
-	void paintEvent(QPaintEvent* event);
-
-	/// \brief 初始化文字
-	/// \isSelf 是不是自己发的消息
-	void InitText(bool isSelf);
-
-	/// \brief 返回消息的类型
-	/// \retval 消息类型
-	ContentType GetType();
-
-public:
-	QString m_strContent;           ///< 消息体
-	ContentType m_MsgType;          ///< 消息类型
-	QByteArray m_ArrayData;         ///< 消息缓存
-private:
-	QTextEdit* m_pMessageContent;    ///< 气泡
-    QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
-	QMediaPlayer m_player;  ///< 播放语音消息
-	bool m_IsClicked;  ///< 语音消息
 };
 
 

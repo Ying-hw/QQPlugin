@@ -19,6 +19,7 @@ LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent), m_BackPassWD(N
 }
 
 LoginSystem::~LoginSystem() {
+	
 }
 
 void LoginSystem::SetCurrenrtUser()

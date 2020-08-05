@@ -1,5 +1,15 @@
 /* === QPushButton === */
+/* === QWidget === */
+QWidget:window {
+    font-family: 'Segoe UI';
+	font-size: 20px;
+    background-color: rgb(30,100,100);
+}
 
+*{
+font-family: 'Segoe UI';
+	font-size: 20px;
+}
 QToolButton#m_BtnTgtInfo{
 	border: none;
 }
@@ -16,12 +26,13 @@ QPushButton#BtnPicture,#BtnText{
 	background-color: rgb(30,100,100);
 }
 
-QPushButton#BtnLogin,#BtnBackPassWD,#BtnRegister {
+QPushButton#BtnLogin,#BtnBackPassWD,#BtnRegister{
 	background-color: rgba(150,255,255, 50);
 	border-width: 2px;
     padding: 4px;
 	border-radius: 4px;
     font-family: "Segoe UI";
+	font-size: 20px;
 }
 
 QPushButton#BtnLogin:hover,#BtnBackPassWD:hover,#BtnRegister:hover {
@@ -565,12 +576,6 @@ QStackedWidget, QLabel, QRadioButton, QCheckBox,
 QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog, QTabBar {
     font-family: "Segoe UI";
     background-color: rgb(30,100,120);
-}
-
-/* === QWidget === */
-QWidget:window {
-    font-family: 'Segoe UI';
-    background-color: rgb(30,100,100);
 }
 
 

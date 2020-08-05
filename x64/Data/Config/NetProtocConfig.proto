@@ -21,8 +21,9 @@ message ChatRecord
 	HeadInfor 	head     		= 7;
 	message 	HeadInfor 
 	{
-		uint64 size    = 1;
-	    bytes  name     = 2;
+		uint64 FileSize    = 1;
+		uint64 AllSize     = 2;
+	    bytes  name        = 3;
 	}
 }
 
@@ -52,7 +53,7 @@ message User
 message ChatRecord_Group
 {
 	uint64 currtime = 1;
-	bytes  account   = 2;
+	bytes  account  = 2;
 	enum contenttype
 	{
 		file  = 0;
@@ -64,6 +65,26 @@ message ChatRecord_Group
 	contenttype type       = 3;
 	bytes 		content    = 4;
 	bytes 		selfNumber = 5;
+	HeadInfor 	head       = 6;
+	message 	HeadInfor 
+	{
+		uint64 FileSize    = 1;
+		uint64 AllSize     = 2;
+	    bytes  name        = 3;
+	}
+}
+
+message StateInformation
+{
+	enum StateMsg
+	{
+		Online    = 0;
+		offline   = 1;
+		hide      = 2;
+		dontexcuse= 3;
+	}
+	StateMsg     currState   = 1;
+	repeated bytes AllFriend = 2;
 }
 
 message protocol
@@ -75,27 +96,20 @@ message protocol
 		http   = 2;
 		smtp   = 3;
 		ftp    = 4;
-		state  = 5;
+		stateInfor  = 5;
 	}
 	enum Chat_OneorMultiple
 	{
 		one      = 0;
 		multiple = 1;
 	}
-	enum StateMsg
-	{
-		Online     = 0;
-		Offline    = 1;
-		hide       = 2;
-		dontexcuse = 3;
-	}
 	MsgType                   type         = 1;
-	StateMsg                  currState    = 2;
-	bytes                     MySelfNum    = 3;
-	Chat_OneorMultiple        count        = 4;
-	repeated ChatRecord       chatContent  = 5;
-	repeated ChatRecord_Group group        = 6;
-	AddInformation            addInfor     = 7;
+	bytes                     MySelfNum    = 2;
+	Chat_OneorMultiple        count        = 3;
+	repeated ChatRecord       chatContent  = 4;
+	repeated ChatRecord_Group group        = 5;
+	AddInformation            addInfor     = 6;
+	StateInformation          state        = 7;
 }
 
 
