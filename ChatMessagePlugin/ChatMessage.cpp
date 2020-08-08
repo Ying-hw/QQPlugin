@@ -130,7 +130,7 @@ void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg, q
 	m_MsgSourceNum[MessWidget] = strTgtNum;
 }
 
-void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty content, quint64 time, Message_Content::Content_Type msgtype)
+void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype)
 {
 	for (QMap<CustomToolButton*, NumInfo>::iterator it = m_mapFriendInfo.begin();
 		it != m_mapFriendInfo.end(); it++)
@@ -437,7 +437,7 @@ void ChatMessage::UpdateFriendState(QString strNum, StateInformation state)
 	}
 }
 
-void ChatMessage::InitSendFile(ChatRecord* chat, ChatRecord_Group* pGroup, protocol_Chat_OneorMultiple isOne, QFileInfo& info, protocol* proto)
+void ChatMessage::InitSendFileHead(ChatRecord* chat, ChatRecord_Group* pGroup, protocol_Chat_OneorMultiple isOne, QFileInfo& info, protocol* proto)
 {
 	CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
 	bool OneToOne = (isOne == protocol_Chat_OneorMultiple_one);
@@ -450,29 +450,31 @@ void ChatMessage::InitSendFile(ChatRecord* chat, ChatRecord_Group* pGroup, proto
 	}
 	if (OneToOne) {
 		chat->mutable_head()->set_filesize(info.size());
-		chat->mutable_head()->set_name(info.baseName().toStdString());
+		chat->mutable_head()->set_name(info.baseName().toStdString());      
+		chat->mutable_head()->set_isconsent(false);
 		chat->set_type(ChatRecord_contenttype_file);
 	}
 	else {
 		pGroup->mutable_head()->set_filesize(info.size());
 		pGroup->mutable_head()->set_name(info.baseName().toStdString());
-		pGroup->set_type(ChatRecord_Group_contenttype_file);
+		pGroup->set_type(ChatRecord_Group_contenttype_file); 
 	}
-	if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
-		if (OneToOne)
-			SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), chat->time(), (Message_Content::Content_Type)chat->type());
-		else
-			SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
-	QFile f(info.fileName());
-	if (f.open(QIODevice::ReadOnly)) {
-		QByteArray arrayData = f.readAll();
-		OneToOne ? chat->set_content(arrayData) : pGroup->set_content(arrayData);
-		if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
-			if (OneToOne)
-				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), chat->time(), (Message_Content::Content_Type)chat->type());
-			else
-				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
-		f.close();
+}
+
+void ChatMessage::SendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, protocol* proto)
+{
+	bool isOneToOne = (isOne == protocol_Chat_OneorMultiple_one);
+	CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+	for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
+		QFileInfo info(strFile);
+		QFile f(info.fileName());
+		if (f.open(QIODevice::ReadOnly)) {
+			QByteArray arrayData = f.readAll();
+			isOneToOne ? rec->set_content(arrayData) : recGroup->set_content(arrayData);
+			if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
+				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), isOneToOne ? rec->time() : recGroup->currtime(), (Message_Content::Content_Type)(isOneToOne ? rec->type() : recGroup->type()));
+			f.close();
+		}
 	}
 }
 
@@ -554,40 +556,75 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 	if(proto->count() == protocol_Chat_OneorMultiple_one) {
 		m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::TCP);	
 		if (!m_mapFriendToTextEdit[pTgtBu]->toPlainText().isEmpty()) {
-			ChatRecord* chat = proto->add_chatcontent();
-			chat->set_time(QDateTime::currentMSecsSinceEpoch());
-			chat->set_targetnumber(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
-			chat->set_selfnumber(m_strSelfNum.toStdString());
-			chat->set_isself(true);
 			for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
+				ChatRecord* chat = proto->add_chatcontent();
+				chat->set_time(QDateTime::currentMSecsSinceEpoch());
+				chat->set_targetnumber(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
+				chat->set_selfnumber(m_strSelfNum.toStdString());
+				chat->set_isself(true);
 				QFileInfo info(strFile);
-				InitSendFile(chat, nullptr, protocol_Chat_OneorMultiple_one, info, proto);		
+				InitSendFileHead(chat, nullptr, protocol_Chat_OneorMultiple_one, info, proto);		
+			}
+			if (proto->chatcontent_size() > 0)
+			{
+				m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString()));
+			}
+			for (int i = 0; i < proto->chatcontent_size(); i++) {
+				SendFile(proto->mutable_chatcontent(i), nullptr, protocol_Chat_OneorMultiple_one, proto);
+				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type());
+			}
+			if (proto->chatcontent_size() > 0)
+			{
+				m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString()));
 				return;
 			}
 			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty()) {
+				ChatRecord* chat = proto->add_chatcontent();
+				chat->set_time(QDateTime::currentMSecsSinceEpoch());
+				chat->set_targetnumber(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
+				chat->set_selfnumber(m_strSelfNum.toStdString());
+				chat->set_isself(true);
 				chat->set_type(ChatRecord_contenttype_text);
 				chat->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
-			}
-			if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
-				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), chat->time(), (Message_Content::Content_Type)chat->type());			
+				if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
+					SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), chat->time(), (Message_Content::Content_Type)chat->type());
+			}				
 		}
 	}
 	else {
 		m_ProMsg->SetCommunicationProtocol(AbstractNetWork::ProtoType::UDP);
 		if (!m_mapFriendToTextEdit[pTgtBu]->toPlainText().isEmpty()) {
-			ChatRecord_Group* pGroup = proto->add_group();
 			CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
-			pGroup->set_account(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
-			pGroup->set_selfnumber(m_strSelfNum.toStdString());
-			pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
+			for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
+				ChatRecord_Group* pGroup = proto->add_group();
+				pGroup->set_account(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
+				pGroup->set_selfnumber(m_strSelfNum.toStdString());
+				pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
+				QFileInfo info(strFile);
+				InitSendFileHead(nullptr, pGroup,protocol_Chat_OneorMultiple_multiple, info, proto);
+			}
+			if (proto->group_size() > 0)
+			{
+				m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString()));
+			}
+			for (int i = 0;i < proto->group_size();i++) {
+				SendFile(nullptr, proto->mutable_group(i), protocol_Chat_OneorMultiple_multiple, proto);
+				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type());
+			}
+			if (proto->group_size() > 0)
+			{
+				m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString()));
+				return;
+			}
 			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty()) {
+				ChatRecord_Group* pGroup = proto->add_group();
+				pGroup->set_account(m_mapFriendInfo[pTgtBu].m_strNum.toStdString());
+				pGroup->set_selfnumber(m_strSelfNum.toStdString());
+				pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
 				pGroup->set_type(ChatRecord_Group_contenttype_text);
 				pGroup->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
-				return;						
-			}
-			for (QString strFile : m_mapFriendToTextEdit[pTgtBu]->GetFilePath()) {
-				QFileInfo info(strFile);
-				InitSendFile(nullptr, pGroup,protocol_Chat_OneorMultiple_multiple, info, proto);
+				if (m_ProMsg->SendMsg(QString::fromStdString(proto->SerializeAsString())) > 0)
+					SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
 			}
 		}
 	}
@@ -628,7 +665,7 @@ void ChatMessage::SlotBtnMail()
 
 void ChatMessage::SlotBtnFace()
 {
-
+	
 }
 
 void ChatMessage::SlotBtnScreenshot()
@@ -790,6 +827,7 @@ void CustomMessageWidget::SetContent(const QString& strContent, bool isSelf, Con
 				file.seek(0);
 				m_player.setMedia(QMediaContent(QUrl::fromLocalFile(TEMP_FILE)), &file);
 				m_player.play();
+				file.close();
 			}
 		});
 		QGridLayout* lay = new QGridLayout;
@@ -803,9 +841,9 @@ void CustomMessageWidget::SetContent(const QString& strContent, bool isSelf, Con
 	}
 }
 
-void CustomMessageWidget::SetContent(FileProperty property, bool isSelf, ContentType type)
+void CustomMessageWidget::SetContent(FileProperty& property, bool isSelf, ContentType type)
 {
-	m_MsgProperty = property;
+	m_mapMsgProperty[property.strName] = property;
 	switch (type)
 	{
 	case ContentType::file:
@@ -816,15 +854,16 @@ void CustomMessageWidget::SetContent(FileProperty property, bool isSelf, Content
 		QPushButton* pButtonRecv = new QPushButton(QString::fromLocal8Bit("接受"), this);
 		QPushButton* pButtonRejective = new QPushButton(QString::fromLocal8Bit("拒绝"), this);
 		QSpacerItem* acerItem = new QSpacerItem(40,40, QSizePolicy::Expanding, QSizePolicy::Expanding);
-		QHBoxLayout* hB = new QHBoxLayout;
+		QHBoxLayout* hB = new QHBoxLayout; 
 		hB->addWidget(pButtonRecv);
 		hB->addItem(acerItem);
 		hB->addWidget(pButtonRejective);
 
-		connect(pButtonRejective, &QPushButton::clicked, [pButtonRejective, pButtonRecv, this, hB]() {
+		connect(pButtonRejective, &QPushButton::clicked, [pButtonRejective, pButtonRecv, this, hB, labFile](){
 			pButtonRecv->close();
 			pButtonRejective->close();
-			m_MsgProperty.fileData.clear();
+			QString strFileName = labFile->text().remove(QString::fromLocal8Bit("文件："));
+			m_mapMsgProperty.remove(strFileName);
 			QLabel* labHint = new QLabel(QString::fromLocal8Bit("已拒绝"), this);
 			hB->insertWidget(0, labHint);
 		});
@@ -832,7 +871,13 @@ void CustomMessageWidget::SetContent(FileProperty property, bool isSelf, Content
 		connect(pButtonRecv, &QPushButton::clicked, [pButtonRejective, pButtonRecv, hB, this](){
 			pButtonRecv->close();
 			pButtonRejective->close();
-			hB->insertWidget(0, &m_Bar);
+			m_Bar.show();
+			hB->insertWidget(0, &m_Bar); 
+			protocol proto;
+			proto.add_chatcontent()->mutable_head()->set_isconsent(true);
+			proto.set_myselfnum(g_pChatMessage->m_strSelfNum.toStdString());
+			proto.set_type(protocol_MsgType::protocol_MsgType_tcp);
+			g_pChatMessage->m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString()));
 		});
 
 		QGridLayout* lay = new QGridLayout;

@@ -23,6 +23,7 @@ int ProcessChatMessage::RecvMessage()
 		QByteArray buf;
 		buf.resize(tcp->bytesAvailable());
 		size = tcp->read(buf.data(), buf.size());
+		m_CurrentReadSize = size;
 		AnalysisProtocol(buf);  //protobuf解析协议，把解析出来的协议内容显示到界面中
 	}
 	return size;
@@ -47,7 +48,7 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 				quint64 size = proto.chatcontent(0).head().filesize();
 				QString strName = QString::fromStdString(proto.chatcontent(0).head().name());
 				std::string strFielData = proto.chatcontent(0).content();
-				CustomMessageWidget::FileProperty fileInfo = {size, strName, strFielData.c_str()};
+				CustomMessageWidget::FileProperty fileInfo = {size, strName, QByteArray::fromStdString(strFielData)};
 				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), fileInfo, proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::file);
 			}
 				break;

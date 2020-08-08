@@ -22,8 +22,8 @@ message ChatRecord
 	message 	HeadInfor 
 	{
 		uint64 FileSize    = 1;
-		uint64 AllSize     = 2;
-	    bytes  name        = 3;
+	    bytes  name        = 2;
+		bool   isConsent   = 3;
 	}
 }
 
@@ -69,8 +69,8 @@ message ChatRecord_Group
 	message 	HeadInfor 
 	{
 		uint64 FileSize    = 1;
-		uint64 AllSize     = 2;
-	    bytes  name        = 3;
+	    bytes  name        = 2;
+		bool   isConsent   = 3;
 	}
 }
 

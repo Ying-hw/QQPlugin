@@ -70,7 +70,7 @@ public:
 	/// \param[in] property 文件信息
 	/// \param[in] isSelf 是否是自己的消息
 	/// \param[in] type 消息类型
-	void SetContent(FileProperty property, bool isSelf, ContentType type);
+	void SetContent(FileProperty& property, bool isSelf, ContentType type);
 
 	/// \brief 计算坐标，绘制聊天气泡
 	/// \paran[in] event 系统参数
@@ -88,7 +88,7 @@ private slots:
 
 public:
 	ContentType m_MsgType;          ///< 消息类型
-	FileProperty m_MsgProperty;     ///< 消息属性  
+	QMap<QString, FileProperty> m_mapMsgProperty;     ///< 消息属性  
 	ContentArray m_unionContent;         ///< 消息体
 private:
 	QTextEdit* m_pMessageContent;    ///< 气泡
@@ -96,6 +96,7 @@ private:
 	QMediaPlayer m_player;  ///< 播放语音消息
 	bool m_IsClicked;  ///< 语音消息
 	QProgressBar m_Bar;  ///< 读取文件进度条
+	QFile  m_FileTransfer;  ///< 文件传输
 };
 
 /// \brief 聊天界面功能定义
@@ -134,7 +135,7 @@ public:
 	/// \param[in] content 消息结构
 	/// \param[in] time 发送消息的时间
 	/// \param[in] msgtype 消息类型
-	void SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty content, quint64 time, Message_Content::Content_Type msgtype);
+	void SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype);
 
 	/// \brief 添加聊天对象
 	/// \param[in] pToolTgt 对方信息
@@ -167,13 +168,21 @@ public:
 	/// \param[in] state 状态
 	void UpdateFriendState(QString strNum, StateInformation state);
 
-	/// \brief 初始化要发送的文件
+	/// \brief 初始化要发送的文件头
 	/// \param[out] rec 单人聊天协议
 	/// \param[out] recGroup 群聊协议
 	/// \param[in] isOne 是否是单人
 	/// \param[in] info 文件信息
 	/// \param[out] proto 协议
-	void InitSendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, QFileInfo& info, protocol* proto);
+	void InitSendFileHead(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, QFileInfo& info, protocol* proto);
+
+	/// \brief 初始化要发送的文件头
+	/// \param[out] rec 单人聊天协议
+	/// \param[out] recGroup 群聊协议
+	/// \param[in] isOne 是否是单人
+	/// \param[out] proto 协议
+	void SendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, protocol* proto);
+
 
 private slots:
 	
@@ -238,8 +247,7 @@ private:
 	QMap<QString, QList<quint64>> m_mapNumberToTime;  ///< 好友映射到聊天时间
 	QMap<CustomToolButton*, CustomTextEdit*> m_mapFriendToTextEdit;  ///< 好友对应文字编辑框
 	QMap<QString, QLabel*> m_mapFriendState; ///< 好友状态
+	friend class CustomMessageWidget;
 };
-
-
 
 #endif // CHATMESSAGE_H

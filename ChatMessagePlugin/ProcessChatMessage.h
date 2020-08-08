@@ -9,6 +9,9 @@ public:
 	~ProcessChatMessage();
 	int RecvMessage();
 	void AnalysisProtocol(QByteArray& protocol);
+private:
+	qint64 m_CurrentReadSize;
+	friend class CustomMessageWidget;
 };
 
 #endif

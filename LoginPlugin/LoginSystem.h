@@ -8,12 +8,12 @@
 #include "SqlStatementDefine.h"
 #include "NetProtocConfig.pb.h"
 #include "AbstractWidget.h"
-#include <QTcpServer>
-
 
 class LOGINPLUGIN_EXPORT LoginSystem : public AbstractWidget
 {
 	Q_OBJECT
+
+	enum class OperatorType{LOGIN, REGISTER, FINDPASSWORD};
 
 public:
 	LoginSystem(QWidget *parent = 0);
@@ -27,10 +27,14 @@ private slots:
 	void SlotBackPassWD();
 	void SlotRegister();
 	void SlotLogin();
+	void processLoginResult(QHostInfo host);
+	void processRegisterResult(QHostInfo host);
+	void OpenDataLibResult();
 private:
 	Ui::LoginSystem ui;
 	BackPassword *m_BackPassWD;
 	User m_User;  
+	OperatorType m_CurrentType;
 };
 
 #endif // LOGINSYSTEM_H

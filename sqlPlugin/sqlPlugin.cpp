@@ -1,15 +1,16 @@
 #include "sqlPlugin.h"
 
-sqlPlugin::DataLib::DataLib() :m_Port(3306) {
+sqlPlugin::DataLib::DataLib() :m_Port(3306), m_IsOpen(false) {
 
 }
+
 
 sqlPlugin::DataLib::~DataLib() {
 	if (m_dataBase.isOpen())
 		m_dataBase.close();
 }
 
-bool sqlPlugin::DataLib::openDataLib() {
+void sqlPlugin::DataLib::openDataLib() {
 	if (!m_dataBase.isOpen()) {
 		m_strDataLibUserName = "root";
 		m_strPassWD = "root";
@@ -21,12 +22,13 @@ bool sqlPlugin::DataLib::openDataLib() {
 		m_dataBase.setHostName(m_strAddress);  
 		m_dataBase.setPort(m_Port);
 		m_dataBase.setUserName(m_strDataLibUserName);
-		if (!m_dataBase.open()) {
-			m_strError = m_dataBase.lastError().text();
-			return false;
-		}
+		start();
 	}
-	return true;
+}
+
+bool sqlPlugin::DataLib::GetOpenResult()
+{
+	return m_IsOpen;
 }
 
 sqlPlugin::DataLib* sqlPlugin::DataLib::GetDataLibInstance()
@@ -41,6 +43,17 @@ sqlPlugin::DBSelect* sqlPlugin::DataLib::GetSelectInstance()
 	return &select;
 }
 
+
+void sqlPlugin::DataLib::run()
+{
+	if (!m_dataBase.open()) {
+		m_strError = m_dataBase.lastError().text();
+		m_IsOpen = false;
+	}
+	else {
+		m_IsOpen = true;
+	}
+}
 
 sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(const QString &strSql) {
 	static sqlPlugin::DataStructDefine Data;
@@ -57,8 +70,8 @@ sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(const QString &strSql)
 			Data.m_lstAllData.append(rowMapData);
 		}
 	else {
-		if (query.lastError().type() == QSqlError::ConnectionError) 
-			while (!DataLib::GetDataLibInstance()->openDataLib());
+		if (query.lastError().type() == QSqlError::ConnectionError)
+			sqlPlugin::DataLib::GetDataLibInstance()->start();
 		m_strError = query.lastError().text();
 	}
 	return Data;
@@ -69,6 +82,8 @@ bool sqlPlugin::DBSelect::ExecuteSql(const QString &strSql) {
 	query.prepare(strSql);
 	if (!query.exec()) {
 		m_strError = query.lastError().text();
+		if (query.lastError().type() == QSqlError::ConnectionError)
+			sqlPlugin::DataLib::GetDataLibInstance()->start();
 		return false;
 	}
 	return true;
@@ -81,6 +96,8 @@ bool sqlPlugin::DBSelect::InsertImage(const QString &strSql, QVariant& ImageData
 	query.addBindValue(ImageData);
 	if (!query.exec()) {
 		m_strError = query.lastError().text();
+		if (query.lastError().type() == QSqlError::ConnectionError)
+			sqlPlugin::DataLib::GetDataLibInstance()->start();
 		return false;
 	}
 	return true;
@@ -108,3 +125,4 @@ sqlPlugin::DataStructDefine::DataStructDefine()
 {
 
 }
+

@@ -271,8 +271,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_HeadInfor, filesize_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_HeadInfor, allsize_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_HeadInfor, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_HeadInfor, isconsent_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -313,7 +313,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group_HeadInfor, filesize_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group_HeadInfor, allsize_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group_HeadInfor, name_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::ChatRecord_Group, _internal_metadata_),
@@ -353,9 +352,9 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 29, -1, sizeof(::User_loginUser)},
   { 36, -1, sizeof(::User)},
   { 42, -1, sizeof(::ChatRecord_Group_HeadInfor)},
-  { 50, -1, sizeof(::ChatRecord_Group)},
-  { 61, -1, sizeof(::StateInformation)},
-  { 68, -1, sizeof(::protocol)},
+  { 49, -1, sizeof(::ChatRecord_Group)},
+  { 60, -1, sizeof(::StateInformation)},
+  { 67, -1, sizeof(::protocol)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -392,45 +391,45 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\025NetProtocConfig.proto\"\277\002\n\nChatRecord\022\014"
+      "\n\025NetProtocConfig.proto\"\301\002\n\nChatRecord\022\014"
       "\n\004time\030\001 \001(\004\022%\n\004type\030\002 \001(\0162\027.ChatRecord."
       "contenttype\022\017\n\007content\030\003 \001(\014\022\016\n\006isSelf\030\004"
       " \001(\010\022\024\n\014targetNumber\030\005 \001(\014\022\022\n\nselfNumber"
       "\030\006 \001(\014\022#\n\004head\030\007 \001(\0132\025.ChatRecord.HeadIn"
-      "for\032<\n\tHeadInfor\022\020\n\010FileSize\030\001 \001(\004\022\017\n\007Al"
-      "lSize\030\002 \001(\004\022\014\n\004name\030\003 \001(\014\"N\n\013contenttype"
-      "\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text\020\002\022\t\n\005video"
-      "\020\003\022\n\n\006folder\020\004\022\t\n\005audio\020\005\"\237\001\n\016AddInforma"
-      "tion\022(\n\004type\030\001 \001(\0162\032.AddInformation.Targ"
-      "etType\022\025\n\rTargetAccount\030\002 \001(\014\022\023\n\013FromAcc"
-      "ount\030\003 \001(\014\022\016\n\006reason\030\004 \001(\014\"\'\n\nTargetType"
-      "\022\014\n\010isFriend\020\000\022\013\n\007isGroup\020\001\"Z\n\004User\022\036\n\005l"
-      "ogin\030\003 \003(\0132\017.User.loginUser\0322\n\tloginUser"
-      "\022\022\n\nuserNumder\030\001 \001(\014\022\021\n\tisCurrent\030\002 \001(\010\""
-      "\265\002\n\020ChatRecord_Group\022\020\n\010currtime\030\001 \001(\004\022\017"
-      "\n\007account\030\002 \001(\014\022+\n\004type\030\003 \001(\0162\035.ChatReco"
-      "rd_Group.contenttype\022\017\n\007content\030\004 \001(\014\022\022\n"
-      "\nselfNumber\030\005 \001(\014\022)\n\004head\030\006 \001(\0132\033.ChatRe"
-      "cord_Group.HeadInfor\032<\n\tHeadInfor\022\020\n\010Fil"
-      "eSize\030\001 \001(\004\022\017\n\007AllSize\030\002 \001(\004\022\014\n\004name\030\003 \001"
-      "(\014\"C\n\013contenttype\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010"
-      "\n\004text\020\002\022\n\n\006folder\020\003\022\t\n\005audio\020\004\"\223\001\n\020Stat"
-      "eInformation\022-\n\tcurrState\030\001 \001(\0162\032.StateI"
-      "nformation.StateMsg\022\021\n\tAllFriend\030\002 \003(\014\"="
-      "\n\010StateMsg\022\n\n\006Online\020\000\022\013\n\007offline\020\001\022\010\n\004h"
-      "ide\020\002\022\016\n\ndontexcuse\020\003\"\353\002\n\010protocol\022\037\n\004ty"
-      "pe\030\001 \001(\0162\021.protocol.MsgType\022\021\n\tMySelfNum"
-      "\030\002 \001(\014\022+\n\005count\030\003 \001(\0162\034.protocol.Chat_On"
-      "eorMultiple\022 \n\013chatContent\030\004 \003(\0132\013.ChatR"
-      "ecord\022 \n\005group\030\005 \003(\0132\021.ChatRecord_Group\022"
-      "!\n\010addInfor\030\006 \001(\0132\017.AddInformation\022 \n\005st"
-      "ate\030\007 \001(\0132\021.StateInformation\"H\n\007MsgType\022"
-      "\007\n\003tcp\020\000\022\007\n\003udp\020\001\022\010\n\004http\020\002\022\010\n\004smtp\020\003\022\007\n"
-      "\003ftp\020\004\022\016\n\nstateInfor\020\005\"+\n\022Chat_OneorMult"
-      "iple\022\007\n\003one\020\000\022\014\n\010multiple\020\001B\002H\001b\006proto3"
+      "for\032>\n\tHeadInfor\022\020\n\010FileSize\030\001 \001(\004\022\014\n\004na"
+      "me\030\002 \001(\014\022\021\n\tisConsent\030\003 \001(\010\"N\n\013contentty"
+      "pe\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text\020\002\022\t\n\005vid"
+      "eo\020\003\022\n\n\006folder\020\004\022\t\n\005audio\020\005\"\237\001\n\016AddInfor"
+      "mation\022(\n\004type\030\001 \001(\0162\032.AddInformation.Ta"
+      "rgetType\022\025\n\rTargetAccount\030\002 \001(\014\022\023\n\013FromA"
+      "ccount\030\003 \001(\014\022\016\n\006reason\030\004 \001(\014\"\'\n\nTargetTy"
+      "pe\022\014\n\010isFriend\020\000\022\013\n\007isGroup\020\001\"Z\n\004User\022\036\n"
+      "\005login\030\003 \003(\0132\017.User.loginUser\0322\n\tloginUs"
+      "er\022\022\n\nuserNumder\030\001 \001(\014\022\021\n\tisCurrent\030\002 \001("
+      "\010\"\244\002\n\020ChatRecord_Group\022\020\n\010currtime\030\001 \001(\004"
+      "\022\017\n\007account\030\002 \001(\014\022+\n\004type\030\003 \001(\0162\035.ChatRe"
+      "cord_Group.contenttype\022\017\n\007content\030\004 \001(\014\022"
+      "\022\n\nselfNumber\030\005 \001(\014\022)\n\004head\030\006 \001(\0132\033.Chat"
+      "Record_Group.HeadInfor\032+\n\tHeadInfor\022\020\n\010F"
+      "ileSize\030\001 \001(\004\022\014\n\004name\030\002 \001(\014\"C\n\013contentty"
+      "pe\022\010\n\004file\020\000\022\t\n\005image\020\001\022\010\n\004text\020\002\022\n\n\006fol"
+      "der\020\003\022\t\n\005audio\020\004\"\223\001\n\020StateInformation\022-\n"
+      "\tcurrState\030\001 \001(\0162\032.StateInformation.Stat"
+      "eMsg\022\021\n\tAllFriend\030\002 \003(\014\"=\n\010StateMsg\022\n\n\006O"
+      "nline\020\000\022\013\n\007offline\020\001\022\010\n\004hide\020\002\022\016\n\ndontex"
+      "cuse\020\003\"\353\002\n\010protocol\022\037\n\004type\030\001 \001(\0162\021.prot"
+      "ocol.MsgType\022\021\n\tMySelfNum\030\002 \001(\014\022+\n\005count"
+      "\030\003 \001(\0162\034.protocol.Chat_OneorMultiple\022 \n\013"
+      "chatContent\030\004 \003(\0132\013.ChatRecord\022 \n\005group\030"
+      "\005 \003(\0132\021.ChatRecord_Group\022!\n\010addInfor\030\006 \001"
+      "(\0132\017.AddInformation\022 \n\005state\030\007 \001(\0132\021.Sta"
+      "teInformation\"H\n\007MsgType\022\007\n\003tcp\020\000\022\007\n\003udp"
+      "\020\001\022\010\n\004http\020\002\022\010\n\004smtp\020\003\022\007\n\003ftp\020\004\022\016\n\nstate"
+      "Infor\020\005\"+\n\022Chat_OneorMultiple\022\007\n\003one\020\000\022\014"
+      "\n\010multiple\020\001B\002H\001b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1439);
+      descriptor, 1424);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetProtocConfig.proto", &protobuf_RegisterTypes);
 }
@@ -605,8 +604,8 @@ void ChatRecord_HeadInfor::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ChatRecord_HeadInfor::kFileSizeFieldNumber;
-const int ChatRecord_HeadInfor::kAllSizeFieldNumber;
 const int ChatRecord_HeadInfor::kNameFieldNumber;
+const int ChatRecord_HeadInfor::kIsConsentFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ChatRecord_HeadInfor::ChatRecord_HeadInfor()
@@ -627,16 +626,16 @@ ChatRecord_HeadInfor::ChatRecord_HeadInfor(const ChatRecord_HeadInfor& from)
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
   ::memcpy(&filesize_, &from.filesize_,
-    static_cast<size_t>(reinterpret_cast<char*>(&allsize_) -
-    reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+    static_cast<size_t>(reinterpret_cast<char*>(&isconsent_) -
+    reinterpret_cast<char*>(&filesize_)) + sizeof(isconsent_));
   // @@protoc_insertion_point(copy_constructor:ChatRecord.HeadInfor)
 }
 
 void ChatRecord_HeadInfor::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&filesize_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&allsize_) -
-      reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+      reinterpret_cast<char*>(&isconsent_) -
+      reinterpret_cast<char*>(&filesize_)) + sizeof(isconsent_));
   _cached_size_ = 0;
 }
 
@@ -680,8 +679,8 @@ void ChatRecord_HeadInfor::Clear() {
 
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&filesize_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&allsize_) -
-      reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+      reinterpret_cast<char*>(&isconsent_) -
+      reinterpret_cast<char*>(&filesize_)) + sizeof(isconsent_));
   _internal_metadata_.Clear();
 }
 
@@ -709,26 +708,26 @@ bool ChatRecord_HeadInfor::MergePartialFromCodedStream(
         break;
       }
 
-      // uint64 AllSize = 2;
+      // bytes name = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &allsize_)));
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_name()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // bytes name = 3;
+      // bool isConsent = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_name()));
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &isconsent_)));
         } else {
           goto handle_unusual;
         }
@@ -766,15 +765,15 @@ void ChatRecord_HeadInfor::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->filesize(), output);
   }
 
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->allsize(), output);
-  }
-
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->name(), output);
+      2, this->name(), output);
+  }
+
+  // bool isConsent = 3;
+  if (this->isconsent() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->isconsent(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -796,16 +795,16 @@ void ChatRecord_HeadInfor::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->filesize(), target);
   }
 
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->allsize(), target);
-  }
-
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->name(), target);
+        2, this->name(), target);
+  }
+
+  // bool isConsent = 3;
+  if (this->isconsent() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->isconsent(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -825,7 +824,7 @@ size_t ChatRecord_HeadInfor::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -839,11 +838,9 @@ size_t ChatRecord_HeadInfor::ByteSizeLong() const {
         this->filesize());
   }
 
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->allsize());
+  // bool isConsent = 3;
+  if (this->isconsent() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -882,8 +879,8 @@ void ChatRecord_HeadInfor::MergeFrom(const ChatRecord_HeadInfor& from) {
   if (from.filesize() != 0) {
     set_filesize(from.filesize());
   }
-  if (from.allsize() != 0) {
-    set_allsize(from.allsize());
+  if (from.isconsent() != 0) {
+    set_isconsent(from.isconsent());
   }
 }
 
@@ -913,7 +910,7 @@ void ChatRecord_HeadInfor::InternalSwap(ChatRecord_HeadInfor* other) {
   using std::swap;
   name_.Swap(&other->name_);
   swap(filesize_, other->filesize_);
-  swap(allsize_, other->allsize_);
+  swap(isconsent_, other->isconsent_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -2327,7 +2324,6 @@ void ChatRecord_Group_HeadInfor::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ChatRecord_Group_HeadInfor::kFileSizeFieldNumber;
-const int ChatRecord_Group_HeadInfor::kAllSizeFieldNumber;
 const int ChatRecord_Group_HeadInfor::kNameFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -2348,17 +2344,13 @@ ChatRecord_Group_HeadInfor::ChatRecord_Group_HeadInfor(const ChatRecord_Group_He
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  ::memcpy(&filesize_, &from.filesize_,
-    static_cast<size_t>(reinterpret_cast<char*>(&allsize_) -
-    reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+  filesize_ = from.filesize_;
   // @@protoc_insertion_point(copy_constructor:ChatRecord_Group.HeadInfor)
 }
 
 void ChatRecord_Group_HeadInfor::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&filesize_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&allsize_) -
-      reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+  filesize_ = GOOGLE_ULONGLONG(0);
   _cached_size_ = 0;
 }
 
@@ -2401,9 +2393,7 @@ void ChatRecord_Group_HeadInfor::Clear() {
   (void) cached_has_bits;
 
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&filesize_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&allsize_) -
-      reinterpret_cast<char*>(&filesize_)) + sizeof(allsize_));
+  filesize_ = GOOGLE_ULONGLONG(0);
   _internal_metadata_.Clear();
 }
 
@@ -2431,24 +2421,10 @@ bool ChatRecord_Group_HeadInfor::MergePartialFromCodedStream(
         break;
       }
 
-      // uint64 AllSize = 2;
+      // bytes name = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &allsize_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // bytes name = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_name()));
         } else {
@@ -2488,15 +2464,10 @@ void ChatRecord_Group_HeadInfor::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->filesize(), output);
   }
 
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->allsize(), output);
-  }
-
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->name(), output);
+      2, this->name(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2518,16 +2489,11 @@ void ChatRecord_Group_HeadInfor::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->filesize(), target);
   }
 
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->allsize(), target);
-  }
-
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->name(), target);
+        2, this->name(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2547,7 +2513,7 @@ size_t ChatRecord_Group_HeadInfor::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // bytes name = 3;
+  // bytes name = 2;
   if (this->name().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -2559,13 +2525,6 @@ size_t ChatRecord_Group_HeadInfor::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::UInt64Size(
         this->filesize());
-  }
-
-  // uint64 AllSize = 2;
-  if (this->allsize() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->allsize());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2604,9 +2563,6 @@ void ChatRecord_Group_HeadInfor::MergeFrom(const ChatRecord_Group_HeadInfor& fro
   if (from.filesize() != 0) {
     set_filesize(from.filesize());
   }
-  if (from.allsize() != 0) {
-    set_allsize(from.allsize());
-  }
 }
 
 void ChatRecord_Group_HeadInfor::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2635,7 +2591,6 @@ void ChatRecord_Group_HeadInfor::InternalSwap(ChatRecord_Group_HeadInfor* other)
   using std::swap;
   name_.Swap(&other->name_);
   swap(filesize_, other->filesize_);
-  swap(allsize_, other->allsize_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }

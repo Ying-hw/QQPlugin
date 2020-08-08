@@ -6,6 +6,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QVariant>
+#include <QThread>
 
 namespace sqlPlugin {
 
@@ -25,8 +26,7 @@ namespace sqlPlugin {
 		 QString m_strError;
 	};
 
-	class SQLPLUGIN_EXPORT DataLib {
-		DataLib();
+	class SQLPLUGIN_EXPORT DataLib : public QThread {
 	public:
 		~DataLib();
 		quint32 m_Port;
@@ -36,8 +36,15 @@ namespace sqlPlugin {
 		QString m_strDataLibUserName;
 		QString m_strError;
 		QSqlDatabase m_dataBase;
-		bool openDataLib();
+		void openDataLib();
+		bool GetOpenResult();
 		static DataLib* GetDataLibInstance();
 		DBSelect* GetSelectInstance();
+		void run();
+	private:
+		DataLib();
+		DataLib(const DataLib&);
+		const DataLib& operator=(const DataLib& target);
+		bool m_IsOpen;
 	};
 }

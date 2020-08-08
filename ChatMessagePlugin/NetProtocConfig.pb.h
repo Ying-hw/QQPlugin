@@ -324,9 +324,9 @@ class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_inse
 
   // accessors -------------------------------------------------------
 
-  // bytes name = 3;
+  // bytes name = 2;
   void clear_name();
-  static const int kNameFieldNumber = 3;
+  static const int kNameFieldNumber = 2;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   #if LANG_CXX11
@@ -344,11 +344,11 @@ class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_inse
   ::google::protobuf::uint64 filesize() const;
   void set_filesize(::google::protobuf::uint64 value);
 
-  // uint64 AllSize = 2;
-  void clear_allsize();
-  static const int kAllSizeFieldNumber = 2;
-  ::google::protobuf::uint64 allsize() const;
-  void set_allsize(::google::protobuf::uint64 value);
+  // bool isConsent = 3;
+  void clear_isconsent();
+  static const int kIsConsentFieldNumber = 3;
+  bool isconsent() const;
+  void set_isconsent(bool value);
 
   // @@protoc_insertion_point(class_scope:ChatRecord.HeadInfor)
  private:
@@ -356,7 +356,7 @@ class ChatRecord_HeadInfor : public ::google::protobuf::Message /* @@protoc_inse
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::uint64 filesize_;
-  ::google::protobuf::uint64 allsize_;
+  bool isconsent_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_HeadInforImpl();
@@ -1040,9 +1040,9 @@ class ChatRecord_Group_HeadInfor : public ::google::protobuf::Message /* @@proto
 
   // accessors -------------------------------------------------------
 
-  // bytes name = 3;
+  // bytes name = 2;
   void clear_name();
-  static const int kNameFieldNumber = 3;
+  static const int kNameFieldNumber = 2;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   #if LANG_CXX11
@@ -1060,19 +1060,12 @@ class ChatRecord_Group_HeadInfor : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::uint64 filesize() const;
   void set_filesize(::google::protobuf::uint64 value);
 
-  // uint64 AllSize = 2;
-  void clear_allsize();
-  static const int kAllSizeFieldNumber = 2;
-  ::google::protobuf::uint64 allsize() const;
-  void set_allsize(::google::protobuf::uint64 value);
-
   // @@protoc_insertion_point(class_scope:ChatRecord_Group.HeadInfor)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::uint64 filesize_;
-  ::google::protobuf::uint64 allsize_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_Group_HeadInforImpl();
@@ -1676,21 +1669,7 @@ inline void ChatRecord_HeadInfor::set_filesize(::google::protobuf::uint64 value)
   // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.FileSize)
 }
 
-// uint64 AllSize = 2;
-inline void ChatRecord_HeadInfor::clear_allsize() {
-  allsize_ = GOOGLE_ULONGLONG(0);
-}
-inline ::google::protobuf::uint64 ChatRecord_HeadInfor::allsize() const {
-  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.AllSize)
-  return allsize_;
-}
-inline void ChatRecord_HeadInfor::set_allsize(::google::protobuf::uint64 value) {
-  
-  allsize_ = value;
-  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.AllSize)
-}
-
-// bytes name = 3;
+// bytes name = 2;
 inline void ChatRecord_HeadInfor::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1741,6 +1720,20 @@ inline void ChatRecord_HeadInfor::set_allocated_name(::std::string* name) {
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:ChatRecord.HeadInfor.name)
+}
+
+// bool isConsent = 3;
+inline void ChatRecord_HeadInfor::clear_isconsent() {
+  isconsent_ = false;
+}
+inline bool ChatRecord_HeadInfor::isconsent() const {
+  // @@protoc_insertion_point(field_get:ChatRecord.HeadInfor.isConsent)
+  return isconsent_;
+}
+inline void ChatRecord_HeadInfor::set_isconsent(bool value) {
+  
+  isconsent_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord.HeadInfor.isConsent)
 }
 
 // -------------------------------------------------------------------
@@ -2298,21 +2291,7 @@ inline void ChatRecord_Group_HeadInfor::set_filesize(::google::protobuf::uint64 
   // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.FileSize)
 }
 
-// uint64 AllSize = 2;
-inline void ChatRecord_Group_HeadInfor::clear_allsize() {
-  allsize_ = GOOGLE_ULONGLONG(0);
-}
-inline ::google::protobuf::uint64 ChatRecord_Group_HeadInfor::allsize() const {
-  // @@protoc_insertion_point(field_get:ChatRecord_Group.HeadInfor.AllSize)
-  return allsize_;
-}
-inline void ChatRecord_Group_HeadInfor::set_allsize(::google::protobuf::uint64 value) {
-  
-  allsize_ = value;
-  // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.AllSize)
-}
-
-// bytes name = 3;
+// bytes name = 2;
 inline void ChatRecord_Group_HeadInfor::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
