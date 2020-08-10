@@ -14,7 +14,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	ui.setupUi(this);
 	g_pChatMessage = this;
 	ui.TexEditContent->resize(ui.TexEditContent->width(), 80);
-	QHostAddress host("192.168.1.17");
+	QHostAddress host("33a15e2655.qicp.vip");
 	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
 	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
 	QString* strSelfNum = (QString *)GET_MESSAGE(0); 
@@ -843,7 +843,7 @@ void CustomMessageWidget::SetContent(const QString& strContent, bool isSelf, Con
 
 void CustomMessageWidget::SetContent(FileProperty& property, bool isSelf, ContentType type)
 {
-	m_mapMsgProperty[property.strName] = property;
+	m_MsgProperty = property;
 	switch (type)
 	{
 	case ContentType::file:
@@ -863,7 +863,6 @@ void CustomMessageWidget::SetContent(FileProperty& property, bool isSelf, Conten
 			pButtonRecv->close();
 			pButtonRejective->close();
 			QString strFileName = labFile->text().remove(QString::fromLocal8Bit("ÎÄ¼ş£º"));
-			m_mapMsgProperty.remove(strFileName);
 			QLabel* labHint = new QLabel(QString::fromLocal8Bit("ÒÑ¾Ü¾ø"), this);
 			hB->insertWidget(0, labHint);
 		});

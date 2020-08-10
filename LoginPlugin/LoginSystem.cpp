@@ -18,15 +18,17 @@ LoginSystem::LoginSystem(QWidget *parent):AbstractWidget(parent), m_BackPassWD(N
 	ui.BtnLogin->setObjectName("BtnLogin");
 	ui.BtnBackPassWD->setObjectName("BtnBackPassWD");
 	ui.BtnRegister->setObjectName("BtnRegister");
+	QString strlibpath = (QDir::toNativeSeparators(QApplication::applicationDirPath()) + QDir::separator() + "plugins");
+	qApp->addLibraryPath(strlibpath);
 }
 
 void LoginSystem::processLoginResult(QHostInfo host)
 {
 	bool IsConnected = (host.error() == QHostInfo::NoError);
 	if (IsConnected ) 
-		OPEN_DATATBASE();
+		!GET_OPENRESULT() ? OPEN_DATATBASE() : OpenDataLibResult();
 	else {
-		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("网络连接错误或者远端服务器未开启！！！"), this);
+		HintFrameWidget* hint = new HintFrameWidget(host.errorString(), this);
 		hint->show();
 	}
 }
@@ -35,11 +37,11 @@ void LoginSystem::processRegisterResult(QHostInfo host)
 {
 	bool IsConnected = (host.error() == QHostInfo::NoError);
 	if (!IsConnected) {
-		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("网络连接错误或者远端服务器未开启！！！"), this);
+		HintFrameWidget* hint = new HintFrameWidget(host.errorString(), this);
 		hint->show();
 		return;
 	}
-	OPEN_DATATBASE();
+	!GET_OPENRESULT() ? OPEN_DATATBASE() : OpenDataLibResult();
 }
 
 void LoginSystem::OpenDataLibResult()
@@ -74,7 +76,7 @@ void LoginSystem::OpenDataLibResult()
 		else {}
 	}
 	else {
-		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("网络连接错误或者远端服务器未开启！！！"), this);
+		HintFrameWidget* hint = new HintFrameWidget(GET_DATALIBTHREAD->m_strError, this);  
 		hint->show();
 	}
 }

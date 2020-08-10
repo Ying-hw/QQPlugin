@@ -6,6 +6,7 @@
 #include "MacroDefine.h"
 #include "SqlStatementDefine.h"
 #include "AbstractWidget.h"
+#include "HintFrameWidget.h"
 
 enum GenDer { MAN, WOMAN };
 enum StackedWidgetPage { USERINFO,IDENTIFY,ACCOUNT };

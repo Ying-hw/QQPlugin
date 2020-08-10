@@ -88,7 +88,7 @@ private slots:
 
 public:
 	ContentType m_MsgType;          ///< 消息类型
-	QMap<QString, FileProperty> m_mapMsgProperty;     ///< 消息属性  
+	FileProperty m_MsgProperty;     ///< 消息属性  
 	ContentArray m_unionContent;         ///< 消息体
 private:
 	QTextEdit* m_pMessageContent;    ///< 气泡

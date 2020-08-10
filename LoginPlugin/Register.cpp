@@ -1,7 +1,7 @@
 #include "stdafx1.h"
 #include "Register.h"
 #include "Message.h"
-#include <QCryptographicHash>
+
 
 #define ANIMATION_TIME  300
 #define PASSWORDLENGTH  10
@@ -28,7 +28,6 @@ Register::Register(AbstractWidget *parent) : AbstractWidget(parent), m_pArrayAni
 	connect(ui.BtnNext, SIGNAL(clicked()), this, SLOT(NextPage()));
 	connect(ui.BtnNext_2, SIGNAL(clicked()), this, SLOT(NextPage()));
 	connect(ui.BtnAffrime, SIGNAL(clicked()), this, SLOT(RegisterUser()));
-	
 	QRegExp reg("(\\d|[a-z]|[A-Z]){1,}");
 	ui.EditUserNumber->setValidator(new QRegExpValidator(reg, this));
 	ui.EditIdentify->setValidator(new QRegExpValidator(reg, this));
@@ -159,8 +158,18 @@ void Register::AddUserToSqldatabase()
 		.arg(strSchool).arg(strIdentify);
 	QString strInsertState = QString(INSERT_FRIENDSTATE).arg(ui.EditUserNumber->text()).arg(QString::fromLocal8Bit("在线"));
 
+	sqlPlugin::DataStructDefine& dataKey = GET_DATA(QString(SELECT_USER).arg(strAccount));
+	if (!dataKey.m_lstAllData.isEmpty())
+	{
+		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("账号已经注册，请更换！"), this);
+		hint->show();
+		return;
+	}
+
+
 	if (EXECUTE(strRegisterUserSql) && UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(strAccount), QVariant(LoadDefaultImage())) && EXECUTE(strInsertState)) {
-		QMessageBox::critical(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功"));
+		QMessageBox::information(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功，正在回到登录界面，请重新登录"));
+		QThread::sleep(1);
 		ui.BtnReturn->click();
 	}
 	else 

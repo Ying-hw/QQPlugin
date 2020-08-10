@@ -18,3 +18,4 @@
 #include <QSequentialAnimationGroup>
 #include <QBitmap>
 #include <QImageReader>
+#include <QCryptographicHash>

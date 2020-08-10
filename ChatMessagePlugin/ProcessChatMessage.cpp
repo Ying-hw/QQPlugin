@@ -15,7 +15,7 @@ ProcessChatMessage::~ProcessChatMessage()
 
 }
 
-int ProcessChatMessage::RecvMessage()
+int ProcessChatMessage::RecvMsg()
 {
 	int size = 0;
 	QTcpSocket* tcp = (QTcpSocket*)ReturnCurrentTargetSocket();

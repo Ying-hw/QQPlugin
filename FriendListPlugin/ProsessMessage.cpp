@@ -10,7 +10,7 @@ ProsessMessage::ProsessMessage(AbstractNetWork::ProtoType Type, QHostAddress add
 
 }
 
-int ProsessMessage::RecvMessage()
+int ProsessMessage::RecvMsg()
 {
 	int size = 0;
 	QTcpSocket* tcp = (QTcpSocket*)ReturnCurrentTargetSocket();

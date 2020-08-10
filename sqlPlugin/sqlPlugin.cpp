@@ -26,6 +26,7 @@ void sqlPlugin::DataLib::openDataLib() {
 	}
 }
 
+
 bool sqlPlugin::DataLib::GetOpenResult()
 {
 	return m_IsOpen;

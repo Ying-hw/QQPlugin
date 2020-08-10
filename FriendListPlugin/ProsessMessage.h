@@ -8,7 +8,7 @@ public:
 	
 	~ProsessMessage();
 
-	int RecvMessage();
+	int RecvMsg();
 	
 	/// \brief 解析协议
 	/// \param[in] protocol 原协议内容

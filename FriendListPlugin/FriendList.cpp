@@ -6,7 +6,7 @@
 FriendList* g_FriendList = NULL;
 QString* FriendList::m_pUserNumber = NULL;
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
-FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL), m_NetWorkProsess(AbstractNetWork::ProtoType::TCP, QHostAddress("192.168.1.17") , 7007, this)
+FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL), m_NetWorkProsess(AbstractNetWork::ProtoType::TCP, QHostAddress("33a15e2655.qicp.vip") , 7007, this)
 {
 	ui.setupUi(this);
 	g_FriendList = this;
