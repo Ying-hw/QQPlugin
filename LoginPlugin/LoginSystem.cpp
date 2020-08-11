@@ -26,7 +26,7 @@ void LoginSystem::processLoginResult(QHostInfo host)
 {
 	bool IsConnected = (host.error() == QHostInfo::NoError);
 	if (IsConnected ) 
-		!GET_OPENRESULT() ? OPEN_DATATBASE() : OpenDataLibResult();
+		!GET_OPENRESULT() ? OPEN_DATATBASE("33a15e2655.qicp.vip", 47318) : OpenDataLibResult();
 	else {
 		HintFrameWidget* hint = new HintFrameWidget(host.errorString(), this);
 		hint->show();
@@ -41,7 +41,7 @@ void LoginSystem::processRegisterResult(QHostInfo host)
 		hint->show();
 		return;
 	}
-	!GET_OPENRESULT() ? OPEN_DATATBASE() : OpenDataLibResult();
+	!GET_OPENRESULT() ? OPEN_DATATBASE("33a15e2655.qicp.vip", 47318) : OpenDataLibResult();
 }
 
 void LoginSystem::OpenDataLibResult()
@@ -154,6 +154,7 @@ void LoginSystem::SlotBackPassWD() {
 	//进入找回密码界面
 	
 //	test();
+	Log(LogGrade::Tips, QString::fromLocal8Bit("哈哈哈"));
 	m_CurrentType = OperatorType::FINDPASSWORD;
 }
 

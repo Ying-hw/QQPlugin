@@ -1,6 +1,6 @@
 #include "sqlPlugin.h"
 
-sqlPlugin::DataLib::DataLib() :m_Port(3306), m_IsOpen(false) {
+sqlPlugin::DataLib::DataLib() :m_Port(3306), m_IsOpen(false), hostIsError(false) {
 
 }
 
@@ -10,22 +10,36 @@ sqlPlugin::DataLib::~DataLib() {
 		m_dataBase.close();
 }
 
-void sqlPlugin::DataLib::openDataLib() {
-	if (!m_dataBase.isOpen()) {
-		m_strDataLibUserName = "root";
-		m_strPassWD = "root";
-		m_strDataBaseName = "qq";
-		m_strAddress = "192.168.1.48";
-		m_dataBase = QSqlDatabase::addDatabase("QMYSQL");
-		m_dataBase.setDatabaseName(m_strDataBaseName);
-		m_dataBase.setPassword(m_strPassWD);
-		m_dataBase.setHostName(m_strAddress);  
-		m_dataBase.setPort(m_Port);
-		m_dataBase.setUserName(m_strDataLibUserName);
+void sqlPlugin::DataLib::openDataLib(QHostInfo host) {
+	if (host.error() == QHostInfo::NoError) {
+		hostIsError = false;
+		if (!m_dataBase.isOpen()) {
+			m_strDataLibUserName = "root";
+			m_strPassWD = "root";
+			m_strDataBaseName = "qq";
+			m_strAddress = host.addresses().first().toString();
+			m_dataBase = QSqlDatabase::addDatabase("QMYSQL");
+			m_dataBase.setDatabaseName(m_strDataBaseName);
+			m_dataBase.setPassword(m_strPassWD);
+			m_dataBase.setHostName(m_strAddress);
+			m_dataBase.setPort(m_Port);
+			m_dataBase.setUserName(m_strDataLibUserName);
+			start();
+		}
+	}
+	else {
+		m_strError = host.errorString();
+		hostIsError = true;
 		start();
 	}
 }
 
+
+void sqlPlugin::DataLib::ConnectServer(QString strAddr, quint16 port)
+{
+	m_Port = port;
+	QHostInfo::lookupHost(strAddr, this, SLOT(openDataLib(QHostInfo)));
+}
 
 bool sqlPlugin::DataLib::GetOpenResult()
 {
@@ -47,13 +61,15 @@ sqlPlugin::DBSelect* sqlPlugin::DataLib::GetSelectInstance()
 
 void sqlPlugin::DataLib::run()
 {
+	if (hostIsError)
+		return;
+
 	if (!m_dataBase.open()) {
 		m_strError = m_dataBase.lastError().text();
 		m_IsOpen = false;
 	}
-	else {
+	else 
 		m_IsOpen = true;
-	}
 }
 
 sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(const QString &strSql) {

@@ -5,7 +5,7 @@
 
 extern ChatMessage* g_pChatMessage;
 
-ProcessChatMessage::ProcessChatMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
+ProcessChatMessage::ProcessChatMessage(AbstractNetWork::ProtoType Type,	QString addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
 {
 
 }

@@ -8,7 +8,7 @@
 ApplyJoinFriend::ApplyJoinFriend(TargetInfor& infor, AbstractWidget *parent /*= Q_NULLPTR*/) : AbstractWidget(parent), m_IsFriend(infor.m_IsFriend)
 {
 	ui.setupUi(this);
-	ui.LabImage->setPixmap(infor.pix);
+	ui.LabImage->setPixmap(FriendList::PixmapToRound(infor.pix, 80));
 	ui.LabName->setText(infor.m_strName);
 	ui.LabNumber->setText(infor.m_strNumber);
 	if (m_IsFriend) {
@@ -40,16 +40,12 @@ ApplyJoinFriend::~ApplyJoinFriend()
 
 void ApplyJoinFriend::SlotBtnSend()
 {
-	AddInformation add_info;
-	add_info.set_type((AddInformation_TargetType)(int)m_IsFriend);
-	add_info.set_reason(ui.EditContent->toPlainText().toStdString());
-	add_info.set_targetaccount(ui.LabNumber->text().toStdString());
-	add_info.set_fromaccount(FriendList::m_pUserNumber->toStdString());
-	QHostAddress host("192.168.1.17");
-	ProsessMessage* m_ProMsg = new ProsessMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
-	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
 	protocol proto;
-	proto.set_allocated_addinfor(&add_info);
+	proto.mutable_addinfor()->set_type((AddInformation_TargetType)(int)m_IsFriend);
+	proto.mutable_addinfor()->set_reason(ui.EditContent->toPlainText().toStdString());
+	proto.mutable_addinfor()->set_targetaccount(ui.LabNumber->text().toStdString());
+	proto.mutable_addinfor()->set_fromaccount(FriendList::m_pUserNumber->toStdString());
+	
 	proto.set_type(protocol_MsgType_tcp);
-	m_ProMsg->SendMsg(QString::fromStdString(proto.SerializeAsString()));
+	FriendList::m_NetWorkProsess->SendMsg(QString::fromStdString(proto.SerializeAsString()));
 }

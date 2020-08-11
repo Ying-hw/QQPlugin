@@ -5,9 +5,9 @@
 class ProcessNetWork : public AbstractNetWork
 {
 public:
-	ProcessNetWork(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent = 0);
+	ProcessNetWork(AbstractNetWork::ProtoType Type, QString addr, int port, QObject* parent = 0);
 	~ProcessNetWork();
-	int RecvMessage();
+	int RecvMsg();
 	void AnalysisProtocol(QByteArray& protocol);
 };
 

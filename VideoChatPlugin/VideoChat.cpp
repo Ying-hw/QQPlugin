@@ -10,7 +10,7 @@ extern VideoChat* g_VideoChat = nullptr;
 #define  SELECT_USER "SELECT * FROM user_account WHERE USER_NUMBER = '%1';"
 
 VideoChat::VideoChat(QWidget *parent)
-	: AbstractWidget(parent), m_pNetWork(new ProcessNetWork(AbstractNetWork::ProtoType::TCP, QHostAddress("192.168.1.17"), 7007, this)),
+	: AbstractWidget(parent), m_pNetWork(new ProcessNetWork(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, this)),
 	m_pTimer(NULL), m_CustomImage(NULL)
 {
 	ui.setupUi(this);

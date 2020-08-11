@@ -14,8 +14,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	ui.setupUi(this);
 	g_pChatMessage = this;
 	ui.TexEditContent->resize(ui.TexEditContent->width(), 80);
-	QHostAddress host("33a15e2655.qicp.vip");
-	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
+	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, this);
 	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
 	QString* strSelfNum = (QString *)GET_MESSAGE(0); 
 	QString* strTargetNum = (QString *)GET_MESSAGE(1);

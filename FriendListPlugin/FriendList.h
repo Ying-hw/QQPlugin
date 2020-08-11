@@ -9,7 +9,6 @@
 #include "AbstractNetWork.h"
 #include "NetProtocConfig.pb.h"
 #include "SqlStatementDefine.h"
-#include "NetProtocConfig.pb.h"
 #include "AbstractWidget.h"
 #include "ProsessMessage.h"
 
@@ -99,7 +98,7 @@ public:
 	/// \param[in] src 原图形
 	/// \param[in] radius 圆角
 	/// \retval 返回绘制好的
-	QPixmap PixmapToRound(const QPixmap &src, int radius);
+	static QPixmap PixmapToRound(const QPixmap &src, int radius);
 
 	/// \brief 显示未知消息的数量
 	/// \param[in] strTgtNum 目标账号
@@ -134,6 +133,7 @@ public:
 	void SaveChatRecord(protocol& proto);
 
 	static QString* m_pUserNumber;    ///< 本人账号
+	static ProsessMessage* m_NetWorkProsess;  ///< 处理网络消息
 
 private slots:
 	/// \brief 开始聊天
@@ -168,7 +168,6 @@ private:
 	QMap<CustomToolButton *, QString> m_mapFriend;   ///< 好友映射
 	QMap<CustomToolButton *, QString> m_mapMesssage;  ///< 消息映射
 	QMenu* m_pSystemMenu;  ///< 系统菜单
-	ProsessMessage m_NetWorkProsess;  ///< 处理网络消息
 };
 
 

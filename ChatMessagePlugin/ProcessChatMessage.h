@@ -5,7 +5,7 @@
 class ProcessChatMessage : public AbstractNetWork
 {
 public:
-	ProcessChatMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent = 0);
+	ProcessChatMessage(AbstractNetWork::ProtoType Type, QString addr, int port, QObject* parent = 0);
 	~ProcessChatMessage();
 	int RecvMsg();
 	void AnalysisProtocol(QByteArray& protocol);

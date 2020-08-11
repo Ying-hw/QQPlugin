@@ -5,7 +5,7 @@
 
 
 extern FriendList* g_FriendList;
-ProsessMessage::ProsessMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
+ProsessMessage::ProsessMessage(AbstractNetWork::ProtoType Type, QString addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
 {
 
 }
@@ -83,5 +83,6 @@ void ProsessMessage::AnalysisProtocol(QByteArray& proto)
 
 ProsessMessage::~ProsessMessage()
 {
+	ReleaseCommuncation();
 	deleteLater();
 }

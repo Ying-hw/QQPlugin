@@ -21,12 +21,6 @@
 										.arg(LOCATION->geometry().y()).arg(LOCATION->geometry().width()) \
 										.arg(LOCATION->geometry().height());   ///< 矩形转为字符串，待废弃
 
-enum class LogGrade{
-	SeriousError,
-	Error,
-	Warning,
-	Tips
-};
 
 namespace CommonTemplate {
 	class InitType;
@@ -108,6 +102,11 @@ public:
 	/// \retval 返回自身的名称
 	const QString GetMyselfName(const AbstractWidget* AbsWidget);
 
+	/// \brief 写日志
+	/// \param[in] Grade 日志等级
+	/// \param[in] strLog 日志代码
+	void WriteLog(AbstractWidget::LogGrade Grade, const QString& strLog);
+
 public slots:
 	/// \brief 初始化网络抽象类
 	/// 通过父类指针指向子类，实现多态虚函数特性，可自由调用子类接口
@@ -141,9 +140,6 @@ private:
 	/// \brief 查找插件
 	/// 查找启动插件，在插件配置中有启动优先级标识
 	void FindPlugin();
-
-	/// \brief 待废弃
-	void StartPluginControl();
 
 	/// \brief 更新配置文件 
 	void UpdateConfigFile();

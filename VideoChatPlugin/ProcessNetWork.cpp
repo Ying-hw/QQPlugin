@@ -5,7 +5,7 @@
 
 extern VideoChat* g_VideoChat;
 
-ProcessNetWork::ProcessNetWork(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
+ProcessNetWork::ProcessNetWork(AbstractNetWork::ProtoType Type, QString addr, int port, QObject* parent /*= 0*/) : AbstractNetWork(Type, addr, port, parent)
 {
 
 }
@@ -15,7 +15,7 @@ ProcessNetWork::~ProcessNetWork()
 
 }
 
-int ProcessNetWork::RecvMessage()
+int ProcessNetWork::RecvMsg()
 {
 	int size = 0;
 	QTcpSocket* tcp = (QTcpSocket*)ReturnCurrentTargetSocket();

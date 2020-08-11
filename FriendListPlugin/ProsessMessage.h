@@ -4,7 +4,7 @@
 class ProsessMessage : public AbstractNetWork
 {
 public:
-	ProsessMessage(AbstractNetWork::ProtoType Type, QHostAddress addr, int port, QObject* parent = 0);
+	ProsessMessage(AbstractNetWork::ProtoType Type, QString addr, int port, QObject* parent = 0);
 	
 	~ProsessMessage();
 

@@ -6,7 +6,9 @@
 FriendList* g_FriendList = NULL;
 QString* FriendList::m_pUserNumber = NULL;
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
-FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL), m_NetWorkProsess(AbstractNetWork::ProtoType::TCP, QHostAddress("33a15e2655.qicp.vip") , 7007, this)
+
+ProsessMessage* FriendList::m_NetWorkProsess = NULL;
+FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL)
 {
 	ui.setupUi(this);
 	g_FriendList = this;
@@ -17,9 +19,8 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 	ui.labUserName->setText(*strUserName);
 	delete strUserName;
 	strUserName = nullptr; 
-	QHostAddress host("192.168.1.17");
-	ProsessMessage* pNetMsg = new ProsessMessage(AbstractNetWork::ProtoType::TCP, host, 7007, this);
-	SendSIG(Signal_::INITIALIZENETWORK, pNetMsg);
+	m_NetWorkProsess = new ProsessMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, g_FriendList);
+	SendSIG(Signal_::INITIALIZENETWORK, m_NetWorkProsess);
 	InitFriendList();
 	InitGroupList();
 	InitQQSpaceList(); 
@@ -59,6 +60,10 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 FriendList::~FriendList()
 {
 	SlotChangedState(QString::fromLocal8Bit("ÀëÏß"));
+	if (m_NetWorkProsess) {
+		delete m_NetWorkProsess;
+		m_NetWorkProsess = NULL;
+	}
 }
 
 void FriendList::RecoveryChatRecord()
@@ -434,7 +439,7 @@ void FriendList::SlotChangedState(const QString &strCurrentText)
 	else 
 		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
 	proto.set_type(protocol_MsgType_stateInfor);
-	m_NetWorkProsess.SendMsg(QString::fromStdString(proto.SerializeAsString()));
+	m_NetWorkProsess->SendMsg(QString::fromStdString(proto.SerializeAsString()));
 }
 
 CustomToolButton::CustomToolButton(QWidget* parent /*= 0*/) : QToolButton(parent)
