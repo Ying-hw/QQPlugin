@@ -3,7 +3,7 @@
 #include "HintFrameWidget.h"
 #include "ProcessNetWork.h"
 #include "CustomVideoImage.h"
-#include "MacroDefine.h"
+#include "MessageTemplate.h"
 #include "NetProtocConfig.pb.h"
 
 extern VideoChat* g_VideoChat = nullptr;
@@ -62,13 +62,14 @@ void VideoChat::paintEvent(QPaintEvent *event)
 	pRecord->set_type(ChatRecord_contenttype::ChatRecord_contenttype_video);
 	pRecord->set_selfnumber(m_strSelf.toStdString());
 	pRecord->set_targetnumber(m_strTgtNum.toStdString());
-	m_pNetWork->SendMsg(QString::fromStdString(pRecord->SerializeAsString()));
+	m_pNetWork->Send(QString::fromStdString(pRecord->SerializeAsString()));
 }
 
 void VideoChat::FintTgtNum(const QString& strNum)
 {
 	QString strSelectUser = QString(SELECT_USER).arg(strNum);
-	sqlPlugin::DataStructDefine& data = GET_DATA(strSelectUser);
+	sqlPlugin::DataStructDefine dataLib;
+	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSelectUser);
 	if (!data.m_lstAllData.isEmpty()) {
 		QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
 		QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();

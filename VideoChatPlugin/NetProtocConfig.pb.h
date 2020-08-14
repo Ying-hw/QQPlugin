@@ -127,14 +127,14 @@ inline bool ChatRecord_contenttype_Parse(
     ChatRecord_contenttype_descriptor(), name, value);
 }
 enum AddInformation_TargetType {
-  AddInformation_TargetType_isFriend = 0,
-  AddInformation_TargetType_isGroup = 1,
+  AddInformation_TargetType_isGroup = 0,
+  AddInformation_TargetType_isFriend = 1,
   AddInformation_TargetType_AddInformation_TargetType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   AddInformation_TargetType_AddInformation_TargetType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool AddInformation_TargetType_IsValid(int value);
-const AddInformation_TargetType AddInformation_TargetType_TargetType_MIN = AddInformation_TargetType_isFriend;
-const AddInformation_TargetType AddInformation_TargetType_TargetType_MAX = AddInformation_TargetType_isGroup;
+const AddInformation_TargetType AddInformation_TargetType_TargetType_MIN = AddInformation_TargetType_isGroup;
+const AddInformation_TargetType AddInformation_TargetType_TargetType_MAX = AddInformation_TargetType_isFriend;
 const int AddInformation_TargetType_TargetType_ARRAYSIZE = AddInformation_TargetType_TargetType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* AddInformation_TargetType_descriptor();
@@ -648,10 +648,10 @@ class AddInformation : public ::google::protobuf::Message /* @@protoc_insertion_
   // nested types ----------------------------------------------------
 
   typedef AddInformation_TargetType TargetType;
-  static const TargetType isFriend =
-    AddInformation_TargetType_isFriend;
   static const TargetType isGroup =
     AddInformation_TargetType_isGroup;
+  static const TargetType isFriend =
+    AddInformation_TargetType_isFriend;
   static inline bool TargetType_IsValid(int value) {
     return AddInformation_TargetType_IsValid(value);
   }
@@ -723,6 +723,12 @@ class AddInformation : public ::google::protobuf::Message /* @@protoc_insertion_
   ::AddInformation_TargetType type() const;
   void set_type(::AddInformation_TargetType value);
 
+  // bool isConsent = 5;
+  void clear_isconsent();
+  static const int kIsConsentFieldNumber = 5;
+  bool isconsent() const;
+  void set_isconsent(bool value);
+
   // @@protoc_insertion_point(class_scope:AddInformation)
  private:
 
@@ -731,6 +737,7 @@ class AddInformation : public ::google::protobuf::Message /* @@protoc_insertion_
   ::google::protobuf::internal::ArenaStringPtr fromaccount_;
   ::google::protobuf::internal::ArenaStringPtr reason_;
   int type_;
+  bool isconsent_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsAddInformationImpl();
@@ -1060,12 +1067,19 @@ class ChatRecord_Group_HeadInfor : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::uint64 filesize() const;
   void set_filesize(::google::protobuf::uint64 value);
 
+  // bool isConsent = 3;
+  void clear_isconsent();
+  static const int kIsConsentFieldNumber = 3;
+  bool isconsent() const;
+  void set_isconsent(bool value);
+
   // @@protoc_insertion_point(class_scope:ChatRecord_Group.HeadInfor)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::uint64 filesize_;
+  bool isconsent_;
   mutable int _cached_size_;
   friend struct ::protobuf_NetProtocConfig_2eproto::TableStruct;
   friend void ::protobuf_NetProtocConfig_2eproto::InitDefaultsChatRecord_Group_HeadInforImpl();
@@ -2168,6 +2182,20 @@ inline void AddInformation::set_allocated_reason(::std::string* reason) {
   // @@protoc_insertion_point(field_set_allocated:AddInformation.reason)
 }
 
+// bool isConsent = 5;
+inline void AddInformation::clear_isconsent() {
+  isconsent_ = false;
+}
+inline bool AddInformation::isconsent() const {
+  // @@protoc_insertion_point(field_get:AddInformation.isConsent)
+  return isconsent_;
+}
+inline void AddInformation::set_isconsent(bool value) {
+  
+  isconsent_ = value;
+  // @@protoc_insertion_point(field_set:AddInformation.isConsent)
+}
+
 // -------------------------------------------------------------------
 
 // User_loginUser
@@ -2342,6 +2370,20 @@ inline void ChatRecord_Group_HeadInfor::set_allocated_name(::std::string* name) 
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
   // @@protoc_insertion_point(field_set_allocated:ChatRecord_Group.HeadInfor.name)
+}
+
+// bool isConsent = 3;
+inline void ChatRecord_Group_HeadInfor::clear_isconsent() {
+  isconsent_ = false;
+}
+inline bool ChatRecord_Group_HeadInfor::isconsent() const {
+  // @@protoc_insertion_point(field_get:ChatRecord_Group.HeadInfor.isConsent)
+  return isconsent_;
+}
+inline void ChatRecord_Group_HeadInfor::set_isconsent(bool value) {
+  
+  isconsent_ = value;
+  // @@protoc_insertion_point(field_set:ChatRecord_Group.HeadInfor.isConsent)
 }
 
 // -------------------------------------------------------------------

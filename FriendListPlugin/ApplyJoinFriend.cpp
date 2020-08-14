@@ -31,7 +31,7 @@ ApplyJoinFriend::ApplyJoinFriend(TargetInfor& infor, AbstractWidget *parent /*= 
 		ui.LabCount->setText(ui.LabCount->text() + QString::number(infor.memberCount));
 		ui.LabGroupType->setText(ui.LabGroupType->text() + infor.m_strGroupType);
 	}
-	connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SlotBtnSend()));
+	connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SlotBtnSend()));    
 }
 
 ApplyJoinFriend::~ApplyJoinFriend()
@@ -45,7 +45,7 @@ void ApplyJoinFriend::SlotBtnSend()
 	proto.mutable_addinfor()->set_reason(ui.EditContent->toPlainText().toStdString());
 	proto.mutable_addinfor()->set_targetaccount(ui.LabNumber->text().toStdString());
 	proto.mutable_addinfor()->set_fromaccount(FriendList::m_pUserNumber->toStdString());
-	
+	proto.mutable_addinfor()->set_isconsent(false);
 	proto.set_type(protocol_MsgType_tcp);
-	FriendList::m_NetWorkProsess->SendMsg(QString::fromStdString(proto.SerializeAsString()));
+	FriendList::m_NetWorkProsess->Send(QString::fromStdString(proto.SerializeAsString()));
 }

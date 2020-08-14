@@ -66,6 +66,7 @@ private:
 	AbstractWidget* m_UserWidget;  ///< 好友信息
 	bool m_IsAddFriend; ///< 添加群还是好友
 	bool m_Gender; ///< 性别 
+	AddInformation m_infor;   ///< 添加信息 
 };
 
 class FRIENDLISTPLUGIN_EXPORT FriendList : public AbstractWidget
@@ -168,6 +169,8 @@ private:
 	QMap<CustomToolButton *, QString> m_mapFriend;   ///< 好友映射
 	QMap<CustomToolButton *, QString> m_mapMesssage;  ///< 消息映射
 	QMenu* m_pSystemMenu;  ///< 系统菜单
+	QTreeWidgetItem* m_pFriendTree; ///< 好友列表
+	QTreeWidgetItem* m_pGroupTree;  ///< 群组列表
 };
 
 

@@ -22,7 +22,7 @@ namespace sqlPlugin {
 	};
 
 	struct SQLPLUGIN_EXPORT DBSelect {
-		 DataStructDefine& GetData(const QString &strSql);
+		 DataStructDefine& GetData(DataStructDefine& sourceData, const QString &strSql);
 		 bool ExecuteSql(const QString &strSql);
 		 bool InsertImage(const QString &strSql, QVariant& ImageData);
 		 QString m_strError;

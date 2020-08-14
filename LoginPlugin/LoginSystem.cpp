@@ -1,7 +1,7 @@
 #include "stdafx1.h"
 #include "LoginSystem.h"
 #include "HintFrameWidget.h"
-
+#include "MessageTemplate.h"
 
 #define    CONDIGIMAGEFILE   "../Data/Config/UserConfig.pr"
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
@@ -49,7 +49,8 @@ void LoginSystem::OpenDataLibResult()
 	bool IsOpen = GET_OPENRESULT();
 	if (IsOpen) {
 		if (m_CurrentType == OperatorType::LOGIN) {
-			sqlPlugin::DataStructDefine UserData = GET_DATA(QString(SELECT_USER).arg(ui.ComUserName->currentText()));
+			sqlPlugin::DataStructDefine dataLib;
+			sqlPlugin::DataStructDefine UserData = GET_DATA(dataLib, QString(SELECT_USER).arg(ui.ComUserName->currentText()));
 			if (UserData.m_lstAllData.isEmpty()) {
 				HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("ÕËºÅÊäÈë´íÎó£¡£¡"), this);
 				hint->show();

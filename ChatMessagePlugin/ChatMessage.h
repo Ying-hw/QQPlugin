@@ -183,7 +183,7 @@ public:
 	/// \param[out] proto 协议
 	void SendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, protocol* proto);
 
-
+	void SetButtonIcon();
 private slots:
 	
     /// \brief 发送网络消息 

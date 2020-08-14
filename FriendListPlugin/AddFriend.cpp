@@ -3,6 +3,7 @@
 #include "MacroDefine.h"
 #include "SqlStatementDefine.h"
 #include "ApplyJoinFriend.h"
+#include "FriendList.h"
 
 #define IMAGE_SIZE  60
 #define COLUMN_COUNT 5
@@ -104,7 +105,8 @@ void AddFriend::SlotStartFind()
 			strSql += QString(" USER_NUMBER = '%1' OR USER_NAME = '%1'").arg(ui.EditInput->text());
 	else 
 		strSql += QString(" GROUP_NAME = '%1' OR GROUP_ACCOUNT = '%1'").arg(ui.EditInput->text());
-	sqlPlugin::DataStructDefine& data = GET_DATA(strSql);
+	sqlPlugin::DataStructDefine dataLib;
+	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSql);
 	if (!data.m_lstAllData.isEmpty()) {
 		int count = data.m_lstAllData.size();
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
@@ -118,7 +120,8 @@ void AddFriend::SlotStartFind()
 		infor.m_IsFriend = m_isAddFriend;
 		if (!m_isAddFriend) {
 			QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
-			sqlPlugin::DataStructDefine& dataCount = GET_DATA(strCount);
+			sqlPlugin::DataStructDefine dataLib;
+			sqlPlugin::DataStructDefine& dataCount = GET_DATA(dataLib, strCount);
 			infor.memberCount = dataCount.m_lstAllData.size();
 			infor.m_strNumber = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
 			infor.m_strGroupType = dataCount.m_lstAllData[0]["TYPE"].toString();
@@ -127,7 +130,8 @@ void AddFriend::SlotStartFind()
 		}
 		else {
 			QString strUser = QString(SELECT_USER).arg(data.m_lstAllData[i]["USER_NUMBER"].toString());
-			sqlPlugin::DataStructDefine& UserData = GET_DATA(strUser);
+			sqlPlugin::DataStructDefine dataLib;
+			sqlPlugin::DataStructDefine& UserData = GET_DATA(dataLib, strUser);
 			infor.m_strName = UserData.m_lstAllData[0]["USER_NAME"].toString();
 			infor.pix = QPixmap::fromImage(im);
 			infor.m_Address = UserData.m_lstAllData[0]["ADDRESS"].toString();
@@ -151,9 +155,10 @@ void AddFriend::SlotClickFriend(int row, int col)
 
 void AddFriend::SlotGroupType()
 {
+	sqlPlugin::DataStructDefine dataLib, dataLib1;
 	QPushButton *button = qobject_cast<QPushButton*>(sender());
 	QString strSelect = QString(SELECT_GROUP_TYPE).arg(button->text());
-	sqlPlugin::DataStructDefine& data = GET_DATA(strSelect);
+	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSelect);
 	if (!data.m_lstAllData.isEmpty()) {
 		int count = data.m_lstAllData.size();
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
@@ -163,7 +168,7 @@ void AddFriend::SlotGroupType()
 		QString strGroupName = data.m_lstAllData[i]["GROUP_NAME"].toString();
 		QByteArray array = QString::fromUtf8(data.m_lstAllData[i]["IMAGE"].toByteArray()).toLocal8Bit();
 		QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
-		sqlPlugin::DataStructDefine& dataCount = GET_DATA(strCount);
+		sqlPlugin::DataStructDefine& dataCount = GET_DATA(dataLib1, strCount);
 
 		QImage im;
 		im.loadFromData(array);
@@ -210,6 +215,8 @@ CustomAddInformationWidget::CustomAddInformationWidget(TargetInfor& infor, Abstr
 	lay->setContentsMargins(6, 6, 6, 6);
 	lay->setSpacing(0);
 	setLayout(lay);
+	if (m_Infor.m_strNumber == *FriendList::m_pUserNumber)
+		m_BtnAddButton->hide();
 }
 
 CustomAddInformationWidget::CustomAddInformationWidget(AbstractWidget* parent /*= 0*/) : AbstractWidget(parent), m_Apply(NULL)

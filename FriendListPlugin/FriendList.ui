@@ -183,39 +183,6 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QToolBox" name="Friend_List">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="page">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>58</width>
-           <height>342</height>
-          </rect>
-         </property>
-         <attribute name="label">
-          <string>Page 1</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="page_2">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>58</width>
-           <height>342</height>
-          </rect>
-         </property>
-         <attribute name="label">
-          <string>Page 2</string>
-         </attribute>
-        </widget>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -369,6 +336,21 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QTreeWidget" name="Friend_List">
+     <property name="columnCount">
+      <number>1</number>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
     </widget>
    </item>
   </layout>
