@@ -59,7 +59,6 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 	pMenu->addAction(pAction_No_Enter);
 	ui.BtnAdd->setMenu(pMenu);
 	SlotChangedState(ui.ComState->currentText());
-	
 }
 
 FriendList::~FriendList()
@@ -136,16 +135,17 @@ void FriendList::InitFriendList()
 	QPixmap pix;
 	if (!data.m_lstAllData.isEmpty()) 
 		for (int i = 0; i < data.m_lstAllData.size(); i++) {
-			QString strFriendInfo = QString(SELECT_USER).arg(data.m_lstAllData[i]["FRIEND_ACCOUNT"].toString());
-			sqlPlugin::DataStructDefine& friendata = GET_DATA(dataLib1, strFriendInfo);
+			QString strTargetNum = data.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+			if (strTargetNum == *m_pUserNumber)
+				strTargetNum = data.m_lstAllData[i]["USER_ACCOUNT"].toString();
+			sqlPlugin::DataStructDefine& friendata = GET_DATA(dataLib1, QString(SELECT_USER).arg(strTargetNum));
 			QByteArray arrayImage = friendata.m_lstAllData[0]["IMAGE"].toByteArray();
 			QString strName = friendata.m_lstAllData[0]["USER_NAME"].toString();
 			if (pix.loadFromData(arrayImage)) {
 				QTreeWidgetItem* itemTree = new QTreeWidgetItem(m_pFriendTree);
 				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);				
 				CustomToolButton* pToolBu = new CustomToolButton(this);
-				QString strState = QString(SELECT_STATE).arg(data.m_lstAllData[i]["FRIEND_ACCOUNT"].toString());
-				sqlPlugin::DataStructDefine& userState = GET_DATA(dataLib2, strState);
+				sqlPlugin::DataStructDefine& userState = GET_DATA(dataLib2, QString(SELECT_STATE).arg(strTargetNum));
 				if (!userState.m_lstAllData.isEmpty()) {
 					QString strState = userState.m_lstAllData[0]["STATE"].toString();
 					if (strState == QString::fromLocal8Bit("离线") || strState == QString::fromLocal8Bit("隐身"))
@@ -368,10 +368,22 @@ void FriendList::SaveChatRecord(protocol& proto)
 	}
 }
 
+void FriendList::setCurrentState(protocol& proto)
+{
+	QString strState = g_FriendList->ui.ComState->currentText(); 
+	if (strState == QString::fromLocal8Bit("在线"))
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_Online);
+	else if (strState == QString::fromLocal8Bit("隐身"))
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_hide);
+	else
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
+}
+
 void FriendList::SlotStartChat()
 {
 	CustomToolButton* pTgButton = qobject_cast<CustomToolButton*>(sender());
-	Send_MessageThread("ChatMessagePlugin","ChatMessagePlugin" ,SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), pTgButton, true)); //参数为本人账号，对方账号，是否为单聊
+	CustomToolButton* pTgCopyButton = new CustomToolButton(pTgButton);
+	Send_MessageThread("ChatMessagePlugin","ChatMessagePlugin" ,SEND_MESSAGE(m_pUserNumber, new QString(m_mapFriend[pTgButton]), pTgCopyButton, true)); //参数为本人账号，对方账号，是否为单聊
 	//打开聊天界面，双方号码，昵称，头像
 	SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 }
@@ -379,7 +391,8 @@ void FriendList::SlotStartChat()
 void FriendList::SlotStartGroupChat()
 {	
 	CustomToolButton* pTgButton= qobject_cast<CustomToolButton*>(sender());
-	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), pTgButton, false));//参数为本人账号，对方账号，是否为单聊
+	CustomToolButton* pTgCopyButton = new CustomToolButton(pTgButton);
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapGroup[pTgButton]), pTgCopyButton, false));//参数为本人账号，对方账号，是否为单聊
 	//群号码，名称，成员，以及详细信息，以及所有人的信息
 	SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
 }
@@ -388,7 +401,8 @@ void FriendList::SlotStartGroupChat()
 void FriendList::SlotStartChatFromMessage()
 {
 	CustomToolButton* cusToBu = qobject_cast<CustomToolButton*>(sender());
-	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), cusToBu, true));//参数为本人账号，对方账号，是否为单聊
+	CustomToolButton* pTgCopyButton = new CustomToolButton(cusToBu);
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), pTgCopyButton, true));//参数为本人账号，对方账号，是否为单聊
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin")) 
 		//群号码，名称，成员，以及详细信息，以及所有人的信息
 		SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
@@ -397,7 +411,8 @@ void FriendList::SlotStartChatFromMessage()
 void FriendList::SlotStartGroupChatFromMessage()
 {
 	CustomToolButton* cusToBu = qobject_cast<CustomToolButton*>(sender());
-	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), cusToBu, false));//参数为本人账号，对方账号，是否为单聊
+	CustomToolButton* pTgCopyButton = new CustomToolButton(cusToBu);
+	Send_MessageThread("ChatMessagePlugin", "ChatMessagePlugin", SEND_MESSAGE(m_pUserNumber, new QString(m_mapMesssage[cusToBu]), pTgCopyButton, false));//参数为本人账号，对方账号，是否为单聊
 	if (!PlugIsRuning("ChatMessagePlugin", "ChatMessagePlugin"))
 		//群号码，名称，成员，以及详细信息，以及所有人的信息
 		SendSIG(Signal_::LOADPLUG, "ChatMessagePlugin");
@@ -470,8 +485,22 @@ void FriendList::SlotChangedState(const QString &strCurrentText)
 		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_Online);
 	else if(strCurrentText == QString::fromLocal8Bit("隐身"))
 		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_hide);
+	else if (strCurrentText == QString::fromLocal8Bit("离线"))
+		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_offline);
 	else 
 		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
+
+	sqlPlugin::DataStructDefine frienddata;
+	GET_DATA(frienddata, QString(SELECT_FRIEND).arg(*m_pUserNumber));
+	for (int i = 0;i < frienddata.m_lstAllData.size();i++) {
+		std::string* strFriNum = proto.mutable_state()->add_allfriend();
+		QString strAccount = frienddata.m_lstAllData[i]["USER_ACCOUNT"].toString();
+		if (strAccount == *m_pUserNumber)
+			strAccount = frienddata.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+		std::string strNumber =  strAccount.toStdString();
+		strFriNum->assign(strNumber);
+	}
+	proto.set_client_type(protocol_ClientType_FriendList);
 	proto.set_type(protocol_MsgType_stateInfor);
 	int size = m_NetWorkProsess->Send(QString::fromStdString(proto.SerializeAsString()));
 }
@@ -479,6 +508,29 @@ void FriendList::SlotChangedState(const QString &strCurrentText)
 CustomToolButton::CustomToolButton(QWidget* parent /*= 0*/) : QToolButton(parent)
 {
 
+}
+
+CustomToolButton::CustomToolButton(const CustomToolButton* button)
+{
+	if (this != button) {
+		this->m_strPaintContent = button->m_strPaintContent;
+		this->setText(button->text());
+		this->setIcon(button->icon());
+		this->setToolButtonStyle(button->toolButtonStyle());
+		this->setAutoRaise(button->autoRaise());
+	}
+}
+
+const CustomToolButton& CustomToolButton::operator=(const CustomToolButton* button)
+{
+	if (this != button) {
+		this->m_strPaintContent = button->m_strPaintContent;
+		this->setText(button->text());
+		this->setIcon(button->icon());
+		this->setToolButtonStyle(button->toolButtonStyle());
+		this->setAutoRaise(button->autoRaise());
+	}
+	return *this;
 }
 
 CustomToolButton::~CustomToolButton()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>645</width>
-    <height>500</height>
+    <height>494</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -538,32 +538,52 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item row="0" column="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>391</width>
+               <height>17</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="BtnClear">
+             <property name="minimumSize">
+              <size>
+               <width>90</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <property name="spacing">
               <number>0</number>
              </property>
              <item>
               <widget class="QPushButton" name="BtnSend">
+               <property name="minimumSize">
+                <size>
+                 <width>90</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>发送</string>
                </property>
@@ -577,6 +597,12 @@
              </item>
              <item>
               <widget class="QPushButton" name="BtnEnter">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
                  <width>12</width>
@@ -599,26 +625,6 @@
               </widget>
              </item>
             </layout>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="BtnClear">
-             <property name="text">
-              <string>清空</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>391</width>
-               <height>17</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>

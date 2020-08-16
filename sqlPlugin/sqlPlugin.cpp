@@ -6,6 +6,7 @@ sqlPlugin::DataLib::DataLib() :m_Port(3306), m_IsOpen(false), hostIsError(false)
 
 
 sqlPlugin::DataLib::~DataLib() {
+	wait();
 	if (m_dataBase.isOpen())
 		m_dataBase.close();
 }

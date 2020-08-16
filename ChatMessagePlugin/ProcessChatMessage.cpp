@@ -32,6 +32,7 @@ int ProcessChatMessage::RecvMsg()
 void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 {
 	protocol proto;
+	QString strTargetNumber;
 	if (proto.ParseFromString(protoArray.toStdString())) {
 		switch (proto.type()) {
 		case protocol_MsgType_ftp:
@@ -41,6 +42,10 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 		case protocol_MsgType_smtp:
 			break;
 		case protocol_MsgType_tcp:
+			strTargetNumber = QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber());
+			if (strTargetNumber == g_pChatMessage->m_strSelfNum) {
+				strTargetNumber = QString::fromStdString(proto.mutable_chatcontent(0)->targetnumber());
+			}
 			switch (proto.chatcontent(0).type())
 			{
 			case ChatRecord_contenttype::ChatRecord_contenttype_file:
@@ -49,27 +54,27 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 				QString strName = QString::fromStdString(proto.chatcontent(0).head().name());
 				std::string strFielData = proto.chatcontent(0).content();
 				CustomMessageWidget::FileProperty fileInfo = {size, strName, QByteArray::fromStdString(strFielData)};
-				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), fileInfo, proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::file);
+				g_pChatMessage->SetAddMessage(strTargetNumber, fileInfo, proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::file);
 			}
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_image:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::image);
+				g_pChatMessage->SetAddMessage(strTargetNumber, QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::image);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_text:
-				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::text);
+				g_pChatMessage->SetAddMessage(strTargetNumber, QString::fromStdString(proto.chatcontent(0).content()), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::text);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_video:
-				g_pChatMessage->StartVideoChat(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()));
+				g_pChatMessage->StartVideoChat(strTargetNumber);
 				break;
-			case ChatRecord_contenttype::ChatRecord_contenttype_audio:
-				g_pChatMessage->SetAddMessage(proto.mutable_chatcontent(0)->selfnumber().c_str(), proto.mutable_chatcontent(0)->content().c_str(), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::voice);
+			case ChatRecord_contenttype::ChatRecord_contenttype_audio:				
+				g_pChatMessage->SetAddMessage(strTargetNumber, proto.mutable_chatcontent(0)->content().c_str(), proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::voice);
 				break;
 			case ChatRecord_contenttype::ChatRecord_contenttype_folder:
 			{
 				quint64 size = proto.chatcontent(0).head().filesize();
 				QString strName = QString::fromStdString(proto.chatcontent(0).head().name());
 				CustomMessageWidget::FileProperty fileInfo = { size, strName };		
-				g_pChatMessage->SetAddMessage(QString::fromStdString(proto.mutable_chatcontent(0)->selfnumber()), fileInfo, proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::folder);
+				g_pChatMessage->SetAddMessage(strTargetNumber, fileInfo, proto.mutable_chatcontent(0)->time(), Message_Content::Content_Type::folder);
 			}
 				break;
 			default:

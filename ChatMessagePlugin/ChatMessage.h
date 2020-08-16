@@ -27,6 +27,7 @@ struct Message_Content {
 };
 
 using namespace sqlPlugin;
+
 /// \brief 气泡界面定义
 class CustomMessageWidget : public QWidget
 {
@@ -46,16 +47,10 @@ public:
 		QString strName;
 		QByteArray fileData;
 	};
-	union ContentArray {
-		ContentArray() {}
-		~ContentArray() {}
-		QString strContent;
-		QByteArray arrayContent;
-	};
 
 	/// \brief 构造函数
 	/// \param[in] parent 父窗口
-	CustomMessageWidget(QWidget* parent = 0);
+	CustomMessageWidget(QPixmap userImage, QWidget* parent);
 
 	/// \brief 析构函数
 	~CustomMessageWidget();
@@ -89,7 +84,7 @@ private slots:
 public:
 	ContentType m_MsgType;          ///< 消息类型
 	FileProperty m_MsgProperty;     ///< 消息属性  
-	ContentArray m_unionContent;         ///< 消息体
+	QByteArray m_byteContent;         ///< 消息体
 private:
 	QTextEdit* m_pMessageContent;    ///< 气泡
 	QTableWidget* m_pTargetTab;      ///< 气泡所处的表格
@@ -97,6 +92,7 @@ private:
 	bool m_IsClicked;  ///< 语音消息
 	QProgressBar m_Bar;  ///< 读取文件进度条
 	QFile  m_FileTransfer;  ///< 文件传输
+	QPixmap m_UserImage;  ///< 用户头像
 };
 
 /// \brief 聊天界面功能定义
@@ -120,7 +116,8 @@ public:
 	/// \brief 初始化聊天记录UI
 	/// \param[in] targetMessage 目标聊天消息结构
 	/// \param[in] tab 显示聊天记录的表格
-	void InitMessageUI(const QMap<quint64, QList<Message_Content>>& targetContent, QTableWidget* tab);
+	/// \param[in] strNumber 聊天记录目标账号
+	void InitMessageUI(const QMap<quint64, QList<Message_Content>>& targetContent, QTableWidget* tab, QString strNumber);
 
 	/// \brief 添加聊天消息
 	/// \param[in] strTgtNum 对方账号
@@ -160,8 +157,9 @@ public:
 	void StartVideoChat(const QString& strNum);
 
 	/// \brief 初始化局部协议
+	/// \param[in] client 客户端类型
 	/// \retval 返回协议
-	protocol* InitPartProtocol();
+	protocol* InitPartProtocol(protocol_ClientType client);
 
 	/// \brief 更新好友状态
 	/// \param[in] strNum 好友账号
@@ -183,7 +181,16 @@ public:
 	/// \param[out] proto 协议
 	void SendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol_Chat_OneorMultiple isOne, protocol* proto);
 
+	/// \brief 设置按钮图片
 	void SetButtonIcon();
+
+	/// \brief 通知服务器聊天功能上线
+	void TellServiceChatOnline();
+
+	/// \brief 获取目标头像
+	/// \param[in] strNumber 目标账号
+	/// \retval 返回头像
+	QPixmap GetTargetImage(const QString& strNumber);
 private slots:
 	
     /// \brief 发送网络消息 
@@ -248,6 +255,7 @@ private:
 	QMap<CustomToolButton*, CustomTextEdit*> m_mapFriendToTextEdit;  ///< 好友对应文字编辑框
 	QMap<QString, QLabel*> m_mapFriendState; ///< 好友状态
 	friend class CustomMessageWidget;
+	friend class ProcessChatMessage;
 };
 
 #endif // CHATMESSAGE_H

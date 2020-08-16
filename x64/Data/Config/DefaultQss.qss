@@ -1,6 +1,10 @@
 /* === QPushButton === */
 /* === QWidget === */
 
+QWidget#widget_4{
+	background-color: rgb(255,255,255);
+}
+
 QWidget:window {
     font-family: 'Segoe UI';
 	font-size: 20px;
@@ -21,16 +25,12 @@ QTextEdit{
 	background-color: white;
 }
 
-QPushButton#BtnClose, #BtnMin{
+QPushButton#BtnClose, #BtnMin, #BtnClear, #BtnSend, #BtnEnter, #BtnPicture,#BtnText{
 	background-color: rgb(30,100,100);
 }
 
-QPushButton#BtnClose:hover, #BtnMin:hover{
+QPushButton#BtnClose:hover, #BtnMin:hover, #BtnClear:hover, #BtnSend:hover, #BtnEnter:hover{
 	background-color: rgb(30,120,150);
-}
-
-QPushButton#BtnPicture,#BtnText{
-	background-color: rgb(30,100,100);
 }
 
 QPushButton#BtnLogin,#BtnBackPassWD,#BtnRegister{
@@ -52,7 +52,7 @@ QPushButton:hover {
     color: white;
 }
 
-QPushButton:pressed {
+QPushButton:checked {
 	background-color: rgba(150,255,255, 50);
 }
 

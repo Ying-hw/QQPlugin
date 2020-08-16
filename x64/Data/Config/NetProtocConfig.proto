@@ -84,6 +84,7 @@ message StateInformation
 		hide      = 2;
 		dontexcuse= 3;
 	}
+	
 	StateMsg     currState   = 1;
 	repeated bytes AllFriend = 2;
 }
@@ -104,13 +105,24 @@ message protocol
 		one      = 0;
 		multiple = 1;
 	}
-	MsgType                   type         = 1;
-	bytes                     MySelfNum    = 2;
-	Chat_OneorMultiple        count        = 3;
-	repeated ChatRecord       chatContent  = 4;
-	repeated ChatRecord_Group group        = 5;
-	AddInformation            addInfor     = 6;
-	StateInformation          state        = 7;
+	enum ClientType 
+	{
+		FriendList = 0;
+		ChatMsg    = 1;
+		Video      = 2;
+		Mail       = 3;
+		Ftp        = 4;
+		Space      = 5;
+		All        = 6;
+	}
+	ClientType                client       = 1;
+	MsgType                   type         = 2;
+	bytes                     MySelfNum    = 3;
+	Chat_OneorMultiple        count        = 4;
+	repeated ChatRecord       chatContent  = 5;
+	repeated ChatRecord_Group group        = 6;
+	AddInformation            addInfor     = 7;
+	StateInformation          state        = 8;
 }
 
 

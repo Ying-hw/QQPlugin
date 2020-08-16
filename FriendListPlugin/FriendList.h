@@ -26,6 +26,10 @@ public:
 	/// \brief 析构函数
 	~CustomToolButton();
 
+	CustomToolButton(const CustomToolButton* button);
+
+	const CustomToolButton& operator=(const CustomToolButton* button);
+
 	/// \brief 绘图事件
 	/// \param[in] event 系统参数
 	void paintEvent(QPaintEvent *event);
@@ -132,6 +136,11 @@ public:
 	/// \brief 保存聊天记录
 	/// \param[in] proto 协议
 	void SaveChatRecord(protocol& proto);
+
+	/// \brief 获取当前状态
+	/// \param[in] proto 原协议
+	/// \retval 返回当前状态
+	static void setCurrentState(protocol& proto);
 
 	static QString* m_pUserNumber;    ///< 本人账号
 	static ProsessMessage* m_NetWorkProsess;  ///< 处理网络消息
