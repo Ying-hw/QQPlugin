@@ -27,7 +27,7 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 	m_mapFriendInfo[pToolBu] = num;
 	m_strSelfNum = *strSelfNum;
 	QFont f = this->font();
-	f.setPointSize(f.pointSize() + 2);
+	f.setPointSize(16);
 	ui.labName->setFont(f); 
 	ui.labName->setText(pToolBu->text());
 	SetAddChatTgt(pToolBu, *strSelfNum, *strTargetNum);
@@ -130,7 +130,7 @@ void ChatMessage::InitMessageUI(const QMap<quint64, QList<Message_Content>>& tar
 	}
 }
 
-void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype)
+void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype, bool isSelf)
 {
 	for (QMap<CustomToolButton*, NumInfo>::iterator it = m_mapFriendInfo.begin();
 		it != m_mapFriendInfo.end(); it++) 
@@ -145,14 +145,14 @@ void ChatMessage::SetAddMessage(const QString strTgtNum, const QString strMsg, q
 		m_mapNumberToTable[strTgtNum]->setItem(m_mapNumberToTable[strTgtNum]->rowCount() - 1, 0, item);
 	}
 	CustomMessageWidget* MessWidget = new CustomMessageWidget(GetTargetImage(strTgtNum), m_mapNumberToTable[strTgtNum]);
-	MessWidget->SetContent(strMsg, false, (CustomMessageWidget::ContentType)msgtype);
+	MessWidget->SetContent(strMsg, isSelf, (CustomMessageWidget::ContentType)msgtype);
 	int rowCount = m_mapNumberToTable[strTgtNum]->rowCount();
 	m_mapNumberToTable[strTgtNum]->setRowCount(rowCount + 1);
 	m_mapNumberToTable[strTgtNum]->setCellWidget(rowCount, 0, MessWidget);
 	m_MsgSourceNum[MessWidget] = strTgtNum;
 }
 
-void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype)
+void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype, bool isSelf)
 {
 	for (QMap<CustomToolButton*, NumInfo>::iterator it = m_mapFriendInfo.begin();
 		it != m_mapFriendInfo.end(); it++)
@@ -168,7 +168,7 @@ void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::Fi
 	}
 
 	CustomMessageWidget* MessWidget = new CustomMessageWidget(strTgtNum, m_mapNumberToTable[strTgtNum]);
-	MessWidget->SetContent(content, false, (CustomMessageWidget::ContentType)msgtype);
+	MessWidget->SetContent(content, isSelf, (CustomMessageWidget::ContentType)msgtype);
 	int rowCount = m_mapNumberToTable[strTgtNum]->rowCount();
 	m_mapNumberToTable[strTgtNum]->setRowCount(rowCount + 1);
 	m_mapNumberToTable[strTgtNum]->setCellWidget(rowCount, 0, MessWidget);
@@ -203,13 +203,13 @@ void ChatMessage::SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strSe
 		horizontalLayout_2->addWidget(labName);
 		labName->setText(pToolTgt->text());
 		QFont f = this->font();
-		f.setPointSize(f.pointSize() + 2);
+		f.setPointSize(f.pointSize() + 6);
 		labName->setFont(f);
 		QSpacerItem* horizontalSpacer_2 = new QSpacerItem(37, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
 		horizontalLayout_2->addItem(horizontalSpacer_2);
 		gridLayout->addLayout(horizontalLayout_2, 0, 0, 1, 1);
 		QHBoxLayout * horizontalLayout_3 = new QHBoxLayout();
-		horizontalLayout_3->setSpacing(6);
+		horizontalLayout_3->setSpacing(10);
 
 		QPushButton* pushButton_5 = new QPushButton(widget_3);
 		connect(pushButton_5, SIGNAL(clicked()), this, SLOT(SlotBtnVideo()));
@@ -500,18 +500,26 @@ void ChatMessage::SetButtonIcon()
 	ui.BtnVibration->setIcon(QIcon("../Data/Image/My images1.png"));
 	ui.BtnScreenshot->setIcon(QIcon("../Data/Image/Clipboard cut.png"));
 
-	ui.BtnFace->setIconSize(QSize(26, 26));
-	ui.BtnScreenshot->setIconSize(QSize(26, 26));
-	ui.BtnVibration->setIconSize(QSize(26, 26));
-	ui.BtnVoice->setIconSize(QSize(26, 26));
-	ui.BtnVoiceChat->setIconSize(QSize(30, 30));
-	ui.BtnMail->setIconSize(QSize(30, 30));
-	ui.BtnVedio->setIconSize(QSize(30, 30));
+	ui.BtnFace->setIconSize(QSize(40, 40));
+	ui.BtnScreenshot->setIconSize(QSize(40, 40));
+	ui.BtnVibration->setIconSize(QSize(40, 40));
+	ui.BtnVoice->setIconSize(QSize(40, 40));
+	ui.BtnVoiceChat->setIconSize(QSize(50, 50));
+	ui.BtnMail->setIconSize(QSize(50, 50));
+	ui.BtnVedio->setIconSize(QSize(50, 50));
 
 	ui.BtnSend->setObjectName("BtnSend");
 	ui.BtnClear->setObjectName("BtnClear");
 	ui.BtnEnter->setObjectName("BtnEnter");
 	ui.widget_4->setObjectName("widget_4");
+
+	ui.BtnFace->setFixedSize(40, 40);
+	ui.BtnScreenshot->setFixedSize(40, 40);
+	ui.BtnVibration->setFixedSize(40, 40);
+	ui.BtnVoice->setFixedSize(40, 40);
+	ui.BtnVoiceChat->setFixedSize(50, 50);
+	ui.BtnMail->setFixedSize(50, 50);
+	ui.BtnVedio->setFixedSize(50, 50);
 }
 
 void ChatMessage::TellServiceChatOnline()
@@ -565,47 +573,16 @@ void ChatMessage::SaveChatRecord()
 		});
 		bool IsFriend = tgtFriend.value().m_IsFriend;
 		if (data.m_lstAllData.isEmpty()) {
-			QString strInsertChat = QString(INSERT_CHAT_MESSAGE).arg(m_strSelfNum).arg(it.key()).arg((int)IsFriend);
+			QString strInsertChat = QString(INSERT_CHAT_MESSAGE).arg(m_strSelfNum).arg(m_ProMsg->m_mapChatRecord[it.key().toStdString()].SerializeAsString().c_str()).arg(it.key()).arg((int)IsFriend).arg(0);
 			EXECUTE(strInsertChat);
 			return;
 		}
 		protocol proto;
-		for (int i = 0; i < (*it)->rowCount(); i++) {
-			CustomMessageWidget* pMsgWidget = static_cast<CustomMessageWidget*>((*it)->cellWidget(i, 0));
-			QString strContent = QString::fromUtf8(data.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
-			if (proto.ParseFromString(strContent.toStdString())) {
-				ChatRecord* record = proto.add_chatcontent();
-				if (m_MsgSourceNum.contains(pMsgWidget))
-					if (m_MsgSourceNum[pMsgWidget] == m_strSelfNum) 
-						record->set_selfnumber(m_strSelfNum.toStdString());
-					else
-						record->set_targetnumber(m_MsgSourceNum[pMsgWidget].toStdString());
-				record->set_isself(m_MsgSourceNum.contains(pMsgWidget));
-				record->set_time(QDateTime::currentMSecsSinceEpoch());
-				switch (pMsgWidget->GetType())
-				{
-				case CustomMessageWidget::ContentType::file:
-
-					break;
-				case CustomMessageWidget::ContentType::text:
-					record->set_content(pMsgWidget->m_byteContent.toStdString());
-					break;
-				case CustomMessageWidget::ContentType::image:
-					record->clear_content();
-					record->set_content(pMsgWidget->m_byteContent.toStdString());
-					break;
-				case CustomMessageWidget::ContentType::folder:
-
-					break;
-				case CustomMessageWidget::ContentType::voice:
-
-					break;
-				default:
-					break;
-				}
-				pMsgWidget->GetType();
-			}
-		}
+		proto.ParseFromString(QString::fromUtf8(data.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data()).toStdString());
+		std::string strRecord = m_ProMsg->m_mapChatRecord[it.key().toStdString()].SerializeAsString();
+		proto.AppendPartialToString(&strRecord);
+		QString strAllRecord = QString(UPDATE_CHAT_MESSAGE).arg(proto.SerializeAsString().c_str()).arg(m_strSelfNum).arg(it.key());
+		EXECUTE(strAllRecord);
 	}
 }
 
@@ -634,7 +611,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			for (int i = 0; i < proto->chatcontent_size(); i++) {
 				SendFile(proto->mutable_chatcontent(i), nullptr, protocol_Chat_OneorMultiple_one, proto);
-				SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), strCurretContent, QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type());
+				SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), strCurretContent, QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type(), true);
 			}
 			if (proto->chatcontent_size() > 0)
 			{
@@ -650,7 +627,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 				chat->set_type(ChatRecord_contenttype_text);
 				chat->set_content(strCurretContent.toStdString());
 				if (m_ProMsg->Send(proto->SerializeAsString()) > 0)
-					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), strCurretContent, chat->time(), (Message_Content::Content_Type)chat->type());
+					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), strCurretContent, chat->time(), (Message_Content::Content_Type)chat->type(), true);
 			}				
 		}
 	}
@@ -672,7 +649,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			for (int i = 0;i < proto->group_size();i++) {
 				SendFile(nullptr, proto->mutable_group(i), protocol_Chat_OneorMultiple_multiple, proto);
-				SetAddMessage(proto->group(i).account().c_str(), m_mapFriendToTextEdit[pTgtBu]->toPlainText(), QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type());
+				SetAddMessage(proto->group(i).account().c_str(), m_mapFriendToTextEdit[pTgtBu]->toPlainText(), QDateTime::currentMSecsSinceEpoch(), (Message_Content::Content_Type)proto->mutable_chatcontent(i)->type(), true);
 			}
 			if (proto->group_size() > 0)
 			{
@@ -687,7 +664,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 				pGroup->set_type(ChatRecord_Group_contenttype_text);
 				pGroup->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
 				if (m_ProMsg->Send(proto->SerializeAsString()) > 0)
-					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
+					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type(), true);
 			}
 		}
 	}
@@ -967,40 +944,24 @@ void CustomMessageWidget::SetContent(FileProperty& property, bool isSelf, Conten
 
 void CustomMessageWidget::paintEvent(QPaintEvent *event)
 {
-	switch (m_MsgType) {
-	case ContentType::text:
-	{
-		QFontMetrics fmf(g_Message_Font);
-		QRect textRange = fmf.boundingRect(m_byteContent);
-		int lineHeight = fmf.lineSpacing();
-		textRange.setWidth(textRange.width() + fmf.averageCharWidth() * m_byteContent.count(" "));
-		int residu = textRange.width() / (m_pTargetTab->width() - 113);
-		lineHeight *= ++residu;
-		if (textRange.width() > (m_pTargetTab->width() - 80)) {
-			m_pMessageContent->setFixedWidth(m_pTargetTab->width() - 110);
-			m_pMessageContent->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) - LAYOUT_MESSAEG_WIDGET);
-			this->setFixedHeight(lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
-			for (int r = 0; r < m_pTargetTab->rowCount(); r++)
-				if (m_pTargetTab->cellWidget(r, 0) == this) {
-					m_pTargetTab->setRowHeight(r, lineHeight + (fmf.ascent() - fmf.descent()) + LAYOUT_MESSAEG_WIDGET * 2);
-					break;
-				}
-		}
-		else {
-			for (int r = 0; r < m_pTargetTab->rowCount(); r++)
-				if (m_pTargetTab->cellWidget(r, 0) == this) {
-					m_pTargetTab->setRowHeight(r, textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
-					break;
-				}
-			m_pMessageContent->setFixedWidth(textRange.width() + LAYOUT_MESSAEG_WIDGET * 2);
-			m_pMessageContent->setFixedHeight(textRange.height() + (fmf.ascent() - fmf.descent()));
-			this->setFixedHeight(textRange.height() + LAYOUT_MESSAEG_WIDGET * 2 + (fmf.ascent() - fmf.descent()));
-		}
+	qreal doc_mar = m_pMessageContent->document()->documentMargin();
+	QTextDocument* doc = m_pMessageContent->document();
+	qreal text_Height = 0;
+	int width = 0;
+	for (QTextBlock it = doc->begin();it != doc->end();it = it.next()) {
+		QTextLayout* pLayout = it.layout();
+		QRectF re = pLayout->boundingRect();
+		width = pLayout->maximumWidth();
+		text_Height += re.height();
 	}
-		break;
-	default:
-		break;
-	}
+	int vMar = this->layout()->contentsMargins().top();
+	for (int r = 0; r < m_pTargetTab->rowCount(); r++)
+		if (m_pTargetTab->cellWidget(r, 0) == this) {
+			m_pTargetTab->setRowHeight(r, text_Height + doc_mar * 2 + vMar * 2);
+			break;
+		}
+	setFixedHeight(text_Height + doc_mar * 2 + vMar * 2);
+	m_pMessageContent->setFixedWidth(width + doc_mar * 2);
     QWidget::paintEvent(event);
 }
 
@@ -1018,7 +979,7 @@ void CustomMessageWidget::InitText(bool isSelf)
 	m_pMessageContent->setWordWrapMode(QTextOption::WrapAnywhere);
 	m_pMessageContent->setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
 	QHBoxLayout* lay = new QHBoxLayout(this);
-	button->setFixedWidth(50);
+	button->setFixedSize(50, 50);
 	QSpacerItem* item = new QSpacerItem(100, 20, QSizePolicy::Expanding, QSizePolicy::Expanding);
 	if (!isSelf) {
 		button->setIcon(QIcon(m_UserImage));
@@ -1033,6 +994,7 @@ void CustomMessageWidget::InitText(bool isSelf)
 		lay->addWidget(button, 0, Qt::AlignTop);
 
 	}
+	button->setIconSize(QSize(50, 50));
 	lay->setContentsMargins(0, LAYOUT_MESSAEG_WIDGET, 0, LAYOUT_MESSAEG_WIDGET);
 	setLayout(lay);
 }

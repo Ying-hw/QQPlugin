@@ -168,7 +168,7 @@ void Register::AddUserToSqldatabase()
 
 
 	if (EXECUTE(strRegisterUserSql) && UPDATE_IMAGE(QString(UPDATEIMAGE).arg("user_account").arg(strAccount), QVariant(LoadDefaultImage())) && EXECUTE(strInsertState)) {
-		QMessageBox::information(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功，正在回到登录界面，请重新登录"));
+		QMessageBox::information(this, QString::fromLocal8Bit("成功"), QString::fromLocal8Bit("注册成功，请回到登录界面，重新登录"));
 		QThread::sleep(1);
 		ui.BtnReturn->click();
 	}

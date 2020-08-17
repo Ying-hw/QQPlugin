@@ -1,5 +1,9 @@
 /* === QPushButton === */
 /* === QWidget === */
+QTextEdit#m_pMessageContent{
+	border-radius: 4px;
+	background-color: rgba(255,255,255,150);
+}
 
 QWidget#widget_4{
 	background-color: rgb(255,255,255);
@@ -11,11 +15,6 @@ QWidget:window {
     background-color: rgb(30,100,100);
 }
 
-
-*{
-font-family: 'Segoe UI';
-	font-size: 20px;
-}
 QToolButton#m_BtnTgtInfo{
 	border: none;
 }
@@ -56,7 +55,14 @@ QPushButton:checked {
 	background-color: rgba(150,255,255, 50);
 }
 
-QStackedWidget, QLabel, QRadioButton, QCheckBox, QPushButton,
+QPushButton {
+	font-family: "Segoe UI";
+	color: #BBBBBB;
+	background-color: rgb(30,100,100);
+	border: none;
+}
+
+QStackedWidget, QLabel, QRadioButton, QCheckBox,
 QGroupBox, QStatusBar, QToolButton, QDialog {
     background-color: rgb(30,100,100);
     color: #BBBBBB;
@@ -116,7 +122,9 @@ QCheckBox::indicator::checked:disabled, QRadioButton::indicator::checked:disable
 /* === QComboBox === */
 QComboBox {
     background-color: rgb(30,100,120);   
-    color: white;
+    font-family: "Segoe UI";
+	font-size: 20px;
+	color: #BBBBBB;
 }
 
 QComboBox::drop-down {     
@@ -354,6 +362,11 @@ QAbstractScrollArea, QLineEdit, QAbstractSpinBox, QComboBox {
 
 }
 
+QComboBox:!enabled, QPushButton:!enabled
+{
+	color: gray;
+}
+
 /* === QHeaderView === */
 QHeaderView::section {
     background: #222222;
@@ -372,6 +385,7 @@ QListView::item:selected {
     color: yellow;
 }
 
+
 /* === QTableView === */
 QTableView::item:hover {
     background-color: rgb(30,120,150);
@@ -387,7 +401,7 @@ QTreeView::item {
 }
 
 QTreeView::item:hover {
-    background: rgb(30,100,150);
+    background: rgba(150,255,255, 50);
 }
 
 QTreeView::item:selected {
@@ -532,7 +546,7 @@ QListView {
 }
 
 QListView::item:hover {
-    background-color: wheat;
+    background-color: rgba(150,255,255, 50);
 }
 
 /* We reserve 1 pixel space in padding. When we get the focus,
@@ -718,9 +732,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 /* =================== */
 QLineEdit, QListView, QTreeView, QTableView, QAbstractSpinBox {
-    background-color: blue;
-    color: #000;
-    border: 1px solid #555;
+    font-family: "Segoe UI";
+	font-size: 20px;
+	color: #BBBBBB;
+	background-color: rgb(30,100,150);
 }
 
 QAbstractScrollArea, QLineEdit, QAbstractSpinBox, QComboBox {
@@ -741,7 +756,7 @@ QHeaderView::section {
 
 /* === QListView === */
 QListView::item:hover {
-    background: #AAA;
+    background-color: rgba(150,255,255, 50);
 }
 
 QListView::item:selected {

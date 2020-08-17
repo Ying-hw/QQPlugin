@@ -19,7 +19,7 @@
 
 #define  UPDATE_CHAT_MESSAGE        "UPDATE chat_content SET CHAT_RECORD = '%1' WHERE (USER_ACCOUNT = '%2' AND FRIEND_ACCOUNT = '%3') OR (USER_ACCOUNT = '%2' AND FRIEND_ACCOUNT = '%3')"
 
-#define  INSERT_CHAT_MESSAGE        "INSERT INTO chat_content VALUES('%1', NULL, '%2', '%3',NULL);"
+#define  INSERT_CHAT_MESSAGE        "INSERT INTO chat_content VALUES('%1', '%2', '%3', '%4', '%5');"
 
 #define  SELECT_GROUP_TYPE			"SELECT DISTINCT GROUP_ACCOUNT FROM group WHERE TYPE = '%1'"
 

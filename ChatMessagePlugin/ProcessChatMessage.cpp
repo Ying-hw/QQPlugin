@@ -34,6 +34,13 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 	protocol proto;
 	QString strTargetNumber;
 	if (proto.ParseFromString(protoArray.toStdString())) {
+		if (!m_mapChatRecord.contains(proto.myselfnum())) {
+			m_mapChatRecord[proto.myselfnum()] = proto;
+		}
+		else {
+			std::string strRecord = protoArray.toStdString();
+			m_mapChatRecord[proto.myselfnum()].AppendPartialToString(&strRecord);
+		}
 		switch (proto.type()) {
 		case protocol_MsgType_ftp:
 			break;
@@ -110,6 +117,7 @@ void ProcessChatMessage::AnalysisProtocol(QByteArray& protoArray)
 			break;
 		case protocol_MsgType_stateInfor:
 			g_pChatMessage->UpdateFriendState(QString::fromStdString(proto.myselfnum()), proto.state());
+			break;
 		default:
 			break;
 		}

@@ -25,4 +25,6 @@
 #include <QAudioRecorder>
 #include <QProgressBar>
 #include <QMediaPlayer>
+#include <QTextBlock>
 #include <QTreeWidget>
+#include <QTextLayout>

@@ -151,8 +151,9 @@ void FriendList::InitFriendList()
 					if (strState == QString::fromLocal8Bit("离线") || strState == QString::fromLocal8Bit("隐身"))
 						newpix = QPixmap::fromImage(convertImage(QIcon(newpix), pToolBu->iconSize()));
 				}
-				newpix = PixmapToRound(newpix, 40);
+				newpix = PixmapToRound(newpix, 100);
 				pToolBu->setIcon(newpix);
+				pToolBu->setIconSize(QSize(50, 50));
 				pToolBu->setText(strName);
 				pToolBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 				pToolBu->setAutoRaise(true);
@@ -177,9 +178,10 @@ void FriendList::InitGroupList()
 			QString strName = groupdata .m_lstAllData[i]["GROUP_NAME"].toString();
 			if (pix.loadFromData(arrayImage)) {
 				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-				newpix = PixmapToRound(newpix, 50);
+				newpix = PixmapToRound(newpix, 100);
 				CustomToolButton* pToolBu = new CustomToolButton(ui.Friend_List);
 				pToolBu->setIcon(newpix);
+				pToolBu->setIconSize(QSize(50, 50));
 				pToolBu->setText(strName);
 				pToolBu->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 				pToolBu->setAutoRaise(true);
@@ -254,14 +256,10 @@ void FriendList::StartVideoChat(const QString& strNum)
 void FriendList::RecvFriendApply(AddInformation* infor)
 {
 	if (infor->isconsent()) {
-		if (infor->type() == AddInformation_TargetType_isFriend) {
-			EXECUTE(QString(INSERT_MAP).arg(infor->targetaccount().c_str()).arg("").arg(*FriendList::m_pUserNumber));
+		if (infor->type() == AddInformation_TargetType_isFriend) 
 			g_FriendList->InitFriendList();
-		}
-		else {
-			EXECUTE(QString(INSERT_MAP).arg("").arg(infor->targetaccount().c_str()).arg(*FriendList::m_pUserNumber));
+		else 
 			g_FriendList->InitGroupList();
-		}
 		return;
 	}
 	CustomAddFriendMessageHint* pFriendHint = new CustomAddFriendMessageHint(this);
@@ -516,6 +514,7 @@ CustomToolButton::CustomToolButton(const CustomToolButton* button)
 		this->m_strPaintContent = button->m_strPaintContent;
 		this->setText(button->text());
 		this->setIcon(button->icon());
+		this->setIconSize(button->iconSize());
 		this->setToolButtonStyle(button->toolButtonStyle());
 		this->setAutoRaise(button->autoRaise());
 	}
@@ -619,9 +618,10 @@ void CustomAddFriendMessageHint::ConsentApply()
 		g_FriendList->InitGroupList();
 	}
 	protocol proto;
-	proto.mutable_addinfor()->set_targetaccount(m_infor.targetaccount());
-	proto.mutable_addinfor()->set_fromaccount(FriendList::m_pUserNumber->toStdString());
+	proto.mutable_addinfor()->set_targetaccount(m_infor.fromaccount());
+	proto.mutable_addinfor()->set_fromaccount(m_infor.targetaccount());
 	proto.mutable_addinfor()->set_isconsent(true);
+	proto.mutable_addinfor()->set_type((AddInformation_TargetType)(int)m_IsAddFriend);
 	proto.set_type(protocol_MsgType_tcp);
 	FriendList::m_NetWorkProsess->Send(proto.SerializeAsString());
 }
@@ -636,7 +636,7 @@ void CustomAddFriendMessageHint::UserInfor()
 		QLabel* labNumber = new QLabel(m_UserWidget);
 		labImage->setPixmap(pbutton->icon().pixmap(300,300));
 		labUserName->setText(pbutton->text());
-		labNumber->setText(m_Gender ? QString::fromLocal8Bit("男") : QString::fromLocal8Bit("女"));
+		labNumber->setText(!m_Gender ? QString::fromLocal8Bit("男") : QString::fromLocal8Bit("女"));
 		QVBoxLayout* lay = new QVBoxLayout;
 		lay->addWidget(labImage);
 		lay->addWidget(labUserName);
@@ -645,4 +645,6 @@ void CustomAddFriendMessageHint::UserInfor()
 		m_UserWidget->setLayout(lay);
 		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, m_UserWidget);
 	}
+	else 
+		SendSIG(Signal_::SHOW_ABSTRACTWIDGET, m_UserWidget);
 }

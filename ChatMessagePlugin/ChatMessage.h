@@ -124,15 +124,16 @@ public:
 	/// \param[in] strMsg 消息内容
 	/// \param[in] time 发送的时间
 	/// \param[in] msgtype 消息类型
-	void SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype);
-
+	/// \param[in] isSelf 是否是本人发出的消息
+	void SetAddMessage(const QString strTgtNum, const QString strMsg, quint64 time, Message_Content::Content_Type msgtype, bool isSelf = false);
 
 	/// \brief 发送文件或者文件夹的时候添加此消息
 	/// \param[in] strTgtNum 对方账号
 	/// \param[in] content 消息结构
 	/// \param[in] time 发送消息的时间
 	/// \param[in] msgtype 消息类型
-	void SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype);
+	/// \param[in] isSelf 是否是本人发出的消息
+	void SetAddMessage(const QString strTgtNum, CustomMessageWidget::FileProperty& content, quint64 time, Message_Content::Content_Type msgtype, bool isSelf = false);
 
 	/// \brief 添加聊天对象
 	/// \param[in] pToolTgt 对方信息

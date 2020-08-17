@@ -9,6 +9,7 @@ public:
 	~ProcessChatMessage();
 	int RecvMsg();
 	void AnalysisProtocol(QByteArray& protocol);
+	QMap<std::string, protocol> m_mapChatRecord;
 private:
 	qint64 m_CurrentReadSize;
 	friend class CustomMessageWidget;

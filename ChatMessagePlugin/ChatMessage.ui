@@ -98,6 +98,11 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
                   <widget class="QLabel" name="labName">
+                   <property name="font">
+                    <font>
+                     <pointsize>16</pointsize>
+                    </font>
+                   </property>
                    <property name="text">
                     <string>TextLabel</string>
                    </property>
@@ -120,6 +125,9 @@
                </item>
                <item row="1" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <property name="spacing">
+                  <number>10</number>
+                 </property>
                  <item>
                   <widget class="QPushButton" name="BtnVedio">
                    <property name="toolTip">
