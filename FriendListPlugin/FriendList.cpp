@@ -502,7 +502,7 @@ void FriendList::SlotChangedState(const QString &strCurrentText)
 	}
 	proto.set_client_type(protocol_ClientType_FriendList);
 	proto.set_type(protocol_MsgType_stateInfor);
-	int size = m_NetWorkProsess->Send(QString::fromStdString(proto.SerializeAsString()));
+	int size = m_NetWorkProsess->Send(proto.SerializeAsString());
 }
 
 CustomToolButton::CustomToolButton(QWidget* parent /*= 0*/) : QToolButton(parent)
@@ -623,7 +623,7 @@ void CustomAddFriendMessageHint::ConsentApply()
 	proto.mutable_addinfor()->set_fromaccount(FriendList::m_pUserNumber->toStdString());
 	proto.mutable_addinfor()->set_isconsent(true);
 	proto.set_type(protocol_MsgType_tcp);
-	FriendList::m_NetWorkProsess->Send(QString::fromStdString(proto.SerializeAsString()));
+	FriendList::m_NetWorkProsess->Send(proto.SerializeAsString());
 }
 
 void CustomAddFriendMessageHint::UserInfor()

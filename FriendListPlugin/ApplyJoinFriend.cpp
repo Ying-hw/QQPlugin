@@ -47,5 +47,5 @@ void ApplyJoinFriend::SlotBtnSend()
 	proto.mutable_addinfor()->set_fromaccount(FriendList::m_pUserNumber->toStdString());
 	proto.mutable_addinfor()->set_isconsent(false);
 	proto.set_type(protocol_MsgType_tcp);
-	FriendList::m_NetWorkProsess->Send(QString::fromStdString(proto.SerializeAsString()));
+	FriendList::m_NetWorkProsess->Send(proto.SerializeAsString());
 }

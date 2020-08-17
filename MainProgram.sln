@@ -22,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{8A818F
 		x64\Data\Config\plugin.xml = x64\Data\Config\plugin.xml
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginControl", "PluginControl\PluginControl.vcxproj", "{1356FA71-21E1-43D5-B748-A9286DC61FF4}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlPlugin", "sqlPlugin\sqlPlugin.vcxproj", "{070467FF-DA82-458A-9C88-598C5D7958A6}"
 EndProject
 Global
@@ -90,14 +88,6 @@ Global
 		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Release|Win32.Build.0 = Release|Win32
 		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Release|x64.ActiveCfg = Release|x64
 		{C14A5F02-7E8D-436B-9082-6E3D4A41FF64}.Release|x64.Build.0 = Release|x64
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Debug|Win32.Build.0 = Debug|Win32
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Debug|x64.ActiveCfg = Debug|x64
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Debug|x64.Build.0 = Debug|x64
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Release|Win32.ActiveCfg = Release|Win32
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Release|Win32.Build.0 = Release|Win32
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Release|x64.ActiveCfg = Release|x64
-		{1356FA71-21E1-43D5-B748-A9286DC61FF4}.Release|x64.Build.0 = Release|x64
 		{070467FF-DA82-458A-9C88-598C5D7958A6}.Debug|Win32.ActiveCfg = Debug|x64
 		{070467FF-DA82-458A-9C88-598C5D7958A6}.Debug|x64.ActiveCfg = Debug|x64
 		{070467FF-DA82-458A-9C88-598C5D7958A6}.Debug|x64.Build.0 = Debug|x64

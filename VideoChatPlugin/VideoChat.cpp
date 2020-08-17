@@ -62,7 +62,7 @@ void VideoChat::paintEvent(QPaintEvent *event)
 	pRecord->set_type(ChatRecord_contenttype::ChatRecord_contenttype_video);
 	pRecord->set_selfnumber(m_strSelf.toStdString());
 	pRecord->set_targetnumber(m_strTgtNum.toStdString());
-	m_pNetWork->Send(QString::fromStdString(pRecord->SerializeAsString()));
+	m_pNetWork->Send(pRecord->SerializeAsString());
 }
 
 void VideoChat::FintTgtNum(const QString& strNum)

@@ -483,7 +483,7 @@ void ChatMessage::SendFile(ChatRecord* rec, ChatRecord_Group* recGroup, protocol
 		if (f.open(QIODevice::ReadOnly)) {
 			QByteArray arrayData = f.readAll();
 			isOneToOne ? rec->set_content(arrayData) : recGroup->set_content(arrayData);
-			if (m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString())) > 0)
+			if (m_ProMsg->Send(proto->SerializeAsString()) > 0)
 				SetAddMessage(m_strSelfNum, m_mapFriendToTextEdit[pTgtBu]->toPlainText(), isOneToOne ? rec->time() : recGroup->currtime(), (Message_Content::Content_Type)(isOneToOne ? rec->type() : recGroup->type()));
 			f.close();
 		}
@@ -521,7 +521,7 @@ void ChatMessage::TellServiceChatOnline()
 	FriendList::setCurrentState(proto);
 	proto.set_client_type(protocol_ClientType_ChatMsg);
 	proto.set_type(protocol_MsgType_stateInfor);
-	int size = m_ProMsg->Send(QString::fromStdString(proto.SerializeAsString()));
+	int size = m_ProMsg->Send(proto.SerializeAsString());
 }
 
 QPixmap ChatMessage::GetTargetImage(const QString& strNumber)
@@ -630,7 +630,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			if (proto->chatcontent_size() > 0)
 			{
-				m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+				m_ProMsg->Send(proto->SerializeAsString());
 			}
 			for (int i = 0; i < proto->chatcontent_size(); i++) {
 				SendFile(proto->mutable_chatcontent(i), nullptr, protocol_Chat_OneorMultiple_one, proto);
@@ -638,7 +638,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			if (proto->chatcontent_size() > 0)
 			{
-				m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+				m_ProMsg->Send(proto->SerializeAsString());
 				return;
 			}
 			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty()) {
@@ -649,7 +649,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 				chat->set_isself(true);
 				chat->set_type(ChatRecord_contenttype_text);
 				chat->set_content(strCurretContent.toStdString());
-				if (m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString())) > 0)
+				if (m_ProMsg->Send(proto->SerializeAsString()) > 0)
 					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), strCurretContent, chat->time(), (Message_Content::Content_Type)chat->type());
 			}				
 		}
@@ -668,7 +668,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			if (proto->group_size() > 0)
 			{
-				m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+				m_ProMsg->Send(proto->SerializeAsString());
 			}
 			for (int i = 0;i < proto->group_size();i++) {
 				SendFile(nullptr, proto->mutable_group(i), protocol_Chat_OneorMultiple_multiple, proto);
@@ -676,7 +676,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 			}
 			if (proto->group_size() > 0)
 			{
-				m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+				m_ProMsg->Send(proto->SerializeAsString());
 				return;
 			}
 			if (m_mapFriendToTextEdit[pTgtBu]->GetFilePath().isEmpty()) {
@@ -686,7 +686,7 @@ void ChatMessage::SlotSendTextContent()  //发送类型待区分
 				pGroup->set_currtime(QDateTime::currentMSecsSinceEpoch());
 				pGroup->set_type(ChatRecord_Group_contenttype_text);
 				pGroup->set_content(m_mapFriendToTextEdit[pTgtBu]->toPlainText().toStdString());
-				if (m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString())) > 0)
+				if (m_ProMsg->Send(proto->SerializeAsString()) > 0)
 					SetAddMessage(m_mapFriendInfo[pTgtBu].m_strNum.toStdString().c_str(), m_mapFriendToTextEdit[pTgtBu]->toPlainText(), pGroup->currtime(), (Message_Content::Content_Type)pGroup->type());
 			}
 		}
@@ -801,7 +801,7 @@ void ChatMessage::SlotBtnVoice()
 			group->set_selfnumber(m_strSelfNum.toStdString());
 			group->set_type(ChatRecord_Group_contenttype::ChatRecord_Group_contenttype_audio);
 		}
-		m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+		m_ProMsg->Send(proto->SerializeAsString());
 		delete proto;
 		proto = NULL;
 	});
@@ -937,7 +937,7 @@ void CustomMessageWidget::SetContent(FileProperty& property, bool isSelf, Conten
 			ChatRecord* chat = proto->add_chatcontent();
 			chat->mutable_head()->set_isconsent(true);
 			chat->mutable_head()->set_name(m_MsgProperty.strName.toStdString());
-			g_pChatMessage->m_ProMsg->Send(QString::fromStdString(proto->SerializeAsString()));
+			g_pChatMessage->m_ProMsg->Send(proto->SerializeAsString());
 			delete proto;
 			proto = NULL;
 		});
