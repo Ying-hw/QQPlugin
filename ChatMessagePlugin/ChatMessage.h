@@ -93,6 +93,7 @@ private:
 	QProgressBar m_Bar;  ///< 读取文件进度条
 	QFile  m_FileTransfer;  ///< 文件传输
 	QPixmap m_UserImage;  ///< 用户头像
+	QSpacerItem* m_Msgitem;
 };
 
 /// \brief 聊天界面功能定义

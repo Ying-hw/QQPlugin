@@ -7,7 +7,7 @@
 #include "MessageTemplate.h"
 #include "MacroDefine.h"
 
-#define LAYOUT_MESSAEG_WIDGET   10
+#define LAYOUT_MESSAEG_WIDGET   20
 #define TEMP_FILE  "../Data/Config/temp"
 
 ChatMessage* g_pChatMessage = NULL;
@@ -817,7 +817,7 @@ CustomMessageWidget::CustomMessageWidget(QPixmap userImage, QWidget* parent /*= 
     m_pTargetTab(static_cast<QTableWidget*>(parent)), m_pMessageContent(nullptr), m_IsClicked(false), m_UserImage(userImage)
 {
 	g_Message_Font.setFamily("Microsoft YaHei");
-	g_Message_Font.setPixelSize(18);  //此处应该根据系统的分辨率调整
+	g_Message_Font.setPixelSize(24);  //此处应该根据系统的分辨率调整
 	m_Bar.setRange(0, 100);
 	m_Bar.hide();
 }
@@ -955,47 +955,57 @@ void CustomMessageWidget::paintEvent(QPaintEvent *event)
 		text_Height += re.height();
 	}
 	int vMar = this->layout()->contentsMargins().top();
+	setFixedHeight(text_Height + doc_mar * 2 + vMar * 2);
 	for (int r = 0; r < m_pTargetTab->rowCount(); r++)
 		if (m_pTargetTab->cellWidget(r, 0) == this) {
 			m_pTargetTab->setRowHeight(r, text_Height + doc_mar * 2 + vMar * 2);
+			if (width <= m_pTargetTab->width() - 100) {
+				m_pMessageContent->setFixedWidth(width + doc_mar * 2);
+				if (m_Msgitem)
+					m_Msgitem->changeSize(100, 20, QSizePolicy::Expanding, QSizePolicy::Expanding);
+			}
+			else {
+				m_pMessageContent->setFixedWidth(m_pTargetTab->width() - 100);
+				if (m_Msgitem)
+					m_Msgitem->changeSize(100, 20, QSizePolicy::Preferred, QSizePolicy::Expanding);
+			}
 			break;
 		}
-	setFixedHeight(text_Height + doc_mar * 2 + vMar * 2);
-	m_pMessageContent->setFixedWidth(width + doc_mar * 2);
     QWidget::paintEvent(event);
 }
 
 void CustomMessageWidget::InitText(bool isSelf)
 {
-	QPushButton* button = new QPushButton(this);
+	QLabel* button = new QLabel(this);
 	m_pMessageContent = new QTextEdit(this);
 	m_pMessageContent->setText(QString::fromLocal8Bit(m_byteContent));
 	m_pMessageContent->setFont(g_Message_Font);
 	m_pMessageContent->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
 	m_pMessageContent->setReadOnly(true);
 	m_pMessageContent->setObjectName("m_pMessageContent");
-	m_pMessageContent->setAlignment(Qt::AlignLeft);
+	m_pMessageContent->document()->setDocumentMargin(10);
 	m_pMessageContent->adjustSize();
 	m_pMessageContent->setWordWrapMode(QTextOption::WrapAnywhere);
 	m_pMessageContent->setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
 	QHBoxLayout* lay = new QHBoxLayout(this);
+	m_Msgitem = new QSpacerItem(100, 20, QSizePolicy::Preferred, QSizePolicy::Expanding);
 	button->setFixedSize(50, 50);
-	QSpacerItem* item = new QSpacerItem(100, 20, QSizePolicy::Expanding, QSizePolicy::Expanding);
 	if (!isSelf) {
-		button->setIcon(QIcon(m_UserImage));
+		m_pMessageContent->setAlignment(Qt::AlignLeft);
+		button->setPixmap(FriendList::PixmapToRound(m_UserImage, 24));
 		lay->addWidget(button, 0, Qt::AlignTop);
 		lay->addWidget(m_pMessageContent);
-		lay->addItem(item);
+		lay->addItem(m_Msgitem);
 	}
 	else {
-		button->setIcon(QIcon(g_pChatMessage->GetTargetImage(g_pChatMessage->m_strSelfNum)));
-		lay->addItem(item);
+		m_pMessageContent->setAlignment(Qt::AlignRight);
+		button->setPixmap(FriendList::PixmapToRound(g_pChatMessage->GetTargetImage(g_pChatMessage->m_strSelfNum), 24));
+		lay->addItem(m_Msgitem);
 		lay->addWidget(m_pMessageContent);
 		lay->addWidget(button, 0, Qt::AlignTop);
 
 	}
-	button->setIconSize(QSize(50, 50));
-	lay->setContentsMargins(0, LAYOUT_MESSAEG_WIDGET, 0, LAYOUT_MESSAEG_WIDGET);
+	lay->setContentsMargins(LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET);
 	setLayout(lay);
 }
 

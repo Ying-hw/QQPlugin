@@ -53,7 +53,13 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
 	emit ui.BtnFriend->click();
-	ui.LabImage->setPixmap(PixmapToRound(QPixmap(CONDIGFILE), 40));
+	sqlPlugin::DataStructDefine MyInfo;
+	QPixmap pix;
+	GET_DATA(MyInfo, QString(SELECT_USER).arg(*m_pUserNumber));
+	QByteArray arrayImage = MyInfo.m_lstAllData[0]["IMAGE"].toByteArray();
+	if (pix.loadFromData(arrayImage)) {
+		ui.LabImage->setPixmap(PixmapToRound(pix, 40));
+	}
 	QMenu* pMenu = new QMenu(this);
 	pMenu->addAction(pAction_enter);
 	pMenu->addAction(pAction_No_Enter);
