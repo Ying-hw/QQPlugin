@@ -8,68 +8,22 @@ QString* FriendList::m_pUserNumber = NULL;
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
 
 ProsessMessage* FriendList::m_NetWorkProsess = NULL;
+
+
 FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL)
 {
 	ui.setupUi(this);
 	g_FriendList = this;
-	m_pFriendTree = new QTreeWidgetItem(ui.Friend_List);
-	m_pGroupTree = new QTreeWidgetItem(ui.Friend_List);
-	m_pGroupTree->setText(0, QString::fromLocal8Bit("群组列表"));
-	m_pFriendTree->setText(0, QString::fromLocal8Bit("好友列表"));
-	const QString* strUserName = (QString *)GET_MESSAGE(0);
-	m_pUserNumber = (QString *)GET_MESSAGE(1);
-	ui.labUserName->setText(*strUserName);
-	delete strUserName;
-	strUserName = nullptr; 
 	m_NetWorkProsess = new ProsessMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, g_FriendList);
 	SendSIG(Signal_::INITIALIZENETWORK, m_NetWorkProsess, Signal_Type::CMD);
-	InitFriendList();
-	InitGroupList();
-	InitQQSpaceList(); 
-	RecoveryChatRecord();
-	ui.BtnAdd->setContextMenuPolicy(Qt::CustomContextMenu);
-	QAction* pAction_enter = new QAction(this);
-	QAction* pAction_No_Enter = new QAction(this);
-	pAction_enter->setIcon(QIcon("../Data/Image/User.png"));
-	pAction_No_Enter->setIcon(QIcon("../Data/Image/User_group1.png"));
-	pAction_enter->setIconText(QString::fromLocal8Bit("添加好友"));
-	pAction_No_Enter->setIconText(QString::fromLocal8Bit("添加群"));
-	ui.BtnMenu->setContextMenuPolicy(Qt::CustomContextMenu);
-	QAction* acTionImage = new QAction(QString::fromLocal8Bit("更换头像"), this);
-	QAction* About = new QAction(QString::fromLocal8Bit("关于"), this);
-	QAction* EditInfor = new QAction(QString::fromLocal8Bit("编辑资料"), this);
-	m_pSystemMenu = new QMenu(this);
-	m_pSystemMenu->addAction(About);
-	m_pSystemMenu->addAction(acTionImage);
-	m_pSystemMenu->addAction(EditInfor);
-	ui.BtnMenu->setMenu(m_pSystemMenu);
-	connect(pAction_enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(pAction_No_Enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(ui.BtnSpace, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(ui.BtnMessage, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
-	emit ui.BtnFriend->click();
-	sqlPlugin::DataStructDefine MyInfo;
-	QPixmap pix;
-	GET_DATA(MyInfo, QString(SELECT_USER).arg(*m_pUserNumber));
-	QByteArray arrayImage = MyInfo.m_lstAllData[0]["IMAGE"].toByteArray();
-	if (pix.loadFromData(arrayImage)) {
-		ui.LabImage->setPixmap(PixmapToRound(pix, 40));
-	}
-	QMenu* pMenu = new QMenu(this);
-	pMenu->addAction(pAction_enter);
-	pMenu->addAction(pAction_No_Enter);
-	ui.BtnAdd->setMenu(pMenu);
-	SlotChangedState(ui.ComState->currentText());
+
+	connect(this, SIGNAL(InitAllMember()), this, SLOT(Initialization()), Qt::QueuedConnection);
+	emit InitAllMember();
 }
 
 FriendList::~FriendList()
 {
-	SlotChangedState(QString::fromLocal8Bit("离线"));
+	SlotChangedState(QString::fromLocal8Bit("离线"));  
 	if (m_NetWorkProsess) {
 		delete m_NetWorkProsess;
 		m_NetWorkProsess = NULL;
@@ -278,7 +232,8 @@ void FriendList::RecvFriendApply(AddInformation* infor)
 
 void FriendList::paintEvent(QPaintEvent *event)
 {
-	m_pSystemMenu->move(QCursor::pos());
+	if (m_pSystemMenu)
+		m_pSystemMenu->move(QCursor::pos());
 	AbstractWidget::paintEvent(event);
 }
 
@@ -383,6 +338,61 @@ void FriendList::setCurrentState(protocol& proto)
 		proto.mutable_state()->set_currstate(StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse);
 }
 
+void FriendList::Initialization()
+{
+	m_pFriendTree = new QTreeWidgetItem(ui.Friend_List);
+	m_pGroupTree = new QTreeWidgetItem(ui.Friend_List);
+	m_pGroupTree->setText(0, QString::fromLocal8Bit("群组列表"));
+	m_pFriendTree->setText(0, QString::fromLocal8Bit("好友列表"));
+	const QString* strUserName = (QString *)GET_MESSAGE(0);
+	m_pUserNumber = (QString *)GET_MESSAGE(1);
+	ui.labUserName->setText(*strUserName);
+	delete strUserName;
+	strUserName = nullptr;
+	InitFriendList();
+	InitGroupList();
+	InitQQSpaceList();
+	RecoveryChatRecord();
+	ui.BtnAdd->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* pAction_enter = new QAction(this);
+	QAction* pAction_No_Enter = new QAction(this);
+	pAction_enter->setIcon(QIcon("../Data/Image/User.png"));
+	pAction_No_Enter->setIcon(QIcon("../Data/Image/User_group1.png"));
+	pAction_enter->setIconText(QString::fromLocal8Bit("添加好友"));
+	pAction_No_Enter->setIconText(QString::fromLocal8Bit("添加群"));
+	ui.BtnMenu->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* acTionImage = new QAction(QString::fromLocal8Bit("更换头像"), this);
+	QAction* About = new QAction(QString::fromLocal8Bit("关于"), this);
+	QAction* EditInfor = new QAction(QString::fromLocal8Bit("编辑资料"), this);
+	m_pSystemMenu = new QMenu(this);
+	m_pSystemMenu->addAction(About);
+	m_pSystemMenu->addAction(acTionImage);
+	m_pSystemMenu->addAction(EditInfor);
+	ui.BtnMenu->setMenu(m_pSystemMenu);
+	connect(pAction_enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(pAction_No_Enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
+	connect(ui.BtnSpace, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
+	connect(ui.BtnMessage, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
+	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
+	emit ui.BtnFriend->click();
+	sqlPlugin::DataStructDefine MyInfo;
+	QPixmap pix;
+	GET_DATA(MyInfo, QString(SELECT_USER).arg(*m_pUserNumber));
+	QByteArray arrayImage = MyInfo.m_lstAllData[0]["IMAGE"].toByteArray();
+	if (pix.loadFromData(arrayImage)) {
+		ui.LabImage->setPixmap(PixmapToRound(pix, 40));
+	}
+	QMenu* pMenu = new QMenu(this);
+	pMenu->addAction(pAction_enter);
+	pMenu->addAction(pAction_No_Enter);
+	ui.BtnAdd->setMenu(pMenu);
+	SlotChangedState(ui.ComState->currentText());
+}
+
 void FriendList::SlotStartChat()
 {
 	CustomToolButton* pTgButton = qobject_cast<CustomToolButton*>(sender());
@@ -481,7 +491,7 @@ void FriendList::SwitchFriMsgSpace()
 void FriendList::SlotChangedState(const QString &strCurrentText)
 {
 	//写数据库
-	QString strUpdateState = QString(UPDATESTATE).arg(*m_pUserNumber).arg(strCurrentText);
+	QString strUpdateState = QString(UPDATESTATE).arg(strCurrentText).arg(*m_pUserNumber);
 	EXECUTE(strUpdateState);
 	protocol proto;
 	proto.set_myselfnum(m_pUserNumber->toStdString());

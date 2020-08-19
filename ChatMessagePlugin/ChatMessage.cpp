@@ -15,55 +15,10 @@ ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NUL
 {
 	ui.setupUi(this);
 	g_pChatMessage = this;
-	ui.TexEditContent->resize(ui.TexEditContent->width(), 80);
 	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, this);
 	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg, Signal_Type::CMD);
-	QString* strSelfNum = (QString *)GET_MESSAGE(0); 
-	QString* strTargetNum = (QString *)GET_MESSAGE(1);
-	m_mapFriendState[*strTargetNum] = ui.LabState;
-	CustomToolButton* pToolBu = (CustomToolButton*)GET_MESSAGE(2);
-	bool bType = (bool)GET_MESSAGE(3);
-	NumInfo num(bType, true, *strTargetNum, 0);
-	m_mapFriendInfo[pToolBu] = num;
-	m_strSelfNum = *strSelfNum;
-	QFont f = this->font();
-	f.setPointSize(16);
-	ui.labName->setFont(f); 
-	ui.labName->setText(pToolBu->text());
-	SetAddChatTgt(pToolBu, *strSelfNum, *strTargetNum);
-	m_mapFriendToTextEdit[pToolBu] = ui.TexEditContent;
-	ui.BtnEnter->setContextMenuPolicy(Qt::CustomContextMenu);
-	QAction* pAction_enter = new QAction(QString::fromLocal8Bit("按Enter发送消息"));
-	QAction* pAction_No_Enter = new QAction(QString::fromLocal8Bit("按Ctrl + Enter发送消息"));
-	QMenu* pMenu = new QMenu(this);
-	pMenu->addAction(pAction_enter);
-	pMenu->addAction(pAction_No_Enter); 
-	ui.BtnEnter->setMenu(pMenu);
-    connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SlotSendTextContent()));
-	connect(ui.LstFriend, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(SlotSwitchFriend(QListWidgetItem *, QListWidgetItem *)));
-	connect(ui.BtnFace, SIGNAL(clicked()), this, SLOT(SlotBtnFace()));
-	connect(ui.BtnMail, SIGNAL(clicked()), this, SLOT(SlotBtnMail()));
-	connect(ui.BtnScreenshot, SIGNAL(clicked()), this, SLOT(SlotBtnScreenshot()));
-	connect(ui.BtnVedio, SIGNAL(clicked()), this, SLOT(SlotBtnVideo()));
-	connect(ui.BtnVibration, SIGNAL(clicked()), this, SLOT(SlotBtnVibration()));
-	connect(ui.BtnVoice, SIGNAL(clicked()), this, SLOT(SlotBtnVoice()));
-	connect(ui.BtnVoiceChat, SIGNAL(clicked()), this, SLOT(SlotBtnVoiceChat()));
-	connect(ui.BtnEnter, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(SlotCustomMenu(const QPoint&)));
-	connect(pAction_enter, SIGNAL(toggled(bool)), this, SLOT(SlotBindEnter(bool)));
-	connect(pAction_No_Enter, SIGNAL(toggled(bool)), this, SLOT(SlotRemoveBindEnter(bool)));
-	connect(ui.BtnClear, &QPushButton::clicked, [this]() {
-		CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
-		m_mapFriendToTextEdit[pTgtBu]->clear();
-		m_mapFriendToTextEdit[pTgtBu]->setReadOnly(false);
-	});
-	m_mapNumberToTable[*strTargetNum] = ui.tab_MessageContent;
-	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strSelfNum).arg(*strTargetNum);
-	sqlPlugin::DataStructDefine data;
-	InitChatMessage(GET_DATA(data, strChat), ui.tab_MessageContent);
-	ui.TexEditContent->setFocus();
-	ui.widget_2->setFixedHeight(50);
-	SetButtonIcon();
-	TellServiceChatOnline();
+	connect(this, SIGNAL(InitMember()), this, SLOT(InitClassMember()));
+	emit InitMember();
 }
 
 ChatMessage::~ChatMessage()
@@ -584,6 +539,57 @@ void ChatMessage::SaveChatRecord()
 		QString strAllRecord = QString(UPDATE_CHAT_MESSAGE).arg(proto.SerializeAsString().c_str()).arg(m_strSelfNum).arg(it.key());
 		EXECUTE(strAllRecord);
 	}
+}
+
+void ChatMessage::InitClassMember()
+{
+	ui.TexEditContent->resize(ui.TexEditContent->width(), 80);
+	QString* strSelfNum = (QString *)GET_MESSAGE(0);
+	QString* strTargetNum = (QString *)GET_MESSAGE(1);
+	m_mapFriendState[*strTargetNum] = ui.LabState;
+	CustomToolButton* pToolBu = (CustomToolButton*)GET_MESSAGE(2);
+	bool bType = (bool)GET_MESSAGE(3);
+	NumInfo num(bType, true, *strTargetNum, 0);
+	m_mapFriendInfo[pToolBu] = num;
+	m_strSelfNum = *strSelfNum;
+	QFont f = this->font();
+	f.setPointSize(16);
+	ui.labName->setFont(f);
+	ui.labName->setText(pToolBu->text());
+	SetAddChatTgt(pToolBu, *strSelfNum, *strTargetNum);
+	m_mapFriendToTextEdit[pToolBu] = ui.TexEditContent;
+	ui.BtnEnter->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* pAction_enter = new QAction(QString::fromLocal8Bit("按Enter发送消息"));
+	QAction* pAction_No_Enter = new QAction(QString::fromLocal8Bit("按Ctrl + Enter发送消息"));
+	QMenu* pMenu = new QMenu(this);
+	pMenu->addAction(pAction_enter);
+	pMenu->addAction(pAction_No_Enter);
+	ui.BtnEnter->setMenu(pMenu);
+	connect(ui.BtnSend, SIGNAL(clicked()), this, SLOT(SlotSendTextContent()));
+	connect(ui.LstFriend, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(SlotSwitchFriend(QListWidgetItem *, QListWidgetItem *)));
+	connect(ui.BtnFace, SIGNAL(clicked()), this, SLOT(SlotBtnFace()));
+	connect(ui.BtnMail, SIGNAL(clicked()), this, SLOT(SlotBtnMail()));
+	connect(ui.BtnScreenshot, SIGNAL(clicked()), this, SLOT(SlotBtnScreenshot()));
+	connect(ui.BtnVedio, SIGNAL(clicked()), this, SLOT(SlotBtnVideo()));
+	connect(ui.BtnVibration, SIGNAL(clicked()), this, SLOT(SlotBtnVibration()));
+	connect(ui.BtnVoice, SIGNAL(clicked()), this, SLOT(SlotBtnVoice()));
+	connect(ui.BtnVoiceChat, SIGNAL(clicked()), this, SLOT(SlotBtnVoiceChat()));
+	connect(ui.BtnEnter, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(SlotCustomMenu(const QPoint&)));
+	connect(pAction_enter, SIGNAL(toggled(bool)), this, SLOT(SlotBindEnter(bool)));
+	connect(pAction_No_Enter, SIGNAL(toggled(bool)), this, SLOT(SlotRemoveBindEnter(bool)));
+	connect(ui.BtnClear, &QPushButton::clicked, [this]() {
+		CustomToolButton* pTgtBu = static_cast<CustomToolButton*>(ui.LstFriend->itemWidget(ui.LstFriend->currentItem()));
+		m_mapFriendToTextEdit[pTgtBu]->clear();
+		m_mapFriendToTextEdit[pTgtBu]->setReadOnly(false);
+	});
+	m_mapNumberToTable[*strTargetNum] = ui.tab_MessageContent;
+	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strSelfNum).arg(*strTargetNum);
+	sqlPlugin::DataStructDefine data;
+	InitChatMessage(GET_DATA(data, strChat), ui.tab_MessageContent);
+	ui.TexEditContent->setFocus();
+	ui.widget_2->setFixedHeight(50);
+	SetButtonIcon();
+	TellServiceChatOnline();
 }
 
 void ChatMessage::SlotSendTextContent()  //发送类型待区分

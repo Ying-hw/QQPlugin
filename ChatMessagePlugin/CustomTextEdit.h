@@ -4,6 +4,7 @@
 #include <QTextEdit>
 #include <QDragEnterEvent>
 
+
 class CustomTextEdit : public QTextEdit
 {
 	Q_OBJECT

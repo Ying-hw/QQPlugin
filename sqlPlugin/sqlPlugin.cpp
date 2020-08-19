@@ -78,7 +78,7 @@ sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(DataStructDefine& sour
 	sourceData.m_strError.clear();
 	QSqlQuery query;
 	query.prepare(strSql);
-	sourceData.m_Result = query.exec();
+	sourceData.m_Result = query.exec();     
 	if (sourceData.m_Result)
 		while (query.next()) {
 			QMap<QString, QVariant> rowMapData;

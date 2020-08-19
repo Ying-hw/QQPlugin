@@ -93,7 +93,7 @@ private:
 	QProgressBar m_Bar;  ///< 读取文件进度条
 	QFile  m_FileTransfer;  ///< 文件传输
 	QPixmap m_UserImage;  ///< 用户头像
-	QSpacerItem* m_Msgitem;
+	QSpacerItem* m_Msgitem;  ///< 控制弹簧的属性以及弹力，可自动伸缩界面
 };
 
 /// \brief 聊天界面功能定义
@@ -193,8 +193,12 @@ public:
 	/// \param[in] strNumber 目标账号
 	/// \retval 返回头像
 	QPixmap GetTargetImage(const QString& strNumber);
+
+signals:
+	void InitMember();
 private slots:
 	
+	void InitClassMember();
     /// \brief 发送网络消息 
     void SlotSendTextContent(); 
 
@@ -238,15 +242,22 @@ private slots:
 
 private:
 	Ui::ChatMessage ui;		///< 界面对象
-	struct NumInfo
+	/// \brief 账号信息
+	struct NumInfo 
 	{
+		/// \brief 默认构造函数
 		NumInfo() : m_unknowMessage(0), m_IsFriend(true), m_isCurrent(false) {}
+		/// \brief 带参构造函数 
+		/// \param[in] Friend_Group 账号是好友还是群聊账号
+		/// \param[in] isCurrent 当前聊天对象是否是该账号
+		/// \param[in] strNum 账号
+		/// \param[in] unknowMessage 未知消息
 		NumInfo(bool Friend_Group, bool isCurrent, QString& strNum, quint32 unknowMessage)
 			: m_IsFriend(Friend_Group), m_isCurrent(isCurrent), m_strNum(strNum), m_unknowMessage(unknowMessage) {}
-		bool m_IsFriend;
-		bool m_isCurrent;
-		QString m_strNum;
-		quint32 m_unknowMessage;
+		bool m_IsFriend;			  ///< Friend_Group 账号是好友还是群聊账号
+		bool m_isCurrent;			  ///< isCurrent 当前聊天对象是否是该账号
+		QString m_strNum;			  ///< strNum 账号
+		quint32 m_unknowMessage;	 ///< unknowMessage 未知消息
 	};
 	QString m_strSelfNum;       ///< 本人账号
 	ProcessChatMessage* m_ProMsg;   ///< 处理网络任务 

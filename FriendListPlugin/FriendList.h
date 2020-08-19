@@ -145,7 +145,15 @@ public:
 	static QString* m_pUserNumber;    ///< 本人账号
 	static ProsessMessage* m_NetWorkProsess;  ///< 处理网络消息
 
+signals:
+	/// \brief 使用信号初始化可以帮助界面增加显示速度，不阻塞
+	void InitAllMember();
+
 private slots:
+
+	/// \brief 初始化成员
+	void Initialization();
+
 	/// \brief 开始聊天
 	void SlotStartChat();
 
