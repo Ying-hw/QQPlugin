@@ -68,8 +68,8 @@ void VideoChat::paintEvent(QPaintEvent *event)
 void VideoChat::FintTgtNum(const QString& strNum)
 {
 	QString strSelectUser = QString(SELECT_USER).arg(strNum);
-	sqlPlugin::DataStructDefine dataLib;
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSelectUser);
+	sqlPlugin::DataStructDefine data;
+	GET_DATA(data, strSelectUser);
 	if (!data.m_lstAllData.isEmpty()) {
 		QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
 		QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();

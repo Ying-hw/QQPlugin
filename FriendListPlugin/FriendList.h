@@ -15,7 +15,7 @@
 
 /// \brief 自定义按钮工具
 /// 主要把未读消息的画出来
-class FRIENDLISTPLUGIN_EXPORT CustomToolButton : public QToolButton 
+class FRIENDLISTPLUGIN_EXPORT CustomToolButton : public QToolButton
 {
 	Q_OBJECT
 public:
@@ -188,6 +188,7 @@ private:
 	QMenu* m_pSystemMenu;  ///< 系统菜单
 	QTreeWidgetItem* m_pFriendTree; ///< 好友列表
 	QTreeWidgetItem* m_pGroupTree;  ///< 群组列表
+	QTimer m_timerInit;  ///< 初始化用，防止界面卡死
 };
 
 

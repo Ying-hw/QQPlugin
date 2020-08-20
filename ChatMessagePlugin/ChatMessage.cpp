@@ -11,12 +11,14 @@
 #define TEMP_FILE  "../Data/Config/temp"
 
 ChatMessage* g_pChatMessage = NULL;
+using namespace sqlPlugin;
 ChatMessage::ChatMessage(QWidget *parent) : AbstractWidget(parent), m_ProMsg(NULL)
 {
 	ui.setupUi(this);
 	g_pChatMessage = this;
 	m_ProMsg = new ProcessChatMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, this);
-	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg, Signal_Type::CMD);
+	SendSIG(Signal_::INITIALIZENETWORK, m_ProMsg);
+
 	connect(this, SIGNAL(InitMember()), this, SLOT(InitClassMember()));
 	emit InitMember();
 }
@@ -36,6 +38,7 @@ void ChatMessage::InitChatMessage(const DataStructDefine& targetMessage, QTableW
 	QList<Message_Content> currentContent;
 	if (!targetMessage.m_lstAllData.isEmpty())
 	{
+		targetMessage.m_lstAllData[0]["CHAT_RECORD"];
 		QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
 		protocol proto;
 		if (proto.ParseFromString(strContent.toStdString())) {
@@ -240,8 +243,8 @@ void ChatMessage::SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strSe
 		m_mapNumberToTable[strTgtNum] = tab_MessageContent;
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(strSelfNum).arg(strTgtNum);
 		sqlPlugin::DataStructDefine datastruct;
-		DataStructDefine& data = GET_DATA(datastruct, strChat);
-		InitChatMessage(data, tab_MessageContent);
+		GET_DATA(datastruct, strChat);
+		InitChatMessage(datastruct, tab_MessageContent);
 		QWidget* layoutWidget1 = new QWidget(splitter_3);
 		layoutWidget1->setObjectName("layoutWidget1");
 		QGridLayout* gridLayout_3 = new QGridLayout(layoutWidget1);
@@ -332,8 +335,8 @@ QPixmap ChatMessage::PixmapToRound(const QPixmap &src, int radius)
 void ChatMessage::StartVideoChat(const QString& strNum)
 {
 	sqlPlugin::DataStructDefine dataStruct;
-	DataStructDefine& data = GET_DATA(dataStruct, QString(SELECT_USER).arg(strNum));
-	QString strUserName = data.m_lstAllData[0]["USER_NAME"].toString();
+	GET_DATA(dataStruct, QString(SELECT_USER).arg(strNum));
+	QString strUserName = dataStruct.m_lstAllData[0]["USER_NAME"].toString();
 	QString strHint = strUserName + QString::fromLocal8Bit("发来视频通话，是否接受？");
 	if (QMessageBox::information(this, QString::fromLocal8Bit("视频通话"), strHint, QMessageBox::Ok | QMessageBox::No) == QMessageBox::Yes) {
 		SEND_MESSAGE(false, new QString(m_strSelfNum), new QString(strNum));  //代表被动接受
@@ -522,18 +525,18 @@ void ChatMessage::SaveChatRecord()
 		it != m_mapNumberToTable.end(); it++) {
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(m_strSelfNum).arg(it.key());
 		sqlPlugin::DataStructDefine dataLib;
-		DataStructDefine& data = GET_DATA(dataLib, strChat);
+		GET_DATA(dataLib, strChat);
 		auto tgtFriend = std::find_if(m_mapFriendInfo.begin(), m_mapFriendInfo.end(), [it](const NumInfo& num) {
 			return it.key() == num.m_strNum;
 		});
 		bool IsFriend = tgtFriend.value().m_IsFriend;
-		if (data.m_lstAllData.isEmpty()) {
+		if (dataLib.m_lstAllData.isEmpty()) {
 			QString strInsertChat = QString(INSERT_CHAT_MESSAGE).arg(m_strSelfNum).arg(m_ProMsg->m_mapChatRecord[it.key().toStdString()].SerializeAsString().c_str()).arg(it.key()).arg((int)IsFriend).arg(0);
 			EXECUTE(strInsertChat);
 			return;
 		}
 		protocol proto;
-		proto.ParseFromString(QString::fromUtf8(data.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data()).toStdString());
+		proto.ParseFromString(QString::fromUtf8(dataLib.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data()).toStdString());
 		std::string strRecord = m_ProMsg->m_mapChatRecord[it.key().toStdString()].SerializeAsString();
 		proto.AppendPartialToString(&strRecord);
 		QString strAllRecord = QString(UPDATE_CHAT_MESSAGE).arg(proto.SerializeAsString().c_str()).arg(m_strSelfNum).arg(it.key());
@@ -585,7 +588,8 @@ void ChatMessage::InitClassMember()
 	m_mapNumberToTable[*strTargetNum] = ui.tab_MessageContent;
 	QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*strSelfNum).arg(*strTargetNum);
 	sqlPlugin::DataStructDefine data;
-	InitChatMessage(GET_DATA(data, strChat), ui.tab_MessageContent);
+	GET_DATA(data, strChat);
+	InitChatMessage(data, ui.tab_MessageContent);
 	ui.TexEditContent->setFocus();
 	ui.widget_2->setFixedHeight(50);
 	SetButtonIcon();
@@ -960,7 +964,7 @@ void CustomMessageWidget::paintEvent(QPaintEvent *event)
 		width = pLayout->maximumWidth();
 		text_Height += re.height();
 	}
-	int vMar = this->layout()->contentsMargins().top();
+	int vMar = this->layout()->contentsMargins().top(); 
 	setFixedHeight(text_Height + doc_mar * 2 + vMar * 2);
 	for (int r = 0; r < m_pTargetTab->rowCount(); r++)
 		if (m_pTargetTab->cellWidget(r, 0) == this) {
@@ -1009,7 +1013,6 @@ void CustomMessageWidget::InitText(bool isSelf)
 		lay->addItem(m_Msgitem);
 		lay->addWidget(m_pMessageContent);
 		lay->addWidget(button, 0, Qt::AlignTop);
-
 	}
 	lay->setContentsMargins(LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET, LAYOUT_MESSAEG_WIDGET);
 	setLayout(lay);

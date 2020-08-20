@@ -49,14 +49,13 @@ bool sqlPlugin::DataLib::GetOpenResult()
 
 sqlPlugin::DataLib* sqlPlugin::DataLib::GetDataLibInstance()
 {
-	static DataLib dataLib;
 	return &dataLib;
 }
-
+sqlPlugin::DBSelect SQLPLUGIN_EXPORT sqlPlugin::DBSelect::select;
+sqlPlugin::DataLib SQLPLUGIN_EXPORT sqlPlugin::DataLib::dataLib;
 sqlPlugin::DBSelect* sqlPlugin::DataLib::GetSelectInstance()
 {
-	static sqlPlugin::DBSelect select;
-	return &select;
+	return &DBSelect::select;
 }
 
 
@@ -73,25 +72,23 @@ void sqlPlugin::DataLib::run()
 		m_IsOpen = true;
 }
 
-sqlPlugin::DataStructDefine& sqlPlugin::DBSelect::GetData(DataStructDefine& sourceData, const QString &strSql) {
+sqlPlugin::DBSelect::DBSelect(QObject* parent /*= 0*/) : QThread(parent), m_TargetStruct(NULL)
+{
+
+}
+
+sqlPlugin::DBSelect::~DBSelect()
+{
+
+}
+
+void sqlPlugin::DBSelect::GetData(DataStructDefine& sourceData, const QString &strSql) {
 	sourceData.m_lstAllData.clear();
 	sourceData.m_strError.clear();
-	QSqlQuery query;
-	query.prepare(strSql);
-	sourceData.m_Result = query.exec();     
-	if (sourceData.m_Result)
-		while (query.next()) {
-			QMap<QString, QVariant> rowMapData;
-			for (int i = 0; i < query.record().count(); i++)
-				rowMapData[query.record().fieldName(i)] = query.value(i);
-			sourceData.m_lstAllData.append(rowMapData);
-		}
-	else {
-		if (query.lastError().type() == QSqlError::ConnectionError)
-			sqlPlugin::DataLib::GetDataLibInstance()->start();
-		m_strError = query.lastError().text();
-	}
-	return sourceData;
+	wait();
+	m_strSql = strSql;
+	m_TargetStruct = &sourceData;
+	start();
 }
 
 bool sqlPlugin::DBSelect::ExecuteSql(const QString &strSql) {
@@ -120,7 +117,27 @@ bool sqlPlugin::DBSelect::InsertImage(const QString &strSql, QVariant& ImageData
 	return true;
 }
 
+void sqlPlugin::DBSelect::run()
+{
+	QSqlQuery query(DataLib::dataLib.m_dataBase);
+	query.prepare(m_strSql);
+	m_TargetStruct->m_Result = query.exec();
+	if (m_TargetStruct->m_Result) 
+		while (query.next()) {
+			QMap<QString, QVariant> rowMapData;
+			for (int i = 0; i < query.record().count(); i++)
+				rowMapData[query.record().fieldName(i)] = query.value(i);
+			m_TargetStruct->m_lstAllData.append(rowMapData);
+		}
+	else {
+		if (query.lastError().type() == QSqlError::ConnectionError)
+			sqlPlugin::DataLib::GetDataLibInstance()->start();
+		m_strError = query.lastError().text();
+	}
+}
+
 const sqlPlugin::DataStructDefine& sqlPlugin::DataStructDefine::operator= (const DataStructDefine& that) {
+	DataLib::GetDataLibInstance()->GetSelectInstance()->wait();
 	if (&that != this) {
 		this->m_lstAllData = that.m_lstAllData;
 		this->m_Result = that.m_Result;
@@ -131,6 +148,7 @@ const sqlPlugin::DataStructDefine& sqlPlugin::DataStructDefine::operator= (const
 
 sqlPlugin::DataStructDefine::DataStructDefine(const DataStructDefine& target)
 {
+	DataLib::GetDataLibInstance()->GetSelectInstance()->wait();
 	if (&target != this) {
 		this->m_lstAllData = target.m_lstAllData;
 		this->m_Result = target.m_Result;
@@ -142,4 +160,3 @@ sqlPlugin::DataStructDefine::DataStructDefine()
 {
 
 }
-

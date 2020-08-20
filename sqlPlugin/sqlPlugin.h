@@ -9,11 +9,41 @@
 #include <QVariant>
 #include <QThread>
 #include <QHostInfo>
+#include <QMutex>
 
 namespace sqlPlugin {
+	template<typename T> struct MyList : QList<T> {
+		const T& operator[](int index) const;
+		int size() const;
+		bool isEmpty() const;
+	};
+
+	template<typename T>
+	bool sqlPlugin::MyList<T>::isEmpty() const
+	{
+		DataLib::GetDataLibInstance()->GetSelectInstance()->wait();
+		return QList<T>::isEmpty();
+	}
+
+	template<typename T>
+	int sqlPlugin::MyList<T>::size() const
+	{
+		DataLib::GetDataLibInstance()->GetSelectInstance()->wait();
+		return QList<T>::size();
+	}
+
+	template<typename T>
+	const T& sqlPlugin::MyList<T>::operator[](int index) const
+	{
+			DataLib::GetDataLibInstance()->GetSelectInstance()->wait();
+			if (index < this->size() && index >= 0) {
+				return this->at(index);
+			}
+			return T();
+	}
 
 	struct SQLPLUGIN_EXPORT DataStructDefine {
-		QList<QMap<QString, QVariant>> m_lstAllData;
+		MyList<QMap<QString, QVariant>> m_lstAllData;
 		QString m_strError;
 		bool m_Result;
 		const DataStructDefine& operator=(const DataStructDefine& that);
@@ -21,11 +51,20 @@ namespace sqlPlugin {
 		DataStructDefine();
 	};
 
-	struct SQLPLUGIN_EXPORT DBSelect {
-		 DataStructDefine& GetData(DataStructDefine& sourceData, const QString &strSql);
+	struct SQLPLUGIN_EXPORT DBSelect : QThread {
+	private:
+		Q_OBJECT
+	public:
+		DBSelect(QObject* parent = 0);
+		~DBSelect();
+		 void GetData(DataStructDefine& sourceData, const QString &strSql);
 		 bool ExecuteSql(const QString &strSql);
 		 bool InsertImage(const QString &strSql, QVariant& ImageData);
+		 void run();
 		 QString m_strError;
+		 QString m_strSql;
+		 DataStructDefine* m_TargetStruct;
+		 static sqlPlugin::DBSelect select;
 	};
 
 	class SQLPLUGIN_EXPORT DataLib : public QThread {
@@ -45,6 +84,8 @@ namespace sqlPlugin {
 		void run();
 
 		QString m_strError;
+		static DataLib dataLib;
+		QSqlDatabase m_dataBase;
 
 	public slots:
 		void openDataLib(QHostInfo host);
@@ -59,7 +100,6 @@ namespace sqlPlugin {
 		QString m_strAddress;
 		QString m_strPassWD;
 		QString m_strDataLibUserName;
-		QSqlDatabase m_dataBase;
 	};
 }
 

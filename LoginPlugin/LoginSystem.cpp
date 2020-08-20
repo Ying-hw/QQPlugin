@@ -50,8 +50,8 @@ void LoginSystem::OpenDataLibResult()
 	bool IsOpen = GET_OPENRESULT();
 	if (IsOpen) {
 		if (m_CurrentType == OperatorType::LOGIN) {
-			sqlPlugin::DataStructDefine dataLib;
-			sqlPlugin::DataStructDefine UserData = GET_DATA(dataLib, QString(SELECT_USER).arg(ui.ComUserName->currentText()));
+			sqlPlugin::DataStructDefine UserData;
+			GET_DATA(UserData, QString(SELECT_USER).arg(ui.ComUserName->currentText()));
 			if (UserData.m_lstAllData.isEmpty()) {
 				HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("ÕËºÅÊäÈë´íÎó£¡£¡"), this);
 				hint->show();

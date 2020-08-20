@@ -8,17 +8,59 @@ QString* FriendList::m_pUserNumber = NULL;
 #define    CONDIGFILE   "../Data/Image/Avatar.jpg"
 
 ProsessMessage* FriendList::m_NetWorkProsess = NULL;
-
-
 FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(NULL)
 {
 	ui.setupUi(this);
 	g_FriendList = this;
 	m_NetWorkProsess = new ProsessMessage(AbstractNetWork::ProtoType::TCP, "33a15e2655.qicp.vip", 54813, g_FriendList);
-	SendSIG(Signal_::INITIALIZENETWORK, m_NetWorkProsess, Signal_Type::CMD);
+	SendSIG(Signal_::INITIALIZENETWORK, m_NetWorkProsess);
+	m_pFriendTree = new QTreeWidgetItem(ui.Friend_List);
+	m_pGroupTree = new QTreeWidgetItem(ui.Friend_List);
+	m_pGroupTree->setText(0, QString::fromLocal8Bit("群组列表"));
+	m_pFriendTree->setText(0, QString::fromLocal8Bit("好友列表"));
+	const QString* strUserName = (QString *)GET_MESSAGE(0);
+	m_pUserNumber = (QString *)GET_MESSAGE(1);
+	ui.labUserName->setText(*strUserName);
+	delete strUserName;
+	strUserName = nullptr;
 
+	ui.BtnAdd->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* pAction_enter = new QAction(this);
+	QAction* pAction_No_Enter = new QAction(this);
+	pAction_enter->setIcon(QIcon("../Data/Image/User.png"));
+	pAction_No_Enter->setIcon(QIcon("../Data/Image/User_group1.png"));
+	pAction_enter->setIconText(QString::fromLocal8Bit("添加好友"));
+	pAction_No_Enter->setIconText(QString::fromLocal8Bit("添加群"));
+	ui.BtnMenu->setContextMenuPolicy(Qt::CustomContextMenu);
+	QAction* acTionImage = new QAction(QString::fromLocal8Bit("更换头像"), this);
+	QAction* About = new QAction(QString::fromLocal8Bit("关于"), this);
+	QAction* EditInfor = new QAction(QString::fromLocal8Bit("编辑资料"), this);
+	m_pSystemMenu = new QMenu(this);
+	m_pSystemMenu->addAction(About);
+	m_pSystemMenu->addAction(acTionImage);
+	m_pSystemMenu->addAction(EditInfor);
+	ui.BtnMenu->setMenu(m_pSystemMenu);
+	QMenu* pMenu = new QMenu(this);
+	pMenu->addAction(pAction_enter);
+	pMenu->addAction(pAction_No_Enter);
+	ui.BtnAdd->setMenu(pMenu);
+	connect(pAction_enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(pAction_No_Enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()), Qt::DirectConnection);
+	connect(ui.BtnSpace, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
+	connect(ui.BtnMessage, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
+	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
+	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
 	connect(this, SIGNAL(InitAllMember()), this, SLOT(Initialization()), Qt::QueuedConnection);
-	emit InitAllMember();
+	emit g_FriendList->ui.BtnFriend->click();
+	m_timerInit.setInterval(3000);
+	connect(&m_timerInit, &QTimer::timeout, [this]() {
+		emit InitAllMember();
+		m_timerInit.stop();
+	});
+	m_timerInit.start();
 }
 
 FriendList::~FriendList()
@@ -35,33 +77,33 @@ void FriendList::RecoveryChatRecord()
 	sqlPlugin::DataStructDefine dataLib, dataLib1;
 	QMap<QString, protocol> mapChat;
 	QString strSelectFriend = QString(SELECT_CHAT_CONTENT).arg(*m_pUserNumber);
-	sqlPlugin::DataStructDefine& target = GET_DATA(dataLib, strSelectFriend);
-	for (int i = 0; i < target.m_lstAllData.size();i++) {
+	GET_DATA(dataLib, strSelectFriend);
+	for (int i = 0; i < dataLib.m_lstAllData.size();i++) {
 		protocol protoContent;
-		std::string array = QString::fromUtf8(target.m_lstAllData[i]["CHAT_RECORD"].toByteArray().data()).toStdString();
+		std::string array = QString::fromUtf8(dataLib.m_lstAllData[i]["CHAT_RECORD"].toByteArray().data()).toStdString();
 		if (!array.empty() && protoContent.ParseFromString(array)) {
-			QString strAccount = target.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+			QString strAccount = dataLib.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
 			if (strAccount == *m_pUserNumber)
-				strAccount = target.m_lstAllData[i]["USER_ACCOUNT"].toString();
+				strAccount = dataLib.m_lstAllData[i]["USER_ACCOUNT"].toString();
 			mapChat[strAccount] = protoContent;
 		}
-		std::string unknowArray = QString::fromUtf8(target.m_lstAllData[i]["UNKNOW_MSG"].toByteArray().data()).toStdString();
+		std::string unknowArray = QString::fromUtf8(dataLib.m_lstAllData[i]["UNKNOW_MSG"].toByteArray().data()).toStdString();
 		protocol pro;
 		if (!unknowArray.empty() && pro.ParseFromString(unknowArray)) {
 			protoContent.MergeFrom(pro);
-			QString strAccount = target.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
+			QString strAccount = dataLib.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
 			if (strAccount == *m_pUserNumber)
-				strAccount = target.m_lstAllData[i]["USER_ACCOUNT"].toString();
+				strAccount = dataLib.m_lstAllData[i]["USER_ACCOUNT"].toString();
 			mapChat[strAccount] = protoContent;
 		}
 	}
 	for (QMap<QString, protocol>::const_iterator it = mapChat.constBegin();
 		it != mapChat.constEnd(); it++) {
 		QString strSelectUser = QString(SELECT_USER).arg(it.key());
-		sqlPlugin::DataStructDefine& data = GET_DATA(dataLib1, strSelectUser);
-		if (!data.m_lstAllData.isEmpty()) {
-			QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
-			QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
+		GET_DATA(dataLib1, strSelectUser);
+		if (!dataLib1.m_lstAllData.isEmpty()) {
+			QString strName = dataLib1.m_lstAllData[0]["USER_NAME"].toString();
+			QByteArray array = dataLib1.m_lstAllData[0]["IMAGE"].toByteArray();
 			SetMessage_ListUi(it.key(), strName, array, it->count());
 		}
 	}
@@ -89,23 +131,23 @@ void FriendList::SetMessage_ListUi(const QString& strNum, const QString& strName
 
 void FriendList::InitFriendList()
 {
-	sqlPlugin::DataStructDefine dataLib, dataLib1, dataLib2;
+	sqlPlugin::DataStructDefine data, friendata, userState;
 	QString strFriend = QString(SELECT_FRIEND).arg(*m_pUserNumber);
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strFriend);
+	GET_DATA(data, strFriend);
 	QPixmap pix;
 	if (!data.m_lstAllData.isEmpty()) 
 		for (int i = 0; i < data.m_lstAllData.size(); i++) {
 			QString strTargetNum = data.m_lstAllData[i]["FRIEND_ACCOUNT"].toString();
 			if (strTargetNum == *m_pUserNumber)
 				strTargetNum = data.m_lstAllData[i]["USER_ACCOUNT"].toString();
-			sqlPlugin::DataStructDefine& friendata = GET_DATA(dataLib1, QString(SELECT_USER).arg(strTargetNum));
+			GET_DATA(friendata, QString(SELECT_USER).arg(strTargetNum));
 			QByteArray arrayImage = friendata.m_lstAllData[0]["IMAGE"].toByteArray();
 			QString strName = friendata.m_lstAllData[0]["USER_NAME"].toString();
 			if (pix.loadFromData(arrayImage)) {
 				QTreeWidgetItem* itemTree = new QTreeWidgetItem(m_pFriendTree);
 				QPixmap newpix = pix.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);				
 				CustomToolButton* pToolBu = new CustomToolButton(this);
-				sqlPlugin::DataStructDefine& userState = GET_DATA(dataLib2, QString(SELECT_STATE).arg(strTargetNum));
+				GET_DATA(userState, QString(SELECT_STATE).arg(strTargetNum));
 				if (!userState.m_lstAllData.isEmpty()) {
 					QString strState = userState.m_lstAllData[0]["STATE"].toString();
 					if (strState == QString::fromLocal8Bit("离线") || strState == QString::fromLocal8Bit("隐身"))
@@ -127,9 +169,9 @@ void FriendList::InitFriendList()
 
 void FriendList::InitGroupList()
 {
-	sqlPlugin::DataStructDefine dataLib;
+	sqlPlugin::DataStructDefine groupdata;
 	QString strGroup = QString(SELECT_GROUP).arg(*m_pUserNumber);
-	sqlPlugin::DataStructDefine& groupdata = GET_DATA(dataLib, strGroup);
+	GET_DATA(groupdata, strGroup);
 	QPixmap pix;
 	if (!groupdata.m_lstAllData.isEmpty()) 
 		for (int i = 0; i < groupdata.m_lstAllData.size(); i++) {
@@ -199,10 +241,10 @@ void FriendList::ShowUnknownMsgCount(const QString& strTgtNum, bool isFriend)
 		}
 	QString strFriendInfo = QString(SELECT_USER).arg(strTgtNum);
 	sqlPlugin::DataStructDefine dataLib;
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strFriendInfo);
-	if (!data.m_lstAllData.isEmpty()) {
-		QString strName = data.m_lstAllData[0]["USER_NAME"].toString();
-		QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
+	GET_DATA(dataLib, strFriendInfo);
+	if (!dataLib.m_lstAllData.isEmpty()) {
+		QString strName = dataLib.m_lstAllData[0]["USER_NAME"].toString();
+		QByteArray array = dataLib.m_lstAllData[0]["IMAGE"].toByteArray();
 		SetMessage_ListUi(strTgtNum, strName, array, isFriend);
 	}
 }
@@ -251,8 +293,8 @@ void FriendList::UpdateFriendState(const QString strNum, StateInformation state)
 			case StateInformation::StateMsg::StateInformation_StateMsg_Online:
 			case StateInformation::StateMsg::StateInformation_StateMsg_dontexcuse:
 			{
-				sqlPlugin::DataStructDefine dataLib;
-				sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, QString(SELECT_USER_IMAGE).arg(strNum));
+				sqlPlugin::DataStructDefine data;
+				GET_DATA(data, QString(SELECT_USER_IMAGE).arg(strNum));
 				QByteArray array = data.m_lstAllData[0]["IMAGE"].toByteArray();
 				QImage im;
 				if (im.loadFromData(array)) 
@@ -279,7 +321,7 @@ QImage FriendList::convertImage(QIcon iconSource, QSize size)
 void FriendList::SaveChatRecord(protocol& proto)
 {
 	QString strTragetAccount;
-	sqlPlugin::DataStructDefine dataLib, dataLib1;
+	sqlPlugin::DataStructDefine targetMessage, targetMessage1;
 	switch (proto.type()) {
 	case protocol_MsgType_tcp:
 	{
@@ -289,7 +331,7 @@ void FriendList::SaveChatRecord(protocol& proto)
 			strTragetAccount = proto.chatcontent(0).targetnumber().c_str();
 
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*m_pUserNumber).arg(strTragetAccount);
-		sqlPlugin::DataStructDefine& targetMessage = GET_DATA(dataLib, strChat);
+		GET_DATA(targetMessage, strChat);
 		if (targetMessage.m_lstAllData.isEmpty()) {
 			QString strUpdateChat = QString(UPDATE_CHAT_MESSAGE).arg(proto.SerializeAsString().c_str()).arg(*m_pUserNumber).arg(strTragetAccount);
 			EXECUTE(strUpdateChat);
@@ -307,13 +349,13 @@ void FriendList::SaveChatRecord(protocol& proto)
 	case protocol_MsgType_udp:
 	{
 		QString strChat = QString(SELECT_CHAT_MESSAGE).arg(*m_pUserNumber).arg(proto.group(0).account().c_str());
-		sqlPlugin::DataStructDefine& targetMessage = GET_DATA(dataLib1, strChat);
-		if (targetMessage.m_lstAllData.isEmpty()) {
+		GET_DATA(targetMessage1, strChat);
+		if (targetMessage1.m_lstAllData.isEmpty()) {
 			QString strUpdateChat = QString(UPDATE_CHAT_MESSAGE).arg(proto.SerializeAsString().c_str()).arg(*m_pUserNumber).arg(proto.group(0).account().c_str());
 			EXECUTE(strUpdateChat);
 			return;
 		}
-		QString strContent = QString::fromUtf8(targetMessage.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
+		QString strContent = QString::fromUtf8(targetMessage1.m_lstAllData[0]["CHAT_RECORD"].toByteArray().data());
 		protocol pro;
 		if (pro.ParseFromString(strContent.toStdString())) {
 			pro.MergeFrom(proto);
@@ -340,45 +382,12 @@ void FriendList::setCurrentState(protocol& proto)
 
 void FriendList::Initialization()
 {
-	m_pFriendTree = new QTreeWidgetItem(ui.Friend_List);
-	m_pGroupTree = new QTreeWidgetItem(ui.Friend_List);
-	m_pGroupTree->setText(0, QString::fromLocal8Bit("群组列表"));
-	m_pFriendTree->setText(0, QString::fromLocal8Bit("好友列表"));
-	const QString* strUserName = (QString *)GET_MESSAGE(0);
-	m_pUserNumber = (QString *)GET_MESSAGE(1);
-	ui.labUserName->setText(*strUserName);
-	delete strUserName;
-	strUserName = nullptr;
+	QApplication::processEvents();
 	InitFriendList();
 	InitGroupList();
 	InitQQSpaceList();
 	RecoveryChatRecord();
-	ui.BtnAdd->setContextMenuPolicy(Qt::CustomContextMenu);
-	QAction* pAction_enter = new QAction(this);
-	QAction* pAction_No_Enter = new QAction(this);
-	pAction_enter->setIcon(QIcon("../Data/Image/User.png"));
-	pAction_No_Enter->setIcon(QIcon("../Data/Image/User_group1.png"));
-	pAction_enter->setIconText(QString::fromLocal8Bit("添加好友"));
-	pAction_No_Enter->setIconText(QString::fromLocal8Bit("添加群"));
-	ui.BtnMenu->setContextMenuPolicy(Qt::CustomContextMenu);
-	QAction* acTionImage = new QAction(QString::fromLocal8Bit("更换头像"), this);
-	QAction* About = new QAction(QString::fromLocal8Bit("关于"), this);
-	QAction* EditInfor = new QAction(QString::fromLocal8Bit("编辑资料"), this);
-	m_pSystemMenu = new QMenu(this);
-	m_pSystemMenu->addAction(About);
-	m_pSystemMenu->addAction(acTionImage);
-	m_pSystemMenu->addAction(EditInfor);
-	ui.BtnMenu->setMenu(m_pSystemMenu);
-	connect(pAction_enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(pAction_No_Enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(ui.BtnSpace, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(ui.BtnMessage, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
-	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
-	emit ui.BtnFriend->click();
+	
 	sqlPlugin::DataStructDefine MyInfo;
 	QPixmap pix;
 	GET_DATA(MyInfo, QString(SELECT_USER).arg(*m_pUserNumber));
@@ -386,10 +395,6 @@ void FriendList::Initialization()
 	if (pix.loadFromData(arrayImage)) {
 		ui.LabImage->setPixmap(PixmapToRound(pix, 40));
 	}
-	QMenu* pMenu = new QMenu(this);
-	pMenu->addAction(pAction_enter);
-	pMenu->addAction(pAction_No_Enter);
-	ui.BtnAdd->setMenu(pMenu);
 	SlotChangedState(ui.ComState->currentText());
 }
 
@@ -594,8 +599,8 @@ void CustomAddFriendMessageHint::SetLayout(AddInformation* infor)
 {
 	m_infor = *infor;
 	m_IsAddFriend = (infor->type() == AddInformation_TargetType_isFriend);
-	sqlPlugin::DataStructDefine dataLib;
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, QString(SELECT_USER).arg(infor->fromaccount().c_str()));
+	sqlPlugin::DataStructDefine data;
+	GET_DATA(data, QString(SELECT_USER).arg(infor->fromaccount().c_str()));
 	QPushButton* pButtonConsent = new QPushButton(QString::fromLocal8Bit("同意"), this);
 	connect(pButtonConsent, SIGNAL(clicked()), this, SLOT(ConsentApply()));
 	QVBoxLayout* hBox = new QVBoxLayout;

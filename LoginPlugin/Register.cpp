@@ -157,8 +157,8 @@ void Register::AddUserToSqldatabase()
 		.arg(strOccupational).arg(strBirthplace)
 		.arg(strSchool).arg(strIdentify);
 	QString strInsertState = QString(INSERT_FRIENDSTATE).arg(ui.EditUserNumber->text()).arg(QString::fromLocal8Bit("在线"));
-	sqlPlugin::DataStructDefine dataLib;
-	sqlPlugin::DataStructDefine& dataKey = GET_DATA(dataLib, QString(SELECT_USER).arg(strAccount));
+	sqlPlugin::DataStructDefine dataKey;
+	GET_DATA(dataKey, QString(SELECT_USER).arg(strAccount));
 	if (!dataKey.m_lstAllData.isEmpty())
 	{
 		HintFrameWidget* hint = new HintFrameWidget(QString::fromLocal8Bit("账号已经注册，请更换！"), this);

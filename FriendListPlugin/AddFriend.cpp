@@ -105,8 +105,8 @@ void AddFriend::SlotStartFind()
 			strSql += QString(" USER_NUMBER = '%1' OR USER_NAME = '%1'").arg(ui.EditInput->text());
 	else 
 		strSql += QString(" GROUP_NAME = '%1' OR GROUP_ACCOUNT = '%1'").arg(ui.EditInput->text());
-	sqlPlugin::DataStructDefine dataLib;
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSql);
+	sqlPlugin::DataStructDefine data;
+	GET_DATA(data, strSql);
 	if (!data.m_lstAllData.isEmpty()) {
 		int count = data.m_lstAllData.size();
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
@@ -121,17 +121,17 @@ void AddFriend::SlotStartFind()
 		if (!m_isAddFriend) {
 			QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
 			sqlPlugin::DataStructDefine dataLib;
-			sqlPlugin::DataStructDefine& dataCount = GET_DATA(dataLib, strCount);
-			infor.memberCount = dataCount.m_lstAllData.size();
+			GET_DATA(dataLib, strCount);
+			infor.memberCount = dataLib.m_lstAllData.size();
 			infor.m_strNumber = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
-			infor.m_strGroupType = dataCount.m_lstAllData[0]["TYPE"].toString();
-			infor.m_strName = dataCount.m_lstAllData[0]["GROUP_NAME"].toString();
+			infor.m_strGroupType = dataLib.m_lstAllData[0]["TYPE"].toString();
+			infor.m_strName = dataLib.m_lstAllData[0]["GROUP_NAME"].toString();
 			infor.pix = QPixmap::fromImage(im);	
 		}
 		else {
 			QString strUser = QString(SELECT_USER).arg(data.m_lstAllData[i]["USER_NUMBER"].toString());
-			sqlPlugin::DataStructDefine dataLib;
-			sqlPlugin::DataStructDefine& UserData = GET_DATA(dataLib, strUser);
+			sqlPlugin::DataStructDefine UserData;
+			GET_DATA(UserData, strUser);
 			infor.m_strName = UserData.m_lstAllData[0]["USER_NAME"].toString();
 			infor.pix = QPixmap::fromImage(im);
 			infor.m_Address = UserData.m_lstAllData[0]["ADDRESS"].toString();
@@ -158,24 +158,24 @@ void AddFriend::SlotGroupType()
 	sqlPlugin::DataStructDefine dataLib, dataLib1;
 	QPushButton *button = qobject_cast<QPushButton*>(sender());
 	QString strSelect = QString(SELECT_GROUP_TYPE).arg(button->text());
-	sqlPlugin::DataStructDefine& data = GET_DATA(dataLib, strSelect);
-	if (!data.m_lstAllData.isEmpty()) {
-		int count = data.m_lstAllData.size();
+	GET_DATA(dataLib, strSelect);
+	if (!dataLib.m_lstAllData.isEmpty()) {
+		int count = dataLib.m_lstAllData.size();
 		ui.tabFriendRecord->setRowCount(!(count % COLUMN_COUNT) ? count / COLUMN_COUNT : count / COLUMN_COUNT + 1);
 	}
-	for (int i = 0;i < data.m_lstAllData.size();i++) {
+	for (int i = 0;i < dataLib.m_lstAllData.size();i++) {
 		TargetInfor infor;
-		QString strGroupName = data.m_lstAllData[i]["GROUP_NAME"].toString();
-		QByteArray array = QString::fromUtf8(data.m_lstAllData[i]["IMAGE"].toByteArray()).toLocal8Bit();
-		QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(data.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
-		sqlPlugin::DataStructDefine& dataCount = GET_DATA(dataLib1, strCount);
+		QString strGroupName = dataLib.m_lstAllData[i]["GROUP_NAME"].toString();
+		QByteArray array = QString::fromUtf8(dataLib.m_lstAllData[i]["IMAGE"].toByteArray()).toLocal8Bit();
+		QString strCount = QString(SELECT_GROUP_PEOPLECOUNT).arg(dataLib.m_lstAllData[i]["GROUP_ACCOUNT"].toString());
+		GET_DATA(dataLib1, strCount);
 
 		QImage im;
 		im.loadFromData(array);
-		infor.memberCount = dataCount.m_lstAllData.size();
-		infor.m_strNumber = data.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
-		infor.m_strGroupType = dataCount.m_lstAllData[0]["TYPE"].toString();
-		infor.m_strName = dataCount.m_lstAllData[0]["GROUP_NAME"].toString();
+		infor.memberCount = dataLib1.m_lstAllData.size();
+		infor.m_strNumber = dataLib1.m_lstAllData[i]["GROUP_ACCOUNT"].toString();
+		infor.m_strGroupType = dataLib1.m_lstAllData[0]["TYPE"].toString();
+		infor.m_strName = dataLib1.m_lstAllData[0]["GROUP_NAME"].toString();
 		infor.pix = QPixmap::fromImage(im);
 
 		CustomAddInformationWidget* pAddInfor = new CustomAddInformationWidget(infor, this);
