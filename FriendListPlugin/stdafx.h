@@ -23,4 +23,3 @@
 #include <QGroupBox>
 #include <QFileDialog>
 #include <QBuffer>
-#include <QProgressBar>

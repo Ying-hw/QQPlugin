@@ -46,21 +46,16 @@ FriendList::FriendList(QWidget *parent) : AbstractWidget(parent), m_pSystemMenu(
 	ui.BtnAdd->setMenu(pMenu);
 	connect(pAction_enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(pAction_No_Enter, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
-	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()), Qt::DirectConnection);
+	connect(ui.BtnFriend, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
 	connect(ui.BtnSpace, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
 	connect(ui.BtnMessage, SIGNAL(clicked()), this, SLOT(SwitchFriMsgSpace()));
 	connect(acTionImage, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(About, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(EditInfor, SIGNAL(triggered(bool)), this, SLOT(SlotAdd(bool)));
 	connect(ui.ComState, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(SlotChangedState(const QString&)));
-	connect(this, SIGNAL(InitAllMember()), this, SLOT(Initialization()), Qt::QueuedConnection);
+	connect(this, SIGNAL(InitAllMember()), this, SLOT(Initialization()));
 	emit g_FriendList->ui.BtnFriend->click();
-	m_timerInit.setInterval(3000);
-	connect(&m_timerInit, &QTimer::timeout, [this]() {
-		emit InitAllMember();
-		m_timerInit.stop();
-	});
-	m_timerInit.start();
+	emit InitAllMember();
 }
 
 FriendList::~FriendList()
