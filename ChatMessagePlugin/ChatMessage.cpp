@@ -133,8 +133,10 @@ void ChatMessage::SetAddMessage(const QString strTgtNum, CustomMessageWidget::Fi
 	m_MsgSourceNum[MessWidget] = strTgtNum;
 }
 
-void ChatMessage::SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strSelfNum, const QString& strTgtNum)
+void ChatMessage::SetAddChatTgt(CustomToolButton* pToolTgt, const QString& strSelfNum, const QString& strTgtNum) v
+
 {
+	pToolTgt->setObjectName("m_BtnTgtInfo");
 	QListWidgetItem* pItemWidget = new QListWidgetItem(ui.LstFriend);
 	pItemWidget->setSizeHint(QSize(ui.LstFriend->width(), 80));
 	ui.LstFriend->addItem(pItemWidget);

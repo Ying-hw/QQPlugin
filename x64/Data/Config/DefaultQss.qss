@@ -9,6 +9,16 @@ QWidget#widget_4{
 	background-color: rgb(255,255,255);
 }
 
+QListView {
+    show-decoration-selected: 1;
+	border: none;
+	background-color: rgb(30,100,100);
+}
+
+QListView::item {
+	border: none;
+}
+
 QWidget:window {
     font-family: 'Segoe UI';
 	font-size: 20px;
@@ -200,7 +210,7 @@ QToolBar::separator {
 
 /* === QToolButton === */
 QToolButton {
-    border: 1px solid #333333;
+    border: none;
     margin: 1px;
 }
 
@@ -332,7 +342,7 @@ QScrollBar:left-arrow:horizontal, QScrollBar:right-arrow:horizontal {
 }
 
 /* =================== */
-QLineEdit, QListView, QTreeView, QTableView, QAbstractSpinBox {
+QLineEdit, QTreeView, QTableView, QAbstractSpinBox {
     background-color: rgb(30,100,120);
     color: #BBBBBB;
     border: 1px solid #333333;
@@ -384,6 +394,8 @@ QListView::item:selected {
     background: #111111;
     color: yellow;
 }
+
+
 
 
 /* === QTableView === */
@@ -534,15 +546,10 @@ QStatusBar::item {
     border-radius: 2;
 }
 
-QStackedWidget, QComboBox, QLineEdit, QSpinBox, QListView, QWebView, QTreeView, QHeaderView {
+QStackedWidget, QComboBox, QLineEdit, QSpinBox, QWebView, QTreeView, QHeaderView {
     background-color: rgb(30,100,120);
     selection-color: #0a214c; 
     selection-background-color: #C19A6B;
-}
-
-QListView {
-    show-decoration-selected: 1;
-	border: none;
 }
 
 QListView::item:hover {
@@ -731,7 +738,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 
 /* =================== */
-QLineEdit, QListView, QTreeView, QTableView, QAbstractSpinBox {
+QLineEdit, QTreeView, QTableView, QAbstractSpinBox {
     font-family: "Segoe UI";
 	font-size: 20px;
 	color: #BBBBBB;
